@@ -1,0 +1,35 @@
+# Task 8 Route Smoke Test
+Date: 2026-05-22T18:38:41Z
+Server: http://127.0.0.1:4173
+
+## Route: /
+- HTTP: 200
+- HTML title (shell): <title>VIP Lift Nigeria | Modern Lift Solutions</title>
+- SPA mount (#root): 1
+
+## Route: /about
+- HTTP: 200
+- HTML title (shell): <title>VIP Lift Nigeria | Modern Lift Solutions</title>
+- SPA mount (#root): 1
+
+## Route: /projects
+- HTTP: 200
+- HTML title (shell): <title>VIP Lift Nigeria | Modern Lift Solutions</title>
+- SPA mount (#root): 1
+
+## Route: /contact
+- HTTP: 200
+- HTML title (shell): <title>VIP Lift Nigeria | Modern Lift Solutions</title>
+- SPA mount (#root): 1
+
+## Per-route document.title (via pageMeta in App.jsx)
+- / : VIP Lift Nigeria | Modern Lift Solutions
+- /about : About VIP Lift Nigeria
+- /projects : VIP Lift Projects
+- /contact : Contact VIP Lift Nigeria
+
+## Forbidden string grep (src + index.html)
+(no matches)
+
+## Build
+zsh:26: command not found: npm

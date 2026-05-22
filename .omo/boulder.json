@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "active_work_id": "vip-lift-redesign-11453d51",
+  "works": {
+    "vip-lift-redesign-11453d51": {
+      "work_id": "vip-lift-redesign-11453d51",
+      "active_plan": "/Users/demiladeolawunmi/IdeaProjects/vip-lift-frontend/.omo/plans/vip-lift-redesign.md",
+      "plan_name": "vip-lift-redesign",
+      "status": "active",
+      "started_at": "2026-05-22T18:01:31.354Z",
+      "updated_at": "2026-05-22T18:10:08.193Z",
+      "session_ids": [
+        "ses_1af52ac69ffeZeS8yR7aWn2co1",
+        "ses_1af1e9f5bffea6KJ12wVO4F4tu"
+      ],
+      "session_origins": {
+        "ses_1af52ac69ffeZeS8yR7aWn2co1": "direct",
+        "ses_1af1e9f5bffea6KJ12wVO4F4tu": "direct"
+      },
+      "agent": "atlas",
+      "task_sessions": {}
+    }
+  },
+  "active_plan": "/Users/demiladeolawunmi/IdeaProjects/vip-lift-frontend/.omo/plans/vip-lift-redesign.md",
+  "started_at": "2026-05-22T18:01:31.354Z",
+  "status": "active",
+  "updated_at": "2026-05-22T18:10:08.193Z",
+  "session_ids": [
+    "ses_1af52ac69ffeZeS8yR7aWn2co1",
+    "ses_1af1e9f5bffea6KJ12wVO4F4tu"
+  ],
+  "session_origins": {
+    "ses_1af52ac69ffeZeS8yR7aWn2co1": "direct",
+    "ses_1af1e9f5bffea6KJ12wVO4F4tu": "direct"
+  },
+  "plan_name": "vip-lift-redesign",
+  "task_sessions": {},
+  "agent": "atlas"
+}
