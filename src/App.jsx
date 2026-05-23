@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
-import { audiences, contact, hero, navItems, projects, proofPoints, services } from './data/siteContent.js'
+import { audiences, contact, hero, navItems, pageHeroes, projects, proofPoints, services } from './data/siteContent.js'
 
 const pageMeta = {
   '/': ['VIP Lift Nigeria | Modern Lift Solutions', 'Premium lift solutions for homes, public buildings, and commercial spaces in Nigeria.'],
@@ -23,16 +23,32 @@ function MetaTitle() {
   return null
 }
 
-function Header() {
+function Header({ overHero = false }) {
   const [open, setOpen] = useState(false)
+  const [solid, setSolid] = useState(false)
   const { pathname } = useLocation()
 
   useEffect(() => {
     setOpen(false)
   }, [pathname])
 
+  useEffect(() => {
+    const onScroll = () => setSolid(window.scrollY > 48)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [pathname])
+
+  const headerClass = [
+    'site-header',
+    overHero && !solid ? 'site-header--over-hero' : '',
+    solid || !overHero ? 'site-header--solid' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
-    <header className="site-header">
+    <header className={headerClass}>
       <Link className="brand" to="/" aria-label="VIP Lift home">
         <span>VIP Lift</span>
         <small>Value, Innovation and Prestige</small>
@@ -77,24 +93,46 @@ function Footer() {
   )
 }
 
-function PageShell({ children }) {
+function InquiryBar() {
+  return (
+    <aside className="inquiry-bar" aria-label="Quick enquiry">
+      <div className="inquiry-bar__input">
+        <svg className="inquiry-bar__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span>Ask about our lift solutions</span>
+      </div>
+      <div className="inquiry-bar__actions">
+        <a className="inquiry-bar__cta" href={`mailto:${contact.email}?subject=VIP%20Lift%20Project%20Enquiry`}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Contact VIP Lift
+        </a>
+        <Link className="inquiry-bar__secondary" to="/contact">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Schedule a consultation
+        </Link>
+      </div>
+    </aside>
+  )
+}
+
+function PageShell({ children, overHero = false }) {
   return (
     <>
       <MetaTitle />
-      <Header />
+      <Header overHero={overHero} />
       <main>{children}</main>
       <Footer />
+      <InquiryBar />
     </>
   )
 }
 
 function HeroSection() {
   return (
-    <section className="hero-section" style={{ '--hero-image': `url(${hero.image})` }}>
-      <div className="hero-overlay" />
+    <section className="hero-section viewport-section" style={{ '--hero-image': `url(${hero.image})` }}>
       <div className="hero-content">
         <p className="eyebrow">{hero.eyebrow}</p>
         <h1>{hero.title}</h1>
+        {hero.promo && <p className="hero-promo">{hero.promo}</p>}
         <p>{hero.summary}</p>
         <div className="button-row">
           <a className="button button-primary" href={hero.primaryCta.href}>
@@ -110,22 +148,35 @@ function HeroSection() {
 }
 
 function ServiceGrid() {
+  const [featured, ...rest] = services
+
   return (
     <section className="section">
       <div className="section-heading">
         <p className="eyebrow">What we do</p>
         <h2>Flexible lift systems for modern Nigerian buildings.</h2>
       </div>
-      <div className="card-grid">
-        {services.map((service) => (
-          <article className="image-card" key={service.title}>
-            <img src={service.image} alt={`${service.title} by VIP Lift`} loading="lazy" />
-            <div>
-              <h3>{service.title}</h3>
-              <p>{service.summary}</p>
-            </div>
-          </article>
-        ))}
+      <div className="category-grid">
+        <article className="category-card">
+          <img src={featured.image} alt={`${featured.title} by VIP Lift`} loading="lazy" />
+          <span>{featured.title}</span>
+          <div className="category-card__links">
+            <Link className="text-link" to="/about">Learn</Link>
+            <a className="text-link" href={`mailto:${contact.email}?subject=VIP%20Lift%20${encodeURIComponent(featured.title)}%20Enquiry`}>Enquire</a>
+          </div>
+        </article>
+        <div className="card-grid card-grid--stacked">
+          {rest.map((service) => (
+            <article className="category-card" key={service.title}>
+              <img src={service.image} alt={`${service.title} by VIP Lift`} loading="lazy" />
+              <span>{service.title}</span>
+              <div className="category-card__links">
+                <Link className="text-link" to="/about">Learn</Link>
+                <a className="text-link" href={`mailto:${contact.email}?subject=VIP%20Lift%20${encodeURIComponent(service.title)}%20Enquiry`}>Enquire</a>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   )
@@ -151,11 +202,11 @@ function ProofSection() {
 
 function Home() {
   return (
-    <PageShell>
+    <PageShell overHero>
       <HeroSection />
       <ServiceGrid />
       <ProofSection />
-      <section className="section cta-panel">
+      <section className="cta-panel">
         <p className="eyebrow">After-sales support</p>
         <h2>Supply, installation, and maintenance in one coordinated lift package.</h2>
         <p>
@@ -171,15 +222,17 @@ function Home() {
 }
 
 function About() {
+  const data = pageHeroes.about
+
   return (
     <PageShell>
-      <section className="page-hero">
-        <p className="eyebrow">Who we are</p>
-        <h1>A lift technology and engineering company operating from Lagos.</h1>
-        <p>
-          VIP Lift specializes in the supply, installation, and maintenance of Cibes lifts
-          and other premium elevating solutions for private homes and public buildings.
-        </p>
+      <section
+        className="page-hero page-hero--image"
+        style={{ '--hero-image': `url(${data.image})` }}
+      >
+        <p className="eyebrow">{data.eyebrow}</p>
+        <h1>{data.title}</h1>
+        <p>{data.summary}</p>
       </section>
       <section className="section">
         <div className="card-grid three">
@@ -202,7 +255,7 @@ function About() {
           coordinated installation support.
         </p>
       </section>
-      <section className="section cta-panel">
+      <section className="cta-panel">
         <p className="eyebrow">Discuss your project</p>
         <h2>Talk to VIP Lift about specifications, drawings, and installation support.</h2>
         <Link className="button button-primary" to="/contact">
@@ -214,15 +267,17 @@ function About() {
 }
 
 function Projects() {
+  const data = pageHeroes.projects
+
   return (
     <PageShell>
-      <section className="page-hero">
-        <p className="eyebrow">Completed projects</p>
-        <h1>Selected lift installations across homes, clubs, and public buildings.</h1>
-        <p>
-          VIP Lift supports everything from drawings and material selection to installation,
-          service, and maintenance.
-        </p>
+      <section
+        className="page-hero page-hero--image"
+        style={{ '--hero-image': `url(${data.image})` }}
+      >
+        <p className="eyebrow">{data.eyebrow}</p>
+        <h1>{data.title}</h1>
+        <p>{data.summary}</p>
       </section>
       <ProofSection />
       <section className="section">
@@ -243,15 +298,17 @@ function Projects() {
 }
 
 function Contact() {
+  const data = pageHeroes.contact
+
   return (
     <PageShell>
-      <section className="page-hero">
-        <p className="eyebrow">Get in touch</p>
-        <h1>Discuss a lift solution for your home or business.</h1>
-        <p>
-          We would be delighted to discuss how VIP Lift can present valuable, innovative,
-          and prestigious lift solutions at a date and time convenient to you.
-        </p>
+      <section
+        className="page-hero page-hero--image"
+        style={{ '--hero-image': `url(${data.image})` }}
+      >
+        <p className="eyebrow">{data.eyebrow}</p>
+        <h1>{data.title}</h1>
+        <p>{data.summary}</p>
       </section>
       <section className="section contact-grid">
         <a className="contact-card" href={contact.phoneHref}>
@@ -271,7 +328,7 @@ function Contact() {
           <strong>{contact.hours}</strong>
         </div>
       </section>
-      <section className="section cta-panel">
+      <section className="cta-panel">
         <p className="eyebrow">Request information</p>
         <h2>Looking for a lift solution for your home or business?</h2>
         <a className="button button-primary" href={`mailto:${contact.email}?subject=VIP%20Lift%20Information%20Pack`}>
