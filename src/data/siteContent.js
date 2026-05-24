@@ -1,3 +1,10 @@
+export const brand = {
+  logo: '/assets/logo.png',
+  logoLight: '/assets/logo-light.png',
+  favicon: '/assets/favicon.png',
+  tagline: 'Value, Innovation and Prestige',
+}
+
 export const contact = {
   email: 'sales@viplift.com.ng',
   phone: '+234 1 4540118',
@@ -18,6 +25,7 @@ export const navItems = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
   { label: 'Projects', href: '/projects' },
+  { label: 'Customize Lift', href: '/customize-lift' },
   { label: 'Contact', href: '/contact' },
 ]
 
@@ -28,10 +36,10 @@ export const hero = {
     'VIP Lift Nigeria supplies, installs, and maintains elegant platform and MRL lift systems for private homes, public buildings, and commercial environments.',
   promo: 'Supply, installation, and maintenance from Lagos',
   primaryCta: {
-    label: 'Request info pack',
+    label: 'Request Info Pack',
     href: `mailto:${contact.email}?subject=VIP%20Lift%20Information%20Pack`,
   },
-  secondaryCta: { label: 'View projects', href: '/projects' },
+  secondaryCta: { label: 'View Projects', href: '/projects' },
   image:
     'https://viplift.com.ng/wp-content/uploads/2021/01/black-residential-platform-lift-1300x800-1.jpg',
 }
@@ -62,7 +70,7 @@ export const pageHeroes = {
 
 export const services = [
   {
-    title: 'Home lifts',
+    title: 'Home Lifts',
     learnHref: '/about',
     orderHref: '/contact',
     summary:
@@ -70,7 +78,7 @@ export const services = [
     image: 'https://viplift.com.ng/wp-content/uploads/2021/01/HOME4.jpg',
   },
   {
-    title: 'Public lifts',
+    title: 'Public Lifts',
     summary:
       'Flexible lift solutions for hospitals, shopping malls, churches, offices, schools, restaurants, factories, clubs, and apartment buildings.',
     image: 'https://viplift.com.ng/wp-content/uploads/2021/01/OFFICE-BUILDING.jpg',

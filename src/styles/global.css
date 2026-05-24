@@ -10,40 +10,52 @@
   --color-pale-silver: #d0d1d2;
   --radius-control: 4px;
   --radius-card: 12px;
-  --font-display: "Universal Sans Display", -apple-system, Arial, sans-serif;
-  --font-text: "Universal Sans Text", -apple-system, Arial, sans-serif;
+  --font-sans: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: var(--font-sans);
+  --font-text: var(--font-sans);
   --transition-ui: 0.33s cubic-bezier(0.5, 0, 0, 0.75);
   --header-height: 56px;
 }
 
 * {
   box-sizing: border-box;
+  font-family: inherit;
 }
 
 html {
   scroll-behavior: smooth;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   margin: 0;
   background: var(--color-white);
   color: var(--color-carbon);
-  font-family: var(--font-text);
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.43;
 }
 
-body,
 button,
 input,
+select,
 textarea {
-  font: inherit;
+  font-family: var(--font-sans);
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+button {
+  appearance: none;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  font-family: inherit;
 }
 
 img {
@@ -115,13 +127,20 @@ img {
 
 .brand {
   display: inline-flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
   width: fit-content;
   font-family: var(--font-display);
   font-size: 1.0625rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+}
+
+.brand__logo {
+  display: block;
+  height: 56px;
+  width: auto;
+  object-fit: contain;
 }
 
 .brand small {
@@ -140,10 +159,13 @@ img {
 
 .nav a,
 .menu-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: var(--radius-control);
   font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1;
   min-height: 32px;
   padding: 4px 16px;
   transition:
@@ -168,6 +190,7 @@ img {
   color: var(--color-white);
   font-size: 0.875rem;
   font-weight: 500;
+  line-height: 1;
   min-height: 40px;
   min-width: 160px;
   padding: 4px 16px;
@@ -375,7 +398,7 @@ main {
   padding: 4px 16px;
   font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1;
   transition:
     background-color var(--transition-ui),
     border-color var(--transition-ui),
@@ -470,15 +493,30 @@ main {
 /* ─── Category cards (photography-first) ─── */
 
 .category-card {
-  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 280px;
   border-radius: var(--radius-card);
   overflow: hidden;
+  background: var(--color-white);
 }
 
-.category-card img {
+.category-card__media {
+  position: relative;
+  flex: 1;
+  min-height: 220px;
+  overflow: hidden;
+}
+
+.category-card__media::after {
+  position: absolute;
+  inset: 0;
+  background: rgba(23, 26, 32, 0.5);
+  content: "";
+  pointer-events: none;
+}
+
+.category-card__media img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -486,31 +524,32 @@ main {
   object-fit: cover;
 }
 
-.category-card span {
+.category-card__media span {
   position: absolute;
   top: 20px;
   left: 20px;
+  z-index: 1;
   color: var(--color-white);
+  font-family: var(--font-display);
   font-size: 1rem;
   font-weight: 500;
-  z-index: 1;
+  line-height: 1.2;
 }
 
 /* Vehicle-card-style text links beneath category cards */
 .category-card__links {
-  position: relative;
-  z-index: 1;
   display: flex;
   gap: 16px;
-  margin-top: auto;
+  flex-shrink: 0;
   padding: 16px 20px;
-  background: var(--color-white);
+  border-top: 1px solid var(--color-cloud);
+  background: var(--color-ash);
 }
 
 .category-card__links .text-link {
-  color: var(--color-pewter);
+  color: var(--color-graphite);
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .category-card__links .text-link:hover {
@@ -731,6 +770,7 @@ main {
   color: var(--color-white);
   font-size: 0.875rem;
   font-weight: 500;
+  line-height: 1;
   white-space: nowrap;
   transition: background-color var(--transition-ui);
 }
@@ -751,6 +791,7 @@ main {
   color: var(--color-pewter);
   font-size: 0.875rem;
   font-weight: 400;
+  line-height: 1;
   white-space: nowrap;
   transition: color var(--transition-ui);
 }
@@ -784,6 +825,8 @@ main {
 
   .menu-button {
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .nav {
@@ -794,7 +837,29 @@ main {
     display: none;
     flex-direction: column;
     padding: 8px;
+    border: 1px solid var(--color-cloud);
+    border-radius: var(--radius-control);
     background: var(--color-white);
+  }
+
+  .nav a {
+    color: var(--color-carbon);
+  }
+
+  .nav a:hover,
+  .nav a.active {
+    background: rgba(23, 26, 32, 0.06);
+    color: var(--color-carbon);
+  }
+
+  .site-header--over-hero .nav a {
+    color: var(--color-carbon);
+  }
+
+  .site-header--over-hero .nav a:hover,
+  .site-header--over-hero .nav a.active {
+    background: rgba(23, 26, 32, 0.06);
+    color: var(--color-carbon);
   }
 
   .nav-open {

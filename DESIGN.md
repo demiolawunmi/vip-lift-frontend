@@ -60,6 +60,14 @@ Typography recently transitioned from Gotham to Universal Sans — a custom fami
 - **No OpenType features** detected — typography is completely unembellished
 - **No italic variants** observed on the marketing site
 
+### Web implementation (VIP Lift site)
+
+Universal Sans is the Tesla design reference (proprietary, not web-licensed). The production site loads **[Open Sans](https://fonts.google.com/specimen/Open+Sans)** from Google Fonts — a clean humanist sans suited to UI and headings at 14px.
+
+- **Display** and **Text/UI** both map to `Open Sans` via `--font-display` and `--font-text` in `src/styles/global.css`
+- Weights loaded: **400** and **500** only (no italic)
+- Loaded in `index.html`
+
 ### Hierarchy
 
 | Role | Size | Weight | Line Height | Letter Spacing | Notes |

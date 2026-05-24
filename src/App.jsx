@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
-import { audiences, contact, hero, navItems, pageHeroes, projects, proofPoints, services } from './data/siteContent.js'
+import { audiences, brand, contact, hero, navItems, pageHeroes, projects, proofPoints, services } from './data/siteContent.js'
 
 const pageMeta = {
   '/': ['VIP Lift Nigeria | Modern Lift Solutions', 'Premium lift solutions for homes, public buildings, and commercial spaces in Nigeria.'],
   '/about': ['About VIP Lift Nigeria', 'Learn how VIP Lift supports architects, contractors, and building owners with lift engineering services.'],
   '/projects': ['VIP Lift Projects', 'Explore selected VIP Lift Nigeria installations and lift project examples.'],
   '/contact': ['Contact VIP Lift Nigeria', 'Contact VIP Lift Nigeria in Lagos for lift supply, installation, and maintenance enquiries.'],
+  '/customize-lift': ['Customize Lift | VIP Lift Nigeria', 'Customize your lift solution with VIP Lift Nigeria.'],
 }
 
 function MetaTitle() {
@@ -47,11 +48,13 @@ function Header({ overHero = false }) {
     .filter(Boolean)
     .join(' ')
 
+  const logoSrc = overHero && !solid ? brand.logoLight : brand.logo
+
   return (
     <header className={headerClass}>
       <Link className="brand" to="/" aria-label="VIP Lift home">
-        <span>VIP Lift</span>
-        <small>Value, Innovation and Prestige</small>
+        <img src={logoSrc} alt="VIP Lift" className="brand__logo" width={72} height={63} />
+        <small>{brand.tagline}</small>
       </Link>
       <button
         className="menu-button"
@@ -107,7 +110,7 @@ function InquiryBar() {
         </a>
         <Link className="inquiry-bar__secondary" to="/contact">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-          Schedule a consultation
+          Schedule A Consultation
         </Link>
       </div>
     </aside>
@@ -158,8 +161,10 @@ function ServiceGrid() {
       </div>
       <div className="category-grid">
         <article className="category-card">
-          <img src={featured.image} alt={`${featured.title} by VIP Lift`} loading="lazy" />
-          <span>{featured.title}</span>
+          <div className="category-card__media">
+            <img src={featured.image} alt={`${featured.title} by VIP Lift`} loading="lazy" />
+            <span>{featured.title}</span>
+          </div>
           <div className="category-card__links">
             <Link className="text-link" to="/about">Learn</Link>
             <a className="text-link" href={`mailto:${contact.email}?subject=VIP%20Lift%20${encodeURIComponent(featured.title)}%20Enquiry`}>Enquire</a>
@@ -168,8 +173,10 @@ function ServiceGrid() {
         <div className="card-grid card-grid--stacked">
           {rest.map((service) => (
             <article className="category-card" key={service.title}>
-              <img src={service.image} alt={`${service.title} by VIP Lift`} loading="lazy" />
-              <span>{service.title}</span>
+              <div className="category-card__media">
+                <img src={service.image} alt={`${service.title} by VIP Lift`} loading="lazy" />
+                <span>{service.title}</span>
+              </div>
               <div className="category-card__links">
                 <Link className="text-link" to="/about">Learn</Link>
                 <a className="text-link" href={`mailto:${contact.email}?subject=VIP%20Lift%20${encodeURIComponent(service.title)}%20Enquiry`}>Enquire</a>
@@ -214,7 +221,7 @@ function Home() {
           specification through installation and long-term maintenance.
         </p>
         <Link className="button button-primary" to="/contact">
-          Talk to VIP Lift
+          Talk To VIP Lift
         </Link>
       </section>
     </PageShell>
@@ -259,7 +266,7 @@ function About() {
         <p className="eyebrow">Discuss your project</p>
         <h2>Talk to VIP Lift about specifications, drawings, and installation support.</h2>
         <Link className="button button-primary" to="/contact">
-          Discuss a project
+          Discuss A Project
         </Link>
       </section>
     </PageShell>
@@ -332,8 +339,18 @@ function Contact() {
         <p className="eyebrow">Request information</p>
         <h2>Looking for a lift solution for your home or business?</h2>
         <a className="button button-primary" href={`mailto:${contact.email}?subject=VIP%20Lift%20Information%20Pack`}>
-          Request your free information pack
+          Request Your Free Information Pack
         </a>
+      </section>
+    </PageShell>
+  )
+}
+
+function CustomizeLift() {
+  return (
+    <PageShell>
+      <section className="section">
+        <p>Work in progress</p>
       </section>
     </PageShell>
   )
@@ -346,6 +363,7 @@ function App() {
       <Route path="/about" element={<About />} />
       <Route path="/projects" element={<Projects />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/customize-lift" element={<CustomizeLift />} />
     </Routes>
   )
 }

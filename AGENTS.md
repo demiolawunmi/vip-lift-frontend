@@ -13,6 +13,7 @@ VIP Lift Nigeria marketing site: React 19 + Vite 8 SPA with client-side routing.
 ```
 vip-lift-frontend/
 ├── index.html          # Static meta + root mount
+├── public/assets/      # Brand logo + favicon (served at /assets/...)
 ├── DESIGN.md           # Tokens, components, do/do-not
 ├── src/
 │   ├── main.jsx        # BrowserRouter + StrictMode
@@ -27,9 +28,11 @@ vip-lift-frontend/
 | Task | Location | Notes |
 |------|----------|-------|
 | Add/edit page copy | `src/data/siteContent.js` | Single content source |
+| Brand logo / favicon | `public/assets/` + `siteContent.js` → `brand` | Drop files in `public/assets/`; paths in `brand` export |
 | New route / page | `src/App.jsx` | Add `pageMeta` entry + `<Route>` + page component |
 | Per-route `<title>` / description | `App.jsx` → `pageMeta` + `MetaTitle` | Updates `document.title` and meta description |
 | Global styles / tokens | `src/styles/global.css` | Mirrors `DESIGN.md` color tokens |
+| Typography / fonts | `index.html` + `global.css` → `--font-display`, `--font-text` | Open Sans via Google Fonts |
 | Design rules | `DESIGN.md` | Authoritative for visual constraints |
 | Redesign plan | `.omo/plans/vip-lift-redesign.md` | Active boulder, not runtime |
 
