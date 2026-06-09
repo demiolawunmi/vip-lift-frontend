@@ -51,7 +51,7 @@ All page UI lives in `App.jsx` (~290 lines; no `src/pages/` split). Pages: `/`, 
 
 - **JSX only** — no TypeScript; `.jsx` entry, ESM (`"type": "module"`).
 - **Content separation** — never hardcode marketing copy in components; use `siteContent.js`.
-- **Images** — remote URLs on `viplift.com.ng` (legacy WordPress uploads); lazy-load in grids.
+- **Images** — local files in `public/assets/images/` (sourced from legacy WordPress uploads); lazy-load in grids. Paths centralized in `siteContent.js` → `images` export.
 - **Routing** — `react-router-dom` v7; `NavLink` with `end` on home; mobile nav closes on `pathname` change.
 - **Hero background** — CSS custom property `--hero-image` inline on section.
 

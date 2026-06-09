@@ -804,11 +804,360 @@ main {
   color: var(--color-blue);
 }
 
+/* ─── Header actions ─── */
+
+.header-actions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-phone {
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity var(--transition-ui);
+}
+
+.header-phone:hover {
+  opacity: 0.75;
+  text-decoration: underline;
+}
+
+.site-header--over-hero .header-phone {
+  color: var(--color-white);
+}
+
+.site-header--solid .header-phone {
+  color: var(--color-carbon);
+}
+
+/* ─── Hero trust line ─── */
+
+.hero-trust,
+.page-hero-trust {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.hero-trust a:hover,
+.page-hero-trust a:hover {
+  text-decoration: underline;
+}
+
+.page-hero-trust {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ─── Process strip ─── */
+
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.process-card {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+  background: var(--color-white);
+}
+
+.process-card__step {
+  color: var(--color-blue);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.process-card h3 {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
+.process-card p {
+  margin: 0;
+  color: var(--color-graphite);
+}
+
+/* ─── Certification badges ─── */
+
+.badge-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.badge-row__item {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  background: var(--color-white);
+}
+
+.badge-row__item strong {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.badge-row__item span {
+  color: var(--color-pewter);
+  font-size: 0.8125rem;
+}
+
+/* ─── FAQ ─── */
+
+.faq-list {
+  display: grid;
+  gap: 8px;
+  max-width: 840px;
+}
+
+.faq-item {
+  padding: 16px 20px;
+  border: 1px solid var(--color-cloud);
+  background: var(--color-white);
+}
+
+.faq-item summary {
+  cursor: pointer;
+  font-weight: 500;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item p {
+  margin: 12px 0 0;
+  color: var(--color-graphite);
+}
+
+.faq-more {
+  margin: 16px 0 0;
+}
+
+/* ─── Testimonials ─── */
+
+.testimonial-card {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 24px;
+  background: var(--color-white);
+}
+
+.testimonial-card p {
+  margin: 0;
+  color: var(--color-graphite);
+  font-style: italic;
+}
+
+.testimonial-card footer {
+  display: grid;
+  gap: 4px;
+}
+
+.testimonial-card strong {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.testimonial-card span {
+  color: var(--color-pewter);
+  font-size: 0.8125rem;
+}
+
+.trust-link-row {
+  margin-top: 24px;
+  text-align: center;
+}
+
+/* ─── Contact form ─── */
+
+.contact-form {
+  display: grid;
+  gap: 16px;
+  max-width: 720px;
+}
+
+.contact-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.contact-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.contact-form label span {
+  color: var(--color-pewter);
+  font-size: 0.875rem;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-pale-silver);
+  border-radius: var(--radius-control);
+  background: var(--color-white);
+  color: var(--color-carbon);
+}
+
+.contact-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.contact-form__note {
+  margin: 0;
+  color: var(--color-pewter);
+  font-size: 0.8125rem;
+}
+
+.contact-form .button {
+  width: fit-content;
+}
+
+/* ─── Project link cards ─── */
+
+.project-link-card {
+  transition: opacity var(--transition-ui);
+}
+
+.project-link-card:hover {
+  opacity: 0.92;
+}
+
+.image-card h3 {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+
+/* ─── Service area ─── */
+
+.area-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.area-list li {
+  padding: 16px;
+  background: var(--color-ash);
+  font-weight: 500;
+}
+
+.inline-address {
+  display: grid;
+  gap: 10px;
+  font-style: normal;
+}
+
+.inline-address a {
+  color: var(--color-graphite);
+}
+
+.inline-address a:hover {
+  color: var(--color-carbon);
+  text-decoration: underline;
+}
+
+.footer-response {
+  margin: 12px 0 0;
+  color: var(--color-pale-silver);
+  font-size: 0.875rem;
+}
+
+.resource-note {
+  margin: 16px 0 0;
+  color: var(--color-pewter);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+/* ─── Customize lift wizard ─── */
+
+.wizard-section {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.wizard-progress {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.wizard-progress__dot {
+  flex: 1;
+  height: 4px;
+  background: var(--color-cloud);
+}
+
+.wizard-progress__dot--active {
+  background: var(--color-blue);
+}
+
+.wizard-step {
+  display: grid;
+  gap: 20px;
+}
+
+.wizard-options {
+  display: grid;
+  gap: 12px;
+}
+
+.wizard-option {
+  min-height: 48px;
+  padding: 12px 16px;
+  border: 1px solid var(--color-pale-silver);
+  border-radius: var(--radius-control);
+  background: var(--color-white);
+  color: var(--color-carbon);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--transition-ui),
+    background-color var(--transition-ui);
+}
+
+.wizard-option:hover,
+.wizard-option--selected {
+  border-color: var(--color-blue);
+  background: rgba(62, 106, 225, 0.06);
+}
+
+.wizard-summary {
+  padding: 20px;
+  background: var(--color-ash);
+}
+
 /* ─── Responsive ─── */
 
 @media (max-width: 1024px) {
   .card-grid,
-  .project-grid {
+  .project-grid,
+  .process-grid,
+  .badge-row,
+  .area-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -871,11 +1220,19 @@ main {
     padding: 4px 12px;
   }
 
+  .header-phone {
+    display: none;
+  }
+
   .card-grid,
   .project-grid,
   .contact-grid,
   .split,
-  .site-footer {
+  .site-footer,
+  .process-grid,
+  .badge-row,
+  .area-list,
+  .contact-form__grid {
     grid-template-columns: 1fr;
   }
 
