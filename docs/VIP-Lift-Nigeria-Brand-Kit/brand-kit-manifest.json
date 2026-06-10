@@ -1,0 +1,51 @@
+{
+  "brand": "VIP Lift Nigeria",
+  "status": "complete brand kit",
+  "slogan": "VALUE. INNOVATION. PRESTIGE.",
+  "positioning": "VIP Lift Nigeria supplies, installs, repairs, services, and maintains selected international lift systems for Nigerian homes, businesses, and public buildings.",
+  "main_guideline_pdf": "VIP-Lift-Nigeria-Brand-Guidelines.pdf",
+  "guides": {
+    "colour": "02-Colours/vip-lift-nigeria-colour-palette.pdf",
+    "typography": "03-Typography/vip-lift-nigeria-typography-guide.pdf"
+  },
+  "folders": [
+    "01-Logo",
+    "02-Colours",
+    "03-Typography",
+    "04-Brand-Patterns",
+    "05-Templates",
+    "06-Exported-Assets/PNG",
+    "06-Exported-Assets/JPG",
+    "06-Exported-Assets/PDF",
+    "06-Exported-Assets/SVG"
+  ],
+  "patterns": [
+    "vip-lift-symbol-monogram-pattern",
+    "vip-lift-diagonal-elevation-pattern",
+    "vip-lift-architectural-shaft-pattern"
+  ],
+  "templates": [
+    "business-card",
+    "letterhead",
+    "quotation-proposal",
+    "company-profile",
+    "email-signature",
+    "whatsapp-social",
+    "lift-cabin-sticker-plate"
+  ],
+  "editable_formats": [
+    "PPTX",
+    "DOCX",
+    "HTML"
+  ],
+  "production_formats": [
+    "PDF",
+    "PNG",
+    "JPG",
+    "SVG"
+  ],
+  "sample_content": {
+    "uses_reserved_domain": true,
+    "must_be_replaced_before_publication": true
+  }
+}
