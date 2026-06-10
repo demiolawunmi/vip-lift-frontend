@@ -536,27 +536,136 @@ function FaqSection({ limit, nested = false }) {
   )
 }
 
+const trustBullets = [
+  'Supply, installation, repairs, servicing, and maintenance',
+  'Support for residential and commercial lift needs',
+  'Local service partner for selected international lift systems',
+]
+
 function TestimonialSection() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const active = testimonials[activeIndex]
+
   return (
-    <Box as="section" bg="vip.ash" {...sectionStyles}>
-      <SectionHeading eyebrow="Client feedback" title="Trusted on residential, commercial, and public projects." />
-      <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={4}>
-        {testimonials.map((item) => (
-          <Stack as="blockquote" key={item.context} gap={4} m={0} p={6} bg="white">
-            <Text color="vip.graphite" fontStyle="italic">&ldquo;{item.quote}&rdquo;</Text>
-            <Stack as="footer" gap={1}>
-              <Text fontWeight="500">{item.source}</Text>
-              <Text color="vip.pewter" fontSize="xs">{item.context}</Text>
-            </Stack>
+    <Box as="section" bg="vip.ink" color="white" {...sectionStyles}>
+      <Grid
+        templateColumns={{ base: '1fr', lg: '0.9fr 1.1fr' }}
+        gap={{ base: 10, lg: 16 }}
+        alignItems="center"
+      >
+        <Stack gap={5}>
+          <Text
+            fontSize="xs"
+            fontWeight="500"
+            letterSpacing="widest"
+            color="vip.silver"
+            textTransform="uppercase"
+          >
+            Client Confidence
+          </Text>
+          <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} color="white" {...headingStyles}>
+            Trusted for the full life of the lift
+          </Heading>
+          <Text color="vip.silver">
+            From initial supply and installation to repairs, servicing, and maintenance, VIP Lift
+            Nigeria is built to support lift systems long after handover.
+          </Text>
+          <Stack as="ul" gap={2.5} m={0} p={0} listStyleType="none" mt={1}>
+            {trustBullets.map((bullet) => (
+              <Flex as="li" key={bullet} alignItems="flex-start" gap={2.5}>
+                <Box flexShrink={0} mt="6px" w="5px" h="5px" borderRadius="full" bg="brand.500" />
+                <Text fontSize="sm" color="vip.silver">{bullet}</Text>
+              </Flex>
+            ))}
           </Stack>
-        ))}
+          {featureFlags.googleReviews && (
+            <Box>
+              <TextLink
+                href={contact.googleBusinessHref}
+                color="vip.silver"
+                _hover={{ color: 'white', textDecoration: 'underline' }}
+              >
+                Read our Google reviews
+              </TextLink>
+            </Box>
+          )}
+        </Stack>
+
+        <Box
+          borderWidth="1px"
+          borderColor="rgba(255,255,255,.12)"
+          borderRadius="card"
+          p={{ base: 6, md: 10 }}
+          bg="rgba(255,255,255,.04)"
+        >
+          <Box
+            as="blockquote"
+            m={0}
+            key={active.id}
+            style={{ transition: 'opacity 0.33s' }}
+          >
+            <Text
+              fontSize={{ base: 'md', md: 'lg' }}
+              color="rgba(255,255,255,.92)"
+              fontStyle="italic"
+              lineHeight="1.65"
+              mb={6}
+            >
+              &ldquo;{active.quote}&rdquo;
+            </Text>
+            <Stack as="footer" gap={1}>
+              <Text fontWeight="500" color="white">{active.author}</Text>
+              <Text fontSize="xs" color="vip.pewter">{active.role}</Text>
+              <Text
+                fontSize="xs"
+                color="brand.500"
+                fontWeight="500"
+                textTransform="uppercase"
+                letterSpacing="wide"
+              >
+                {active.type}
+              </Text>
+            </Stack>
+          </Box>
+
+          <Flex gap={3} mt={8} flexWrap="wrap" role="group" aria-label="Select testimonial">
+            {testimonials.map((item, index) => {
+              const isActive = index === activeIndex
+              return (
+                <Button
+                  key={item.id}
+                  onClick={() => setActiveIndex(index)}
+                  aria-label={`View testimonial from ${item.author}`}
+                  aria-pressed={isActive}
+                  minW="44px"
+                  minH="44px"
+                  w="44px"
+                  h="44px"
+                  p={0}
+                  borderRadius="full"
+                  bg={isActive ? 'brand.500' : 'rgba(255,255,255,.08)'}
+                  color={isActive ? 'white' : 'vip.silver'}
+                  border="1px solid"
+                  borderColor={isActive ? 'brand.500' : 'rgba(255,255,255,.18)'}
+                  fontSize="xs"
+                  fontWeight="600"
+                  transition="background-color 0.33s, border-color 0.33s, color 0.33s"
+                  _hover={{
+                    bg: isActive ? 'brand.600' : 'rgba(255,255,255,.14)',
+                    borderColor: isActive ? 'brand.600' : 'rgba(255,255,255,.32)',
+                  }}
+                  _focusVisible={{
+                    outline: '3px solid rgba(62,106,225,.55)',
+                    outlineOffset: '2px',
+                  }}
+                >
+                  {item.initials}
+                </Button>
+              )
+            })}
+          </Flex>
+        </Box>
       </Grid>
-      {featureFlags.googleReviews && <Box mt={6} textAlign="center"><TextLink href={contact.googleBusinessHref}>Read reviews on Google</TextLink></Box>}
-      <CtaBand
-        title="Ready to discuss your project?"
-        primary={<Action href={contact.phoneHref}>Call for a Site Visit</Action>}
-        secondary={<Action href={mailtoHref('VIP%20Lift%20Project%20Enquiry')} variant="secondary">Email VIP Lift</Action>}
-      />
     </Box>
   )
 }

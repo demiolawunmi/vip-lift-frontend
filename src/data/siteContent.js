@@ -197,22 +197,34 @@ export const certifications = [
 
 export const testimonials = [
   {
+    id: 'facility-manager',
     quote:
       'The installation was coordinated smoothly from specification through commissioning. The lift fits the building well and operates quietly.',
-    source: 'Facility manager',
-    context: 'Private club installation, Lagos',
+    author: 'Facility Manager',
+    role: 'Private club installation, Lagos',
+    type: 'Commercial',
+    initials: 'FM',
+    // TODO: Replace this placeholder with a real approved testimonial, name, and role.
   },
   {
+    id: 'project-architect',
     quote:
       'VIP Lift provided the technical drawings and dimensions we needed early in the design phase, which helped keep the project on schedule.',
-    source: 'Project architect',
-    context: 'Residential retrofit, Lagos Island',
+    author: 'Project Architect',
+    role: 'Residential retrofit, Lagos Island',
+    type: 'Residential',
+    initials: 'PA',
+    // TODO: Replace this placeholder with a real approved testimonial, name, and role.
   },
   {
+    id: 'building-owner',
     quote:
       'We needed accessibility access in an existing public building. The platform lift solution addressed the space constraints without extensive structural changes.',
-    source: 'Building owner representative',
-    context: 'Public building, Lagos',
+    author: 'Building Owner Representative',
+    role: 'Public building, Lagos',
+    type: 'Accessibility',
+    initials: 'BO',
+    // TODO: Replace this placeholder with a real approved testimonial, name, and role.
   },
 ]
 
