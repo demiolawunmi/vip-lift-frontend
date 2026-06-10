@@ -63,6 +63,83 @@ export const inquiryBar = {
   cta: { label: 'Email VIP Lift', subject: 'VIP%20Lift%20Project%20Enquiry' },
 }
 
+export const contactPage = {
+  hero: {
+    eyebrow: 'Contact VIP Lift Nigeria',
+    title: 'Speak with a lift specialist.',
+    summary:
+      'Tell us about your building, lift project, repair, or maintenance requirement. We help homes, businesses, and public buildings choose, install, service, and maintain reliable lift systems.',
+    helper:
+      'Choose an option to open the short enquiry form with the right request type selected.',
+  },
+  inquiries: [
+    {
+      value: 'New lift project',
+      title: 'New Lift Projects',
+      summary:
+        'Platform and traction lift guidance for homes, apartments, offices, hotels, and public buildings.',
+      number: '01',
+    },
+    {
+      value: 'Repair or breakdown support',
+      title: 'Repairs & Breakdown Support',
+      summary:
+        'Tell us about an existing lift fault, service issue, or repair requirement.',
+      number: '02',
+    },
+    {
+      value: 'Maintenance or servicing',
+      title: 'Maintenance & Service Contracts',
+      summary:
+        'Discuss scheduled servicing, inspections, reliability checks, and long-term support.',
+      number: '03',
+    },
+    {
+      value: 'Site inspection',
+      title: 'Consultation / Site Inspection',
+      summary:
+        'Get building-specific guidance before selecting or planning a lift system.',
+      number: '04',
+    },
+  ],
+  inquiryOptions: [
+    'New lift project',
+    'Platform lift / home lift',
+    'Traction lift / commercial lift',
+    'Repair or breakdown support',
+    'Maintenance or servicing',
+    'Site inspection',
+    'General enquiry',
+  ],
+  buildingTypes: [
+    'Private home / duplex',
+    'Apartment building',
+    'Office',
+    'Hotel',
+    'Mall / retail',
+    'Church / public building',
+    'Hospital / accessibility use',
+    'Other',
+  ],
+  nextSteps: [
+    {
+      step: '01',
+      title: 'Share the requirement',
+      summary: 'Tell us about the building, project, lift issue, and location.',
+    },
+    {
+      step: '02',
+      title: 'We review the details',
+      summary: 'Our team considers the building type, use case, and urgency.',
+    },
+    {
+      step: '03',
+      title: 'A specialist follows up',
+      summary: 'We respond with the appropriate quote, inspection, or service next step.',
+    },
+  ],
+}
+
 export const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Solutions', href: '/services/home-lifts' },

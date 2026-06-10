@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Box,
   Button,
@@ -26,6 +26,7 @@ import {
   brand,
   certifications,
   contact,
+  contactPage,
   customizeLiftSteps,
   faqItems,
   featureFlags,
@@ -53,7 +54,7 @@ const pageMeta = {
   '/': ['VIP Lift Nigeria | Premium Lift Solutions', 'VIP Lift Nigeria supplies, installs, repairs, services, and maintains platform and traction lift systems.'],
   '/about': ['About VIP Lift Nigeria', 'Learn how VIP Lift supports architects, contractors, and building owners with lift engineering services.'],
   '/projects': ['VIP Lift Projects', 'Explore selected VIP Lift Nigeria installations and lift project examples.'],
-  '/contact': ['Contact VIP Lift Nigeria', 'Contact VIP Lift Nigeria in Lagos for lift supply, installation, and maintenance enquiries.'],
+  '/contact': ['Contact VIP Lift Nigeria | Lift Installation, Repairs & Maintenance', 'Contact VIP Lift Nigeria for lift supply, installation, repairs, servicing, maintenance, inspections, and project enquiries for homes, businesses, and public buildings.'],
   '/customize-lift': ['Customize Lift | VIP Lift Nigeria', 'Configure your lift requirements and send a tailored enquiry to VIP Lift Nigeria.'],
   '/service-area': ['Service Area | VIP Lift Nigeria', 'VIP Lift serves Lagos and coordinates lift projects across Nigeria.'],
   '/for-architects': ['For Architects | VIP Lift Nigeria', 'Technical specifications, drawings, and design support for architects specifying lift solutions.'],
@@ -456,7 +457,7 @@ function InquiryBar() {
   )
 }
 
-function PageShell({ children, overHero = false }) {
+function PageShell({ children, overHero = false, showInquiryBar = true }) {
   return (
     <>
       <MetaTitle />
@@ -464,14 +465,14 @@ function PageShell({ children, overHero = false }) {
       <Header overHero={overHero} />
       <Box as="main" overflow="hidden">{children}</Box>
       <Footer />
-      <InquiryBar />
+      {showInquiryBar && <InquiryBar />}
     </>
   )
 }
 
-function CtaBand({ eyebrow, title, description, primary, secondary }) {
+function CtaBand({ eyebrow, title, description, primary, secondary, py = { base: 16, md: 24 } }) {
   return (
-    <Stack as="section" gap={5} maxW="900px" mx="auto" px={{ base: 5, md: 10 }} py={{ base: 16, md: 24 }} textAlign="center">
+    <Stack as="section" gap={5} maxW="900px" mx="auto" px={{ base: 5, md: 10 }} py={py} textAlign="center">
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
       <Heading as="h2" textStyle="sectionTitle">{title}</Heading>
       {description && <Text maxW="680px" mx="auto" color="text.muted">{description}</Text>}
@@ -543,50 +544,183 @@ const fieldStyles = {
   _focus: { borderColor: 'accent.primary', boxShadow: '0 0 0 1px var(--chakra-colors-accent-primary)' },
 }
 
-function FormField({ label, children }) {
-  return <Stack as="label" gap={2}><Text color="text.subtle" fontSize="sm" fontWeight="600">{label}</Text>{children}</Stack>
+function FormField({ id, label, required = false, error, children }) {
+  return (
+    <Stack gap={2}>
+      <Text as="label" htmlFor={id} color="text.subtle" fontSize="sm" fontWeight="600">
+        {label}{required && <Text as="span" color="accent.primary"> *</Text>}
+      </Text>
+      {children}
+      {error && (
+        <Text id={`${id}-error`} color="#A12B2B" fontSize="xs" role="alert">
+          {error}
+        </Text>
+      )}
+    </Stack>
+  )
 }
 
-function ContactForm() {
-  const [form, setForm] = useState({ name: '', phone: '', email: '', service: '', message: '' })
+function ContactForm({ selectedInquiry = '' }) {
+  const [form, setForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    inquiryType: selectedInquiry,
+    buildingType: '',
+    location: '',
+    message: '',
+  })
+  const [errors, setErrors] = useState({})
+  const [status, setStatus] = useState('')
+  const fieldRefs = useRef({})
+
+  useEffect(() => {
+    if (!selectedInquiry) return
+    setForm((current) => ({ ...current, inquiryType: selectedInquiry }))
+    setErrors((current) => ({ ...current, inquiryType: undefined }))
+  }, [selectedInquiry])
 
   function handleChange(event) {
     const { name, value } = event.target
     setForm((current) => ({ ...current, [name]: value }))
+    setErrors((current) => ({ ...current, [name]: undefined }))
+    setStatus('')
+  }
+
+  function validateForm() {
+    const nextErrors = {}
+    if (!form.name.trim()) nextErrors.name = 'Enter your full name.'
+    if (!form.phone.trim()) nextErrors.phone = 'Enter a phone number.'
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      nextErrors.email = 'Enter a valid email address.'
+    }
+    if (!form.inquiryType) nextErrors.inquiryType = 'Select an inquiry type.'
+    if (!form.message.trim()) nextErrors.message = 'Tell us briefly about the project or lift issue.'
+    return nextErrors
   }
 
   function handleSubmit(event) {
     event.preventDefault()
+    const nextErrors = validateForm()
+    setErrors(nextErrors)
+
+    const firstInvalidField = Object.keys(nextErrors)[0]
+    if (firstInvalidField) {
+      fieldRefs.current[firstInvalidField]?.focus()
+      return
+    }
+
     const body = [
-      `Name: ${form.name}`,
-      `Phone: ${form.phone}`,
-      form.email ? `Email: ${form.email}` : null,
-      form.service ? `Service: ${form.service}` : null,
+      'VIP Lift Website Enquiry',
       '',
-      form.message,
+      `Name: ${form.name.trim()}`,
+      `Phone: ${form.phone.trim()}`,
+      form.email ? `Email: ${form.email}` : null,
+      `Inquiry type: ${form.inquiryType}`,
+      form.buildingType ? `Building type: ${form.buildingType}` : null,
+      form.location ? `Location / city: ${form.location.trim()}` : null,
+      '',
+      'Project or issue details:',
+      form.message.trim(),
     ].filter(Boolean).join('\n')
-    window.location.href = mailtoHref('VIP%20Lift%20Website%20Enquiry', body)
+
+    setStatus('Your email application should open with the enquiry. If it does not, use the phone or email options beside the form.')
+    window.location.href = mailtoHref(`VIP Lift Website Enquiry - ${form.inquiryType}`, body)
   }
 
   return (
-    <Stack as="form" gap={4} maxW="720px" onSubmit={handleSubmit}>
-      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
-        <FormField label="Name"><Input name="name" required value={form.name} onChange={handleChange} autoComplete="name" {...fieldStyles} /></FormField>
-        <FormField label="Phone"><Input name="phone" required type="tel" value={form.phone} onChange={handleChange} autoComplete="tel" {...fieldStyles} /></FormField>
-        <FormField label="Email (optional)"><Input name="email" type="email" value={form.email} onChange={handleChange} autoComplete="email" {...fieldStyles} /></FormField>
-        <FormField label="Service needed">
-          <chakra.select name="service" value={form.service} onChange={handleChange} {...fieldStyles}>
-            <option value="">Select a service</option>
-            {services.map((service) => <option key={service.slug} value={service.title}>{service.title}</option>)}
-            <option value="Other">Other</option>
+    <Stack as="form" gap={5} noValidate onSubmit={handleSubmit}>
+      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={5}>
+        <FormField id="contact-name" label="Full name" required error={errors.name}>
+          <Input
+            ref={(node) => { fieldRefs.current.name = node }}
+            id="contact-name"
+            name="name"
+            value={form.name}
+            onChange={handleChange}
+            autoComplete="name"
+            aria-invalid={Boolean(errors.name)}
+            aria-describedby={errors.name ? 'contact-name-error' : undefined}
+            {...fieldStyles}
+          />
+        </FormField>
+        <FormField id="contact-phone" label="Phone number" required error={errors.phone}>
+          <Input
+            ref={(node) => { fieldRefs.current.phone = node }}
+            id="contact-phone"
+            name="phone"
+            type="tel"
+            value={form.phone}
+            onChange={handleChange}
+            autoComplete="tel"
+            aria-invalid={Boolean(errors.phone)}
+            aria-describedby={errors.phone ? 'contact-phone-error' : undefined}
+            {...fieldStyles}
+          />
+        </FormField>
+        <FormField id="contact-email" label="Email address (optional)" error={errors.email}>
+          <Input
+            ref={(node) => { fieldRefs.current.email = node }}
+            id="contact-email"
+            name="email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            autoComplete="email"
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? 'contact-email-error' : undefined}
+            {...fieldStyles}
+          />
+        </FormField>
+        <FormField id="contact-inquiry" label="Inquiry type" required error={errors.inquiryType}>
+          <chakra.select
+            ref={(node) => { fieldRefs.current.inquiryType = node }}
+            id="contact-inquiry"
+            name="inquiryType"
+            value={form.inquiryType}
+            onChange={handleChange}
+            aria-invalid={Boolean(errors.inquiryType)}
+            aria-describedby={errors.inquiryType ? 'contact-inquiry-error' : undefined}
+            {...fieldStyles}
+          >
+            <option value="">Select an inquiry type</option>
+            {contactPage.inquiryOptions.map((option) => <option key={option} value={option}>{option}</option>)}
           </chakra.select>
         </FormField>
+        <FormField id="contact-building" label="Building type (optional)">
+          <chakra.select id="contact-building" name="buildingType" value={form.buildingType} onChange={handleChange} {...fieldStyles}>
+            <option value="">Select a building type</option>
+            {contactPage.buildingTypes.map((option) => <option key={option} value={option}>{option}</option>)}
+          </chakra.select>
+        </FormField>
+        <FormField id="contact-location" label="Location / city (optional)">
+          <Input id="contact-location" name="location" value={form.location} onChange={handleChange} autoComplete="address-level2" {...fieldStyles} />
+        </FormField>
       </Grid>
-      <FormField label="Brief description">
-        <Textarea name="message" rows={4} required value={form.message} onChange={handleChange} minH="120px" resize="vertical" {...fieldStyles} />
+      <FormField id="contact-message" label="Project or lift issue" required error={errors.message}>
+        <Textarea
+          ref={(node) => { fieldRefs.current.message = node }}
+          id="contact-message"
+          name="message"
+          rows={5}
+          value={form.message}
+          onChange={handleChange}
+          minH="160px"
+          resize="vertical"
+          aria-invalid={Boolean(errors.message)}
+          aria-describedby={errors.message ? 'contact-message-error' : undefined}
+          {...fieldStyles}
+        />
       </FormField>
-      <Text color="text.subtle" fontSize="xs">{contact.responseTime}</Text>
-      <Action type="submit" alignSelf="flex-start">Send Enquiry via Email</Action>
+      <Flex direction={{ base: 'column', sm: 'row' }} align={{ base: 'stretch', sm: 'center' }} justify="space-between" gap={4}>
+        <Text color="text.subtle" fontSize="xs">{contact.responseTime} Your email application will be used to send the enquiry.</Text>
+        <Action type="submit" flexShrink="0">Prepare Email Enquiry</Action>
+      </Flex>
+      {status && (
+        <Box p={4} bg="rgba(22,138,85,.08)" borderLeft="3px solid" borderColor="accent.primary" role="status" aria-live="polite">
+          <Text color="text.muted" fontSize="sm">{status}</Text>
+        </Box>
+      )}
     </Stack>
   )
 }
@@ -1030,9 +1164,15 @@ function CustomizeLift() {
                 <Eyebrow>Your details</Eyebrow>
                 <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Where should we send your tailored enquiry?</Heading>
                 <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
-                  <FormField label="Name"><Input required value={contactInfo.name} onChange={(event) => setContactInfo((current) => ({ ...current, name: event.target.value }))} {...fieldStyles} /></FormField>
-                  <FormField label="Phone"><Input required type="tel" value={contactInfo.phone} onChange={(event) => setContactInfo((current) => ({ ...current, phone: event.target.value }))} {...fieldStyles} /></FormField>
-                  <FormField label="Email (optional)"><Input type="email" value={contactInfo.email} onChange={(event) => setContactInfo((current) => ({ ...current, email: event.target.value }))} {...fieldStyles} /></FormField>
+                  <FormField id="customize-name" label="Name" required>
+                    <Input id="customize-name" required value={contactInfo.name} onChange={(event) => setContactInfo((current) => ({ ...current, name: event.target.value }))} {...fieldStyles} />
+                  </FormField>
+                  <FormField id="customize-phone" label="Phone" required>
+                    <Input id="customize-phone" required type="tel" value={contactInfo.phone} onChange={(event) => setContactInfo((current) => ({ ...current, phone: event.target.value }))} {...fieldStyles} />
+                  </FormField>
+                  <FormField id="customize-email" label="Email (optional)">
+                    <Input id="customize-email" type="email" value={contactInfo.email} onChange={(event) => setContactInfo((current) => ({ ...current, email: event.target.value }))} {...fieldStyles} />
+                  </FormField>
                 </Grid>
                 <Box p={5} bg="bg.canvas"><Eyebrow>Your selections</Eyebrow><Box mt={4}><ProofList items={customizeLiftSteps.map((item) => `${item.title}: ${answers[item.id]}`)} /></Box></Box>
                 <ButtonRow>
@@ -1054,12 +1194,14 @@ function CustomizeLift() {
   )
 }
 
-function ContactCard({ href, label, children }) {
+function ContactCard({ href, label, children, external = false, ...props }) {
   const styles = {
-    display: 'grid',
-    gap: 2,
-    minH: '160px',
-    p: 6,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: 1.5,
+    minH: '88px',
+    p: 4,
     bg: 'bg.surface',
     color: 'text.primary',
     border: '1px solid',
@@ -1067,33 +1209,219 @@ function ContactCard({ href, label, children }) {
     borderRadius: 'card',
     transition: 'background-color 180ms, border-color 180ms',
     _hover: href ? { bg: 'bg.canvas', borderColor: 'border.strong' } : undefined,
+    ...props,
   }
-  const content = <><Text color="text.subtle">{label}</Text><Text fontSize="lg" fontWeight="500" lineHeight="1.3">{children}</Text></>
-  return href ? <chakra.a href={href} {...styles}>{content}</chakra.a> : <Box {...styles}>{content}</Box>
+  const content = <><Text color="text.subtle" fontSize="xs">{label}</Text><Text fontSize="md" fontWeight="500" lineHeight="1.35">{children}</Text></>
+  return href
+    ? <chakra.a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} {...styles}>{content}</chakra.a>
+    : <Box {...styles}>{content}</Box>
+}
+
+function ContactHero({ onSelectInquiry }) {
+  return (
+    <Grid
+      as="section"
+      position="relative"
+      minH={{ base: '78svh', md: '72svh' }}
+      alignItems="center"
+      px={{ base: 5, md: 10, lg: 16 }}
+      pt={{ base: '140px', md: '164px' }}
+      pb={{ base: 14, md: 16 }}
+      overflow="hidden"
+      bg="bg.deep"
+      color="text.inverse"
+      backgroundImage={`linear-gradient(90deg, rgba(2,8,20,.86), rgba(2,8,20,.3)), url(${images.commercialLift})`}
+      backgroundSize="cover"
+      backgroundPosition="center"
+    >
+      <Box
+        position="absolute"
+        inset={{ base: 'auto -30% -38% 30%', md: '-12% 8% -40% 48%' }}
+        h={{ base: '520px', md: '760px' }}
+        bgImage={`url(${images.architecturalPattern})`}
+        bgSize="contain"
+        bgRepeat="no-repeat"
+        opacity="0.12"
+        aria-hidden="true"
+      />
+      <Stack position="relative" zIndex="1" alignItems="flex-start" gap={6} maxW="850px" textAlign="left">
+        <Eyebrow color="vip.platinum">{contactPage.hero.eyebrow}</Eyebrow>
+        <Heading as="h1" textStyle="hero">{contactPage.hero.title}</Heading>
+        <Text maxW="740px" color="rgba(255,255,255,.9)" fontSize={{ base: 'md', md: 'lg' }}>
+          {contactPage.hero.summary}
+        </Text>
+        <ButtonRow justify="flex-start">
+          <Action onClick={() => onSelectInquiry('New lift project')}>Request a Quote</Action>
+          <Action onClick={() => onSelectInquiry('Site inspection')} variant="inverse">Book an Inspection</Action>
+        </ButtonRow>
+        <Text maxW="580px" color="vip.platinum" fontSize="sm">
+          {contactPage.hero.helper}
+        </Text>
+      </Stack>
+    </Grid>
+  )
+}
+
+function InquiryCard({ item, selected, onSelect }) {
+  return (
+    <Stack
+      as="button"
+      type="button"
+      alignItems="stretch"
+      gap={5}
+      minH="240px"
+      p={6}
+      bg={selected ? 'bg.dark' : 'bg.surface'}
+      color={selected ? 'text.inverse' : 'text.primary'}
+      border="1px solid"
+      borderColor={selected ? 'bg.dark' : 'border.subtle'}
+      borderRadius="card"
+      textAlign="left"
+      cursor="pointer"
+      transition="background-color 180ms, border-color 180ms, color 180ms"
+      onClick={() => onSelect(item.value)}
+      aria-pressed={selected}
+      _hover={{ borderColor: selected ? 'bg.dark' : 'accent.primary' }}
+    >
+      <Text color="accent.primary" fontFamily="label" fontSize="xs" fontWeight="600">{item.number}</Text>
+      <Heading as="h3" fontFamily="body" fontSize="lg" fontWeight="600" lineHeight="1.25">{item.title}</Heading>
+      <Text mt="auto" color={selected ? 'vip.platinum' : 'text.muted'} fontSize="sm">{item.summary}</Text>
+    </Stack>
+  )
+}
+
+function ContactNextSteps() {
+  return (
+    <Box as="section" bg="bg.dark" color="text.inverse">
+      <Box maxW="content" mx="auto" {...sectionStyles}>
+        <Stack gap={4} maxW="720px" mb={{ base: 10, md: 14 }}>
+          <Eyebrow color="vip.platinum">What happens next</Eyebrow>
+          <Heading as="h2" textStyle="sectionTitle">
+            A clear path from enquiry to the right next step.
+          </Heading>
+        </Stack>
+        <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap="1px" bg="rgba(255,255,255,.16)">
+          {contactPage.nextSteps.map((item) => (
+            <Stack as="article" key={item.step} gap={4} p={{ base: 6, md: 8 }} bg="bg.dark">
+              <Text color="accent.primary" fontFamily="label" fontSize="xs" fontWeight="600">{item.step}</Text>
+              <Heading as="h3" fontFamily="body" fontSize="lg" fontWeight="600">{item.title}</Heading>
+              <Text color="vip.platinum">{item.summary}</Text>
+            </Stack>
+          ))}
+        </Grid>
+      </Box>
+    </Box>
+  )
 }
 
 function Contact() {
+  const [selectedInquiry, setSelectedInquiry] = useState('')
+
+  function selectInquiry(value) {
+    setSelectedInquiry(value)
+    const formSection = document.getElementById('contact-form')
+    if (!formSection) return
+    window.scrollTo({
+      top: formSection.offsetTop - 96,
+      behavior: 'smooth',
+    })
+  }
+
   return (
-    <PageShell>
-      <PageHero data={pageHeroes.contact} />
-      <Grid as="section" templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4} {...sectionStyles}>
-        <ContactCard href={contact.phoneHref} label="Phone">{contact.phone}</ContactCard>
-        {featureFlags.whatsapp && <ContactCard href={contact.whatsappHref} label="WhatsApp">Message VIP Lift</ContactCard>}
-        <ContactCard href={`mailto:${contact.email}`} label="Email">{contact.email}</ContactCard>
-        {featureFlags.calendly && <ContactCard href={contact.calendlyHref} label="Consultation">{contact.calendlyLabel}</ContactCard>}
-        <ContactCard href={contact.mapHref} label="Address">{contact.address}</ContactCard>
-        <ContactCard label="Working hours">{contact.hours}</ContactCard>
-      </Grid>
-      <Box as="section" bg="bg.canvas" {...sectionStyles}>
-        <SectionHeading eyebrow="Send an enquiry" title="Tell us about your project." />
-        <ContactForm />
+    <PageShell overHero showInquiryBar={false}>
+      <ContactHero onSelectInquiry={selectInquiry} />
+
+      <Box
+        as="section"
+        maxW="content"
+        mx="auto"
+        px={{ base: 5, md: 10, lg: 16 }}
+        pt={{ base: 18, md: 24, lg: 28 }}
+        pb={{ base: 14, md: 20, lg: 22 }}
+      >
+        <SectionHeading
+          eyebrow="How can we help?"
+          title="Choose the inquiry path that best matches your need."
+        >
+          <Text color="text.muted">
+            Your selection will be carried into the enquiry form, where you can add the building and project details.
+          </Text>
+        </SectionHeading>
+        <Grid templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', xl: 'repeat(4, 1fr)' }} gap={4}>
+          {contactPage.inquiries.map((item) => (
+            <InquiryCard
+              key={item.value}
+              item={item}
+              selected={selectedInquiry === item.value}
+              onSelect={selectInquiry}
+            />
+          ))}
+        </Grid>
       </Box>
-      <Box id="faq" {...sectionStyles}><FaqSection nested /></Box>
+
+      <Box id="contact-form" as="section" scrollMarginTop="110px" bg="bg.canvas">
+        <Grid
+          maxW="content"
+          mx="auto"
+          templateColumns={{ base: '1fr', lg: '.82fr 1.18fr' }}
+          gap={{ base: 10, lg: 12 }}
+          alignItems="start"
+          px={{ base: 5, md: 10, lg: 16 }}
+          py={{ base: 14, md: 20, lg: 22 }}
+        >
+          <Stack gap={6}>
+            <Stack gap={4}>
+              <Eyebrow>Contact and support</Eyebrow>
+              <Heading as="h2" textStyle="sectionTitle">Let’s understand the right next step.</Heading>
+              <Text color="text.muted">
+                Whether you are planning a lift, requesting an inspection, or need support for an existing system, share the key details and our team will follow up.
+              </Text>
+            </Stack>
+            <Grid templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(2, 1fr)' }} gap={3}>
+              <ContactCard href={contact.phoneHref} label="Call our Lagos office">{contact.phone}</ContactCard>
+              <ContactCard href={`mailto:${contact.email}`} label="Email VIP Lift">{contact.email}</ContactCard>
+              {featureFlags.whatsapp && <ContactCard href={contact.whatsappHref} label="WhatsApp">Message VIP Lift</ContactCard>}
+              {featureFlags.calendly && <ContactCard href={contact.calendlyHref} label="Consultation" external>{contact.calendlyLabel}</ContactCard>}
+              <ContactCard gridColumn={{ sm: 'span 2' }} href={contact.mapHref} label="Visit or view location" external>{contact.address}</ContactCard>
+              <ContactCard gridColumn={{ sm: 'span 2' }} label="Working hours">{contact.hours}</ContactCard>
+            </Grid>
+            <Box p={5} bg="bg.dark" color="text.inverse" borderRadius="card">
+              <Eyebrow color="vip.platinum">Existing lift support</Eyebrow>
+              <Text mt={4} color="vip.platinum">
+                Include the building type, location, visible fault or service issue, and how urgently support is needed.
+              </Text>
+            </Box>
+          </Stack>
+
+          <Box p={{ base: 6, md: 8 }} bg="bg.surface" border="1px solid" borderColor="border.subtle" borderRadius="panel">
+            <Stack gap={3} mb={8}>
+              <Eyebrow>Send an enquiry</Eyebrow>
+              <Heading as="h2" fontSize={{ base: '3xl', md: '4xl' }} {...headingStyles}>Tell us about the building or lift issue.</Heading>
+              <Text color="text.muted">
+                Share a few details and we will prepare the enquiry for your email application.
+              </Text>
+            </Stack>
+            <ContactForm selectedInquiry={selectedInquiry} />
+          </Box>
+        </Grid>
+      </Box>
+
+      <ContactNextSteps />
+      <Box
+        id="faq"
+        px={{ base: 5, md: 10, lg: 16 }}
+        pt={{ base: 16, md: 24, lg: 28 }}
+        pb={{ base: 8, md: 10 }}
+      >
+        <FaqSection nested />
+      </Box>
       <CtaBand
-        eyebrow="Request information"
-        title="Looking for a lift solution for your home or business?"
-        primary={<Action href={`mailto:${contact.email}?subject=VIP%20Lift%20Information%20Pack`}>Request Your Free Information Pack</Action>}
-        secondary={<Action href={contact.phoneHref} variant="secondary">Call for a Site Visit</Action>}
+        eyebrow="Prefer to speak directly?"
+        title="Talk through your project or service requirement with VIP Lift."
+        description="Call our Lagos office or prepare a structured email enquiry using the form above."
+        primary={<Action href={contact.phoneHref}>Speak to a Lift Specialist</Action>}
+        secondary={<Action onClick={() => selectInquiry('General enquiry')} variant="secondary">Send an Enquiry</Action>}
+        py={{ base: 8, md: 10 }}
       />
     </PageShell>
   )
