@@ -45,6 +45,7 @@ import {
   serviceAreas,
   services,
   solutionGuide,
+  testimonials,
 } from './data/siteContent.js'
 
 const RouterLink = chakra(ReactRouterLink)
@@ -532,6 +533,223 @@ function FaqSection({ limit, nested = false }) {
   )
 }
 
+const trustBullets = [
+  'Supply, installation, repairs, servicing, and maintenance',
+  'Support for residential and commercial lift needs',
+  'Local service partner for selected international lift systems',
+]
+
+function TestimonialSection() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [previewIndex, setPreviewIndex] = useState(null)
+  const [quoteBlurred, setQuoteBlurred] = useState(false)
+  const transitionTimeoutRef = useRef(null)
+  const active = testimonials[activeIndex]
+
+  useEffect(() => () => window.clearTimeout(transitionTimeoutRef.current), [])
+
+  function handleSelect(index) {
+    if (index === activeIndex) return
+    window.clearTimeout(transitionTimeoutRef.current)
+    setQuoteBlurred(true)
+    transitionTimeoutRef.current = window.setTimeout(() => {
+      setActiveIndex(index)
+      setQuoteBlurred(false)
+    }, 170)
+  }
+
+  return (
+    <Box as="section" bg="bg.deep" color="text.inverse" position="relative" overflow="hidden" {...sectionStyles}>
+      <Box
+        aria-hidden="true"
+        position="absolute"
+        inset="0"
+        bg="radial-gradient(circle at 50% 10%, rgba(22,138,85,.16), transparent 34%)"
+        pointerEvents="none"
+      />
+      <Stack
+        position="relative"
+        maxW="content"
+        mx="auto"
+        gap={{ base: 9, md: 12 }}
+        alignItems="center"
+        textAlign="center"
+      >
+        <Box
+          position="relative"
+          maxW="980px"
+          px={{ base: 0, md: 8 }}
+        >
+          <Text
+            aria-hidden="true"
+            position="absolute"
+            top={{ base: '-26px', md: '-44px' }}
+            left={{ base: '-4px', md: '-34px' }}
+            color="rgba(255,255,255,.055)"
+            fontFamily="heading"
+            fontSize={{ base: '7xl', md: '9xl' }}
+            lineHeight="1"
+          >
+            &ldquo;
+          </Text>
+          <Text
+            aria-hidden="true"
+            position="absolute"
+            right={{ base: '-4px', md: '-34px' }}
+            bottom={{ base: '4px', md: '-22px' }}
+            color="rgba(255,255,255,.055)"
+            fontFamily="heading"
+            fontSize={{ base: '7xl', md: '9xl' }}
+            lineHeight="1"
+          >
+            &rdquo;
+          </Text>
+          <Stack
+            as="blockquote"
+            gap={{ base: 5, md: 7 }}
+            m={0}
+            key={active.id}
+            opacity={quoteBlurred ? 0.38 : 1}
+            filter={quoteBlurred ? 'blur(8px)' : 'blur(0)'}
+            transform={quoteBlurred ? 'translateY(6px) scale(.99)' : 'translateY(0) scale(1)'}
+            transition="opacity 180ms ease, filter 180ms ease, transform 180ms ease"
+          >
+            <Heading
+              as="h2"
+              fontFamily="body"
+              fontWeight="400"
+              fontSize={{ base: '3xl', md: '5xl', lg: '6xl' }}
+              lineHeight={{ base: '1.12', md: '1.08' }}
+              letterSpacing="-0.04em"
+              color="rgba(255,255,255,.94)"
+            >
+              {active.quote}
+            </Heading>
+            <Text color="rgba(255,255,255,.58)" textStyle="label" letterSpacing="0.28em">
+              {active.type} · {active.role}
+            </Text>
+          </Stack>
+        </Box>
+
+        <Flex
+          gap={{ base: 2.5, md: 3 }}
+          flexWrap="wrap"
+          justify="center"
+          role="group"
+          aria-label="Select testimonial"
+        >
+          {testimonials.map((item, index) => {
+            const isActive = index === activeIndex
+            const isPreviewed = previewIndex === index && !isActive
+            const isOpen = isActive || isPreviewed
+            return (
+              <Button
+                key={item.id}
+                onClick={() => handleSelect(index)}
+                onMouseEnter={() => setPreviewIndex(index)}
+                onMouseLeave={() => setPreviewIndex(null)}
+                onFocus={() => setPreviewIndex(index)}
+                onBlur={() => setPreviewIndex(null)}
+                aria-label={`View testimonial from ${item.author}`}
+                aria-pressed={isActive}
+                minH="56px"
+                minW="56px"
+                w={isOpen ? { base: 'auto', md: '250px' } : '56px'}
+                px={isOpen ? { base: 2, md: 2.5 } : 0}
+                borderRadius="999px"
+                bg={isActive ? 'surface.light' : isPreviewed ? 'rgba(255,255,255,.16)' : 'rgba(255,255,255,.07)'}
+                color={isActive ? 'text.primary' : isPreviewed ? 'vip.platinum' : 'rgba(255,255,255,.62)'}
+                border="1px solid"
+                borderColor={isActive ? 'rgba(255,255,255,.86)' : isPreviewed ? 'rgba(255,255,255,.24)' : 'rgba(255,255,255,.1)'}
+                boxShadow={isActive ? '0 18px 38px rgba(0,0,0,.26)' : 'none'}
+                fontFamily="label"
+                fontSize="sm"
+                fontWeight="700"
+                overflow="hidden"
+                transition="width 220ms ease, padding 220ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease"
+                _hover={{
+                  bg: isActive ? 'surface.light' : 'rgba(255,255,255,.16)',
+                  color: isActive ? 'text.primary' : 'vip.platinum',
+                  borderColor: isActive ? 'rgba(255,255,255,.86)' : 'rgba(255,255,255,.24)',
+                }}
+                _focusVisible={{
+                  outline: '3px solid',
+                  outlineColor: 'focus.ring',
+                  outlineOffset: '3px',
+                }}
+              >
+                <Flex alignItems="center" gap={3} minW="0">
+                  <Flex
+                    alignItems="center"
+                    justifyContent="center"
+                    flexShrink={0}
+                    w="42px"
+                    h="42px"
+                    borderRadius="full"
+                    bg={isActive ? 'vip.platinum' : 'rgba(255,255,255,.12)'}
+                    border="1px solid"
+                    borderColor={isActive ? 'rgba(2,8,20,.12)' : 'rgba(255,255,255,.14)'}
+                    color={isActive ? 'text.primary' : 'vip.platinum'}
+                    fontSize="xs"
+                  >
+                    {item.initials}
+                  </Flex>
+                  <Text
+                    as="span"
+                    display={isOpen ? 'block' : 'none'}
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    opacity={isOpen ? 1 : 0}
+                    transform={isOpen ? 'translateX(0)' : 'translateX(-6px)'}
+                    transition="opacity 180ms ease, transform 180ms ease"
+                  >
+                    {item.author}
+                  </Text>
+                </Flex>
+              </Button>
+            )
+          })}
+        </Flex>
+
+        <Stack gap={4} alignItems="center" maxW="840px">
+          <Eyebrow color="vip.platinum">Client Confidence</Eyebrow>
+          <Grid as="ul" templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={3} m={0} p={0} listStyleType="none">
+            {trustBullets.map((bullet) => (
+              <Flex
+                as="li"
+                key={bullet}
+                alignItems="center"
+                justifyContent="center"
+                gap={2}
+                px={4}
+                py={3}
+                border="1px solid"
+                borderColor="rgba(255,255,255,.1)"
+                borderRadius="button"
+                color="rgba(255,255,255,.68)"
+                fontSize="xs"
+              >
+                <Box flexShrink={0} w="5px" h="5px" borderRadius="full" bg="accent.primary" />
+                <Text>{bullet}</Text>
+              </Flex>
+            ))}
+          </Grid>
+          {featureFlags.googleReviews && (
+            <TextLink
+              href={contact.googleBusinessHref}
+              color="vip.platinum"
+              _hover={{ color: 'white', textDecoration: 'underline' }}
+            >
+              Read our Google reviews
+            </TextLink>
+          )}
+        </Stack>
+      </Stack>
+    </Box>
+  )
+}
+
 const fieldStyles = {
   w: 'full',
   minH: '48px',
@@ -896,6 +1114,7 @@ function Home() {
       <ProcessStrip />
       <ProofSection />
       <MaintenanceSection />
+      <TestimonialSection />
       <FaqSection limit={5} />
       <CtaBand
         eyebrow="Start a conversation"

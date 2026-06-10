@@ -282,6 +282,39 @@ export const certifications = [
   { label: 'Long-term care', detail: 'Servicing and maintenance after installation' },
 ]
 
+export const testimonials = [
+  {
+    id: 'property-manager',
+    quote:
+      'VIP Lift helped us think beyond installation and plan for long-term servicing, maintenance, and tenant reliability.',
+    author: 'Property Management Client',
+    role: 'Residential building support',
+    type: 'Maintenance',
+    initials: 'PM',
+    // TODO: Replace this placeholder with a real approved testimonial, name, and role.
+  },
+  {
+    id: 'homeowner',
+    quote:
+      'The team made the lift selection process clearer, especially around space, comfort, and ongoing support after installation.',
+    author: 'Private Home Client',
+    role: 'Home lift / platform lift enquiry',
+    type: 'Residential',
+    initials: 'HC',
+    // TODO: Replace this placeholder with a real approved testimonial, name, and role.
+  },
+  {
+    id: 'developer',
+    quote:
+      'For our project, the biggest value was having a local partner who understood both lift supply and service requirements.',
+    author: 'Development Client',
+    role: 'Commercial lift planning',
+    type: 'Commercial',
+    initials: 'DC',
+    // TODO: Replace this placeholder with a real approved testimonial, name, and role.
+  },
+]
+
 export const serviceAreas = [
   'Lagos Island',
   'Victoria Island',
