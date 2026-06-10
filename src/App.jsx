@@ -541,123 +541,211 @@ const trustBullets = [
 
 function TestimonialSection() {
   const [activeIndex, setActiveIndex] = useState(0)
+  const [previewIndex, setPreviewIndex] = useState(null)
+  const [quoteBlurred, setQuoteBlurred] = useState(false)
+  const transitionTimeoutRef = useRef(null)
   const active = testimonials[activeIndex]
 
+  useEffect(() => () => window.clearTimeout(transitionTimeoutRef.current), [])
+
+  function handleSelect(index) {
+    if (index === activeIndex) return
+    window.clearTimeout(transitionTimeoutRef.current)
+    setQuoteBlurred(true)
+    transitionTimeoutRef.current = window.setTimeout(() => {
+      setActiveIndex(index)
+      setQuoteBlurred(false)
+    }, 170)
+  }
+
   return (
-    <Box as="section" bg="bg.deep" color="text.inverse" {...sectionStyles}>
-      <Grid
+    <Box as="section" bg="bg.deep" color="text.inverse" position="relative" overflow="hidden" {...sectionStyles}>
+      <Box
+        aria-hidden="true"
+        position="absolute"
+        inset="0"
+        bg="radial-gradient(circle at 50% 10%, rgba(22,138,85,.16), transparent 34%)"
+        pointerEvents="none"
+      />
+      <Stack
+        position="relative"
         maxW="content"
         mx="auto"
-        templateColumns={{ base: '1fr', lg: '0.9fr 1.1fr' }}
-        gap={{ base: 10, lg: 20 }}
+        gap={{ base: 9, md: 12 }}
         alignItems="center"
+        textAlign="center"
       >
-        <Stack gap={5}>
-          <Eyebrow color="vip.platinum">Client Confidence</Eyebrow>
-          <Heading as="h2" textStyle="sectionTitle" color="text.inverse">
-            Trusted for the full life of the lift
-          </Heading>
-          <Text maxW="620px" color="rgba(255,255,255,.78)">
-            From initial supply and installation to repairs, servicing, and maintenance, VIP Lift
-            Nigeria is built to support lift systems long after handover.
-          </Text>
-          <Stack as="ul" gap={2.5} m={0} p={0} listStyleType="none" mt={1}>
-            {trustBullets.map((bullet) => (
-              <Flex as="li" key={bullet} alignItems="flex-start" gap={2.5}>
-                <Box flexShrink={0} mt="10px" w="6px" h="6px" borderRadius="full" bg="accent.primary" />
-                <Text fontSize="sm" color="rgba(255,255,255,.78)">{bullet}</Text>
-              </Flex>
-            ))}
-          </Stack>
-          {featureFlags.googleReviews && (
-            <Box>
-              <TextLink
-                href={contact.googleBusinessHref}
-                color="vip.platinum"
-                _hover={{ color: 'white', textDecoration: 'underline' }}
-              >
-                Read our Google reviews
-              </TextLink>
-            </Box>
-          )}
-        </Stack>
-
         <Box
-          borderWidth="1px"
-          borderColor="rgba(255,255,255,.14)"
-          borderRadius="panel"
-          p={{ base: 6, md: 10 }}
-          bg="rgba(255,255,255,.06)"
-          boxShadow="0 28px 80px rgba(0,0,0,.22)"
+          position="relative"
+          maxW="980px"
+          px={{ base: 0, md: 8 }}
         >
-          <Box
+          <Text
+            aria-hidden="true"
+            position="absolute"
+            top={{ base: '-26px', md: '-44px' }}
+            left={{ base: '-4px', md: '-34px' }}
+            color="rgba(255,255,255,.055)"
+            fontFamily="heading"
+            fontSize={{ base: '7xl', md: '9xl' }}
+            lineHeight="1"
+          >
+            &ldquo;
+          </Text>
+          <Text
+            aria-hidden="true"
+            position="absolute"
+            right={{ base: '-4px', md: '-34px' }}
+            bottom={{ base: '4px', md: '-22px' }}
+            color="rgba(255,255,255,.055)"
+            fontFamily="heading"
+            fontSize={{ base: '7xl', md: '9xl' }}
+            lineHeight="1"
+          >
+            &rdquo;
+          </Text>
+          <Stack
             as="blockquote"
+            gap={{ base: 5, md: 7 }}
             m={0}
             key={active.id}
-            style={{ transition: 'opacity 180ms ease' }}
+            opacity={quoteBlurred ? 0.38 : 1}
+            filter={quoteBlurred ? 'blur(8px)' : 'blur(0)'}
+            transform={quoteBlurred ? 'translateY(6px) scale(.99)' : 'translateY(0) scale(1)'}
+            transition="opacity 180ms ease, filter 180ms ease, transform 180ms ease"
           >
-            <Text
-              fontFamily="heading"
-              fontSize={{ base: '2xl', md: '4xl' }}
+            <Heading
+              as="h2"
+              fontFamily="body"
+              fontWeight="400"
+              fontSize={{ base: '3xl', md: '5xl', lg: '6xl' }}
+              lineHeight={{ base: '1.12', md: '1.08' }}
+              letterSpacing="-0.04em"
               color="rgba(255,255,255,.94)"
-              fontStyle="italic"
-              lineHeight="1.18"
-              mb={8}
             >
-              &ldquo;{active.quote}&rdquo;
+              {active.quote}
+            </Heading>
+            <Text color="rgba(255,255,255,.58)" textStyle="label" letterSpacing="0.28em">
+              {active.type} · {active.role}
             </Text>
-            <Stack as="footer" gap={1}>
-              <Text fontWeight="600" color="text.inverse">{active.author}</Text>
-              <Text fontSize="sm" color="rgba(255,255,255,.68)">{active.role}</Text>
-              <Text
-                color="accent.primary"
-                textStyle="label"
-              >
-                {active.type}
-              </Text>
-            </Stack>
-          </Box>
-
-          <Flex gap={3} mt={8} flexWrap="wrap" role="group" aria-label="Select testimonial">
-            {testimonials.map((item, index) => {
-              const isActive = index === activeIndex
-              return (
-                <Button
-                  key={item.id}
-                  onClick={() => setActiveIndex(index)}
-                  aria-label={`View testimonial from ${item.author}`}
-                  aria-pressed={isActive}
-                  minW="44px"
-                  minH="44px"
-                  w="44px"
-                  h="44px"
-                  p={0}
-                  borderRadius="full"
-                  bg={isActive ? 'accent.primary' : 'rgba(255,255,255,.08)'}
-                  color={isActive ? 'text.inverse' : 'vip.platinum'}
-                  border="1px solid"
-                  borderColor={isActive ? 'accent.primary' : 'rgba(255,255,255,.18)'}
-                  fontFamily="label"
-                  fontSize="xs"
-                  fontWeight="700"
-                  transition="background-color 180ms ease, border-color 180ms ease, color 180ms ease"
-                  _hover={{
-                    bg: isActive ? 'accent.strong' : 'rgba(255,255,255,.14)',
-                    borderColor: isActive ? 'accent.strong' : 'rgba(255,255,255,.32)',
-                  }}
-                  _focusVisible={{
-                    outline: '3px solid',
-                    outlineColor: 'focus.ring',
-                    outlineOffset: '3px',
-                  }}
-                >
-                  {item.initials}
-                </Button>
-              )
-            })}
-          </Flex>
+          </Stack>
         </Box>
-      </Grid>
+
+        <Flex
+          gap={{ base: 2.5, md: 3 }}
+          flexWrap="wrap"
+          justify="center"
+          role="group"
+          aria-label="Select testimonial"
+        >
+          {testimonials.map((item, index) => {
+            const isActive = index === activeIndex
+            const isPreviewed = previewIndex === index && !isActive
+            const isOpen = isActive || isPreviewed
+            return (
+              <Button
+                key={item.id}
+                onClick={() => handleSelect(index)}
+                onMouseEnter={() => setPreviewIndex(index)}
+                onMouseLeave={() => setPreviewIndex(null)}
+                onFocus={() => setPreviewIndex(index)}
+                onBlur={() => setPreviewIndex(null)}
+                aria-label={`View testimonial from ${item.author}`}
+                aria-pressed={isActive}
+                minH="56px"
+                minW="56px"
+                w={isOpen ? { base: 'auto', md: '250px' } : '56px'}
+                px={isOpen ? { base: 2, md: 2.5 } : 0}
+                borderRadius="999px"
+                bg={isActive ? 'surface.light' : isPreviewed ? 'rgba(255,255,255,.16)' : 'rgba(255,255,255,.07)'}
+                color={isActive ? 'text.primary' : isPreviewed ? 'vip.platinum' : 'rgba(255,255,255,.62)'}
+                border="1px solid"
+                borderColor={isActive ? 'rgba(255,255,255,.86)' : isPreviewed ? 'rgba(255,255,255,.24)' : 'rgba(255,255,255,.1)'}
+                boxShadow={isActive ? '0 18px 38px rgba(0,0,0,.26)' : 'none'}
+                fontFamily="label"
+                fontSize="sm"
+                fontWeight="700"
+                overflow="hidden"
+                transition="width 220ms ease, padding 220ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease"
+                _hover={{
+                  bg: isActive ? 'surface.light' : 'rgba(255,255,255,.16)',
+                  color: isActive ? 'text.primary' : 'vip.platinum',
+                  borderColor: isActive ? 'rgba(255,255,255,.86)' : 'rgba(255,255,255,.24)',
+                }}
+                _focusVisible={{
+                  outline: '3px solid',
+                  outlineColor: 'focus.ring',
+                  outlineOffset: '3px',
+                }}
+              >
+                <Flex alignItems="center" gap={3} minW="0">
+                  <Flex
+                    alignItems="center"
+                    justifyContent="center"
+                    flexShrink={0}
+                    w="42px"
+                    h="42px"
+                    borderRadius="full"
+                    bg={isActive ? 'vip.platinum' : 'rgba(255,255,255,.12)'}
+                    border="1px solid"
+                    borderColor={isActive ? 'rgba(2,8,20,.12)' : 'rgba(255,255,255,.14)'}
+                    color={isActive ? 'text.primary' : 'vip.platinum'}
+                    fontSize="xs"
+                  >
+                    {item.initials}
+                  </Flex>
+                  <Text
+                    as="span"
+                    display={isOpen ? 'block' : 'none'}
+                    whiteSpace="nowrap"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    opacity={isOpen ? 1 : 0}
+                    transform={isOpen ? 'translateX(0)' : 'translateX(-6px)'}
+                    transition="opacity 180ms ease, transform 180ms ease"
+                  >
+                    {item.author}
+                  </Text>
+                </Flex>
+              </Button>
+            )
+          })}
+        </Flex>
+
+        <Stack gap={4} alignItems="center" maxW="840px">
+          <Eyebrow color="vip.platinum">Client Confidence</Eyebrow>
+          <Grid as="ul" templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={3} m={0} p={0} listStyleType="none">
+            {trustBullets.map((bullet) => (
+              <Flex
+                as="li"
+                key={bullet}
+                alignItems="center"
+                justifyContent="center"
+                gap={2}
+                px={4}
+                py={3}
+                border="1px solid"
+                borderColor="rgba(255,255,255,.1)"
+                borderRadius="button"
+                color="rgba(255,255,255,.68)"
+                fontSize="xs"
+              >
+                <Box flexShrink={0} w="5px" h="5px" borderRadius="full" bg="accent.primary" />
+                <Text>{bullet}</Text>
+              </Flex>
+            ))}
+          </Grid>
+          {featureFlags.googleReviews && (
+            <TextLink
+              href={contact.googleBusinessHref}
+              color="vip.platinum"
+              _hover={{ color: 'white', textDecoration: 'underline' }}
+            >
+              Read our Google reviews
+            </TextLink>
+          )}
+        </Stack>
+      </Stack>
     </Box>
   )
 }
