@@ -1,5 +1,25 @@
 import { useEffect, useState } from 'react'
-import { Link, NavLink, Route, Routes, useLocation, useParams } from 'react-router-dom'
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Heading,
+  Image,
+  Input,
+  Stack,
+  Text,
+  Textarea,
+  chakra,
+} from '@chakra-ui/react'
+import {
+  Link as ReactRouterLink,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+} from 'react-router-dom'
 import {
   audiences,
   brand,
@@ -24,6 +44,9 @@ import {
   testimonials,
 } from './data/siteContent.js'
 
+const RouterLink = chakra(ReactRouterLink)
+const RouterNavLink = chakra(NavLink)
+
 const pageMeta = {
   '/': ['VIP Lift Nigeria | Modern Lift Solutions', 'Premium lift solutions for homes, public buildings, and commercial spaces in Nigeria.'],
   '/about': ['About VIP Lift Nigeria', 'Learn how VIP Lift supports architects, contractors, and building owners with lift engineering services.'],
@@ -38,12 +61,37 @@ const pageMeta = {
   '/services/maintenance': ['Lift Maintenance | VIP Lift Nigeria', 'After-sales maintenance for Cibes platform lifts and Italian MRL installations.'],
 }
 
+const sectionStyles = {
+  px: { base: 5, md: 10, lg: 18 },
+  py: { base: 16, md: 20, lg: 30 },
+}
+
+const headingStyles = {
+  fontFamily: 'heading',
+  fontWeight: '500',
+  lineHeight: '1.2',
+  letterSpacing: 'normal',
+}
+
+const actionStyles = {
+  alignItems: 'center',
+  justifyContent: 'center',
+  minH: '40px',
+  minW: { base: '100%', sm: '200px' },
+  px: 4,
+  border: '3px solid transparent',
+  borderRadius: 'control',
+  fontSize: 'sm',
+  fontWeight: '500',
+  lineHeight: '1',
+  textAlign: 'center',
+  transition: 'background-color 0.33s, border-color 0.33s, color 0.33s',
+}
+
 function getPageMeta(pathname) {
   if (pathname.startsWith('/projects/')) {
     const project = getProjectBySlug(pathname.replace('/projects/', ''))
-    if (project) {
-      return [`${project.title} | VIP Lift Nigeria`, project.summary]
-    }
+    if (project) return [`${project.title} | VIP Lift Nigeria`, project.summary]
   }
   return pageMeta[pathname] ?? pageMeta['/']
 }
@@ -64,29 +112,26 @@ function SchemaMarkup() {
   const { pathname } = useLocation()
 
   useEffect(() => {
-    const existing = document.getElementById('page-schema')
-    existing?.remove()
+    document.getElementById('page-schema')?.remove()
 
-    const schemas = [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'LocalBusiness',
-        name: 'VIP Lift Nigeria',
-        description: 'Premium lift supply, installation, and maintenance for homes and businesses in Nigeria.',
-        url: window.location.origin,
-        telephone: contact.phone,
-        email: contact.email,
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: 'Suite 1910, 19th Floor, 8/10 Broad Street, Western House',
-          addressLocality: 'Lagos Island',
-          addressRegion: 'Lagos',
-          addressCountry: 'NG',
-        },
-        openingHours: 'Mo-Fr 08:00-17:00',
-        areaServed: serviceAreas.map((area) => ({ '@type': 'Place', name: area })),
+    const schemas = [{
+      '@context': 'https://schema.org',
+      '@type': 'LocalBusiness',
+      name: 'VIP Lift Nigeria',
+      description: 'Premium lift supply, installation, and maintenance for homes and businesses in Nigeria.',
+      url: window.location.origin,
+      telephone: contact.phone,
+      email: contact.email,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Suite 1910, 19th Floor, 8/10 Broad Street, Western House',
+        addressLocality: 'Lagos Island',
+        addressRegion: 'Lagos',
+        addressCountry: 'NG',
       },
-    ]
+      openingHours: 'Mo-Fr 08:00-17:00',
+      areaServed: serviceAreas.map((area) => ({ '@type': 'Place', name: area })),
+    }]
 
     if (pathname === '/' || pathname === '/contact') {
       schemas.push({
@@ -105,11 +150,100 @@ function SchemaMarkup() {
     script.type = 'application/ld+json'
     script.textContent = JSON.stringify(schemas.length === 1 ? schemas[0] : schemas)
     document.head.appendChild(script)
-
     return () => script.remove()
   }, [pathname])
 
   return null
+}
+
+function Eyebrow({ children, color = 'vip.pewter', ...props }) {
+  return (
+    <Text color={color} fontSize="sm" fontWeight="500" {...props}>
+      {children}
+    </Text>
+  )
+}
+
+function TextLink({ to, href, children, ...props }) {
+  const styles = {
+    color: 'vip.pewter',
+    fontSize: 'sm',
+    transition: 'color 0.33s',
+    _hover: { color: 'vip.ink', textDecoration: 'underline' },
+    ...props,
+  }
+
+  return to
+    ? <RouterLink to={to} {...styles}>{children}</RouterLink>
+    : <chakra.a href={href} {...styles}>{children}</chakra.a>
+}
+
+function Action({ to, href, children, variant = 'primary', type, disabled, onClick, ...props }) {
+  const variantStyles = variant === 'primary'
+    ? { bg: 'brand.500', color: 'white', _hover: { bg: 'brand.600' } }
+    : { bg: 'white', color: 'vip.graphite', _hover: { bg: 'vip.ash' } }
+
+  if (type || onClick) {
+    return (
+      <Button
+        type={type ?? 'button'}
+        disabled={disabled}
+        onClick={onClick}
+        {...actionStyles}
+        {...variantStyles}
+        {...props}
+      >
+        {children}
+      </Button>
+    )
+  }
+
+  const styles = { display: 'inline-flex', ...actionStyles, ...variantStyles, ...props }
+  return to
+    ? <RouterLink to={to} {...styles}>{children}</RouterLink>
+    : <chakra.a href={href} {...styles}>{children}</chakra.a>
+}
+
+function ButtonRow({ children, justify = 'center' }) {
+  return (
+    <Flex
+      direction={{ base: 'column', sm: 'row' }}
+      flexWrap="wrap"
+      justify={justify}
+      gap={3}
+      mt={2}
+    >
+      {children}
+    </Flex>
+  )
+}
+
+function SectionHeading({ eyebrow, title, children }) {
+  return (
+    <Stack gap={3} maxW="720px" mb={8}>
+      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+      <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>
+        {title}
+      </Heading>
+      {children}
+    </Stack>
+  )
+}
+
+function SplitSection({ children, bg = 'white', ...props }) {
+  return (
+    <Grid
+      as="section"
+      templateColumns={{ base: '1fr', md: 'minmax(0, .95fr) minmax(0, 1.05fr)' }}
+      gap={{ base: 8, lg: 18 }}
+      alignItems="start"
+      bg={bg}
+      {...sectionStyles}
+      {...props}
+    >
+      {children}
+    </Grid>
+  )
 }
 
 function Header({ overHero = false }) {
@@ -117,9 +251,7 @@ function Header({ overHero = false }) {
   const [solid, setSolid] = useState(false)
   const { pathname } = useLocation()
 
-  useEffect(() => {
-    setOpen(false)
-  }, [pathname])
+  useEffect(() => setOpen(false), [pathname])
 
   useEffect(() => {
     const onScroll = () => setSolid(window.scrollY > 48)
@@ -128,103 +260,206 @@ function Header({ overHero = false }) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [pathname])
 
-  const headerClass = [
-    'site-header',
-    overHero && !solid ? 'site-header--over-hero' : '',
-    solid || !overHero ? 'site-header--solid' : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
-
-  const logoSrc = overHero && !solid ? brand.logoLight : brand.logo
+  const transparent = overHero && !solid
+  const foreground = transparent ? 'white' : 'vip.ink'
 
   return (
-    <header className={headerClass}>
-      <Link className="brand" to="/" aria-label="VIP Lift home">
-        <img src={logoSrc} alt="VIP Lift" className="brand__logo" width={72} height={63} />
-        <small>{brand.tagline}</small>
-      </Link>
-      <button
-        className="menu-button"
-        type="button"
+    <Grid
+      as="header"
+      position="fixed"
+      top="0"
+      left="0"
+      zIndex="20"
+      w="full"
+      minH="56px"
+      px={{ base: 4, lg: 12 }}
+      py={2}
+      templateColumns={{ base: '1fr auto auto', md: 'minmax(140px, 1fr) auto minmax(140px, 1fr)' }}
+      gap={2}
+      alignItems="center"
+      color={foreground}
+      bg={transparent ? 'transparent' : 'rgba(255,255,255,.78)'}
+      backdropFilter={transparent ? 'none' : 'blur(12px)'}
+      transition="background-color 0.33s, color 0.33s, backdrop-filter 0.33s"
+    >
+      <RouterLink
+        to="/"
+        aria-label="VIP Lift home"
+        display="inline-flex"
+        alignItems="center"
+        gap={2.5}
+        w="fit-content"
+      >
+        <Image src={transparent ? brand.logoLight : brand.logo} alt="VIP Lift" h="56px" w="auto" objectFit="contain" />
+        <Text
+          display={{ base: 'none', sm: 'block' }}
+          color={transparent ? 'white' : 'vip.pewter'}
+          fontSize="xs"
+        >
+          {brand.tagline}
+        </Text>
+      </RouterLink>
+
+      <Button
+        display={{ base: 'inline-flex', md: 'none' }}
+        minH="32px"
+        px={4}
+        bg="transparent"
+        color={foreground}
+        fontSize="sm"
+        fontWeight="500"
+        borderRadius="control"
         aria-expanded={open}
         aria-controls="primary-navigation"
         onClick={() => setOpen((value) => !value)}
+        _hover={{ bg: transparent ? 'rgba(255,255,255,.12)' : 'rgba(23,26,32,.06)' }}
       >
         Menu
-      </button>
-      <nav id="primary-navigation" className={open ? 'nav nav-open' : 'nav'} aria-label="Primary">
+      </Button>
+
+      <Flex
+        as="nav"
+        id="primary-navigation"
+        aria-label="Primary"
+        position={{ base: 'absolute', md: 'static' }}
+        top={{ base: '100%', md: 'auto' }}
+        left={{ base: 4, md: 'auto' }}
+        right={{ base: 4, md: 'auto' }}
+        display={{ base: open ? 'flex' : 'none', md: 'flex' }}
+        direction={{ base: 'column', md: 'row' }}
+        justify="center"
+        gap={1}
+        p={{ base: 2, md: 0 }}
+        bg={{ base: 'white', md: 'transparent' }}
+        border={{ base: '1px solid', md: '0' }}
+        borderColor="vip.cloud"
+        borderRadius="control"
+      >
         {navItems.map((item) => (
-          <NavLink key={item.href} to={item.href} end={item.href === '/'}>
+          <RouterNavLink
+            key={item.href}
+            to={item.href}
+            end={item.href === '/'}
+            display="inline-flex"
+            alignItems="center"
+            justifyContent="center"
+            minH="32px"
+            px={4}
+            borderRadius="control"
+            color={{ base: 'vip.ink', md: foreground }}
+            fontSize="sm"
+            fontWeight="500"
+            transition="background-color 0.33s, color 0.33s"
+            css={{
+              '&:hover, &[aria-current=page]': {
+                background: transparent
+                  ? 'rgba(255,255,255,.12)'
+                  : 'rgba(23,26,32,.06)',
+              },
+              '@media (max-width: 767px)': {
+                '&:hover, &[aria-current=page]': {
+                  background: 'rgba(23,26,32,.06)',
+                },
+              },
+            }}
+          >
             {item.label}
-          </NavLink>
+          </RouterNavLink>
         ))}
-      </nav>
-      <div className="header-actions">
-        <a className="header-phone" href={contact.phoneHref}>
+      </Flex>
+
+      <Flex justifySelf="end" alignItems="center" gap={3}>
+        <chakra.a
+          display={{ base: 'none', lg: 'block' }}
+          href={contact.phoneHref}
+          color={foreground}
+          fontSize="sm"
+          fontWeight="500"
+          whiteSpace="nowrap"
+          _hover={{ opacity: 0.75, textDecoration: 'underline' }}
+        >
           {contact.phone}
-        </a>
-        <a
-          className="nav-cta"
+        </chakra.a>
+        <Action
           href={mailtoHref('VIP%20Lift%20Project%20Enquiry')}
+          minW={{ base: 'auto', sm: '160px' }}
+          display={{ base: 'none', sm: 'inline-flex' }}
+          px={4}
         >
           Get a Quote
-        </a>
-      </div>
-    </header>
+        </Action>
+      </Flex>
+    </Grid>
   )
 }
 
 function Footer() {
   return (
-    <footer className="site-footer">
-      <div>
-        <p className="eyebrow">Lagos office</p>
-        <h2>Move forward with a lift solution built around your space.</h2>
-        <p className="footer-response">{contact.responseTime}</p>
-      </div>
-      <address>
-        <a href={contact.phoneHref}>{contact.phone}</a>
-        {featureFlags.whatsapp && (
-          <a href={contact.whatsappHref} target="_blank" rel="noreferrer">
-            WhatsApp
-          </a>
-        )}
-        <a href={`mailto:${contact.email}`}>{contact.email}</a>
-        <Link to="/service-area">Service areas</Link>
-        <span>{contact.address}</span>
-        <span>{contact.hours}</span>
-      </address>
-    </footer>
+    <Grid
+      as="footer"
+      templateColumns={{ base: '1fr', md: '1.1fr 1fr' }}
+      gap={8}
+      px={{ base: 5, md: 10, lg: 18 }}
+      pt={12}
+      pb={{ base: 44, md: 32 }}
+      bg="vip.ink"
+      color="white"
+    >
+      <Box>
+        <Eyebrow color="vip.silver">Lagos office</Eyebrow>
+        <Heading as="h2" mt={3} maxW="560px" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>
+          Move forward with a lift solution built around your space.
+        </Heading>
+        <Text mt={3} color="vip.silver">{contact.responseTime}</Text>
+      </Box>
+      <Stack as="address" gap={2.5} fontStyle="normal" color="vip.silver">
+        <TextLink href={contact.phoneHref} color="vip.silver" _hover={{ color: 'white', textDecoration: 'underline' }}>{contact.phone}</TextLink>
+        {featureFlags.whatsapp && <TextLink href={contact.whatsappHref} color="vip.silver">WhatsApp</TextLink>}
+        <TextLink href={`mailto:${contact.email}`} color="vip.silver">{contact.email}</TextLink>
+        <TextLink to="/service-area" color="vip.silver">Service areas</TextLink>
+        <Text>{contact.address}</Text>
+        <Text>{contact.hours}</Text>
+      </Stack>
+    </Grid>
   )
 }
 
 function InquiryBar() {
   return (
-    <aside className="inquiry-bar" aria-label="Quick enquiry">
-      <div className="inquiry-bar__input">
-        <svg className="inquiry-bar__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        <span>{inquiryBar.prompt}</span>
-      </div>
-      <div className="inquiry-bar__actions">
-        <a className="inquiry-bar__cta" href={contact.phoneHref}>
-          Call Now
-        </a>
-        {featureFlags.whatsapp && (
-          <a className="inquiry-bar__secondary" href={contact.whatsappHref} target="_blank" rel="noreferrer">
-            WhatsApp
-          </a>
-        )}
-        <a className="inquiry-bar__secondary" href={mailtoHref(inquiryBar.cta.subject)}>
-          Email
-        </a>
-        {featureFlags.calendly && (
-          <a className="inquiry-bar__secondary" href={contact.calendlyHref} target="_blank" rel="noreferrer">
-            {contact.calendlyLabel}
-          </a>
-        )}
-      </div>
-    </aside>
+    <Grid
+      as="aside"
+      aria-label="Quick enquiry"
+      position="fixed"
+      zIndex="15"
+      left={4}
+      right={4}
+      bottom={4}
+      maxW="920px"
+      mx="auto"
+      p={3}
+      templateColumns={{ base: '1fr', md: '1fr auto' }}
+      gap={3}
+      alignItems="center"
+      bg="white"
+      border="1px solid"
+      borderColor="vip.cloud"
+      borderRadius="control"
+    >
+      <Flex alignItems="center" justify={{ base: 'center', md: 'flex-start' }} gap={2.5} minW="0">
+        <Box as="svg" flexShrink="0" w="20px" h="20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="vip.pewter">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </Box>
+        <Text color="vip.fog" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+          {inquiryBar.prompt}
+        </Text>
+      </Flex>
+      <Flex justify="center" flexWrap="wrap" gap={2}>
+        <Action href={contact.phoneHref} minW="auto" px={4}>Call Now</Action>
+        {featureFlags.whatsapp && <TextLink href={contact.whatsappHref}>WhatsApp</TextLink>}
+        <TextLink href={mailtoHref(inquiryBar.cta.subject)} display={{ base: 'none', sm: 'inline-flex' }} alignItems="center" px={3}>Email</TextLink>
+        {featureFlags.calendly && <TextLink href={contact.calendlyHref}>{contact.calendlyLabel}</TextLink>}
+      </Flex>
+    </Grid>
   )
 }
 
@@ -234,7 +469,7 @@ function PageShell({ children, overHero = false }) {
       <MetaTitle />
       <SchemaMarkup />
       <Header overHero={overHero} />
-      <main>{children}</main>
+      <Box as="main" overflow="hidden">{children}</Box>
       <Footer />
       <InquiryBar />
     </>
@@ -243,119 +478,103 @@ function PageShell({ children, overHero = false }) {
 
 function CtaBand({ eyebrow, title, description, primary, secondary }) {
   return (
-    <section className="cta-panel">
-      {eyebrow && <p className="eyebrow">{eyebrow}</p>}
-      <h2>{title}</h2>
-      {description && <p>{description}</p>}
-      <div className="button-row">
-        {primary}
-        {secondary}
-      </div>
-    </section>
+    <Stack as="section" gap={4} maxW="864px" mx="auto" px={{ base: 5, md: 10 }} py={{ base: 16, md: 24 }} textAlign="center">
+      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+      <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>{title}</Heading>
+      {description && <Text color="vip.graphite">{description}</Text>}
+      <ButtonRow>{primary}{secondary}</ButtonRow>
+    </Stack>
   )
 }
 
 function ProcessStrip() {
   return (
-    <section className="section section-muted">
-      <div className="section-heading">
-        <p className="eyebrow">How it works</p>
-        <h2>From first enquiry to installation and support.</h2>
-      </div>
-      <div className="process-grid">
+    <Box as="section" bg="vip.ash" {...sectionStyles}>
+      <SectionHeading eyebrow="How it works" title="From first enquiry to installation and support." />
+      <Grid templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }} gap={4}>
         {processSteps.map((step) => (
-          <article className="process-card" key={step.step}>
-            <span className="process-card__step">{step.step}</span>
-            <h3>{step.title}</h3>
-            <p>{step.summary}</p>
-          </article>
+          <Stack as="article" key={step.step} gap={3} p={6} bg="white">
+            <Text color="brand.500" fontWeight="500">{step.step}</Text>
+            <Heading as="h3" fontSize="lg" {...headingStyles}>{step.title}</Heading>
+            <Text color="vip.graphite">{step.summary}</Text>
+          </Stack>
         ))}
-      </div>
-    </section>
+      </Grid>
+    </Box>
   )
 }
 
 function CertificationBadges() {
   return (
-    <section className="badge-row" aria-label="Certifications and standards">
+    <Grid as="section" aria-label="Certifications and standards" templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }} gap={3} mt={8}>
       {certifications.map((item) => (
-        <div className="badge-row__item" key={item.label}>
-          <strong>{item.label}</strong>
-          <span>{item.detail}</span>
-        </div>
+        <Stack key={item.label} gap={1} p={4} bg="white">
+          <Text fontWeight="500">{item.label}</Text>
+          <Text color="vip.pewter" fontSize="xs">{item.detail}</Text>
+        </Stack>
       ))}
-    </section>
+    </Grid>
   )
 }
 
-function FaqSection({ limit }) {
+function FaqSection({ limit, nested = false }) {
   const items = limit ? faqItems.slice(0, limit) : faqItems
 
   return (
-    <section className="section">
-      <div className="section-heading">
-        <p className="eyebrow">Common questions</p>
-        <h2>Answers before you call.</h2>
-      </div>
-      <div className="faq-list">
+    <Box as="section" {...(nested ? {} : sectionStyles)}>
+      <SectionHeading eyebrow="Common questions" title="Answers before you call." />
+      <Stack gap={2} maxW="840px">
         {items.map((item) => (
-          <details className="faq-item" key={item.question}>
-            <summary>{item.question}</summary>
-            <p>{item.answer}</p>
-          </details>
+          <Box as="details" key={item.question} p={4} px={5} bg="white" border="1px solid" borderColor="vip.cloud">
+            <Text as="summary" cursor="pointer" fontWeight="500">{item.question}</Text>
+            <Text mt={3} color="vip.graphite">{item.answer}</Text>
+          </Box>
         ))}
-      </div>
-      {limit && (
-        <p className="faq-more">
-          <Link className="text-link" to="/contact#faq">
-            View all questions
-          </Link>
-        </p>
-      )}
-    </section>
+      </Stack>
+      {limit && <Box mt={4}><TextLink to="/contact#faq">View all questions</TextLink></Box>}
+    </Box>
   )
 }
 
 function TestimonialSection() {
   return (
-    <section className="section section-muted">
-      <div className="section-heading">
-        <p className="eyebrow">Client feedback</p>
-        <h2>Trusted on residential, commercial, and public projects.</h2>
-      </div>
-      <div className="card-grid three">
+    <Box as="section" bg="vip.ash" {...sectionStyles}>
+      <SectionHeading eyebrow="Client feedback" title="Trusted on residential, commercial, and public projects." />
+      <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={4}>
         {testimonials.map((item) => (
-          <blockquote className="testimonial-card" key={item.context}>
-            <p>&ldquo;{item.quote}&rdquo;</p>
-            <footer>
-              <strong>{item.source}</strong>
-              <span>{item.context}</span>
-            </footer>
-          </blockquote>
+          <Stack as="blockquote" key={item.context} gap={4} m={0} p={6} bg="white">
+            <Text color="vip.graphite" fontStyle="italic">&ldquo;{item.quote}&rdquo;</Text>
+            <Stack as="footer" gap={1}>
+              <Text fontWeight="500">{item.source}</Text>
+              <Text color="vip.pewter" fontSize="xs">{item.context}</Text>
+            </Stack>
+          </Stack>
         ))}
-      </div>
-      {featureFlags.googleReviews && (
-        <div className="trust-link-row">
-          <a className="text-link" href={contact.googleBusinessHref} target="_blank" rel="noreferrer">
-            Read reviews on Google
-          </a>
-        </div>
-      )}
+      </Grid>
+      {featureFlags.googleReviews && <Box mt={6} textAlign="center"><TextLink href={contact.googleBusinessHref}>Read reviews on Google</TextLink></Box>}
       <CtaBand
         title="Ready to discuss your project?"
-        primary={
-          <a className="button button-primary" href={contact.phoneHref}>
-            Call for a Site Visit
-          </a>
-        }
-        secondary={
-          <a className="button button-secondary" href={mailtoHref('VIP%20Lift%20Project%20Enquiry')}>
-            Email VIP Lift
-          </a>
-        }
+        primary={<Action href={contact.phoneHref}>Call for a Site Visit</Action>}
+        secondary={<Action href={mailtoHref('VIP%20Lift%20Project%20Enquiry')} variant="secondary">Email VIP Lift</Action>}
       />
-    </section>
+    </Box>
   )
+}
+
+const fieldStyles = {
+  w: 'full',
+  minH: '40px',
+  px: 3,
+  border: '1px solid',
+  borderColor: 'vip.silver',
+  borderRadius: 'control',
+  bg: 'white',
+  color: 'vip.ink',
+  _focus: { borderColor: 'brand.500' },
+}
+
+function FormField({ label, children }) {
+  return <Stack as="label" gap={2}><Text color="vip.pewter">{label}</Text>{children}</Stack>
 }
 
 function ContactForm() {
@@ -375,140 +594,145 @@ function ContactForm() {
       form.service ? `Service: ${form.service}` : null,
       '',
       form.message,
-    ]
-      .filter(Boolean)
-      .join('\n')
-
+    ].filter(Boolean).join('\n')
     window.location.href = mailtoHref('VIP%20Lift%20Website%20Enquiry', body)
   }
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit}>
-      <div className="contact-form__grid">
-        <label>
-          <span>Name</span>
-          <input name="name" required value={form.name} onChange={handleChange} autoComplete="name" />
-        </label>
-        <label>
-          <span>Phone</span>
-          <input name="phone" required type="tel" value={form.phone} onChange={handleChange} autoComplete="tel" />
-        </label>
-        <label>
-          <span>Email (optional)</span>
-          <input name="email" type="email" value={form.email} onChange={handleChange} autoComplete="email" />
-        </label>
-        <label>
-          <span>Service needed</span>
-          <select name="service" value={form.service} onChange={handleChange}>
+    <Stack as="form" gap={4} maxW="720px" onSubmit={handleSubmit}>
+      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
+        <FormField label="Name"><Input name="name" required value={form.name} onChange={handleChange} autoComplete="name" {...fieldStyles} /></FormField>
+        <FormField label="Phone"><Input name="phone" required type="tel" value={form.phone} onChange={handleChange} autoComplete="tel" {...fieldStyles} /></FormField>
+        <FormField label="Email (optional)"><Input name="email" type="email" value={form.email} onChange={handleChange} autoComplete="email" {...fieldStyles} /></FormField>
+        <FormField label="Service needed">
+          <chakra.select name="service" value={form.service} onChange={handleChange} {...fieldStyles}>
             <option value="">Select a service</option>
-            {services.map((service) => (
-              <option key={service.slug} value={service.title}>
-                {service.title}
-              </option>
-            ))}
+            {services.map((service) => <option key={service.slug} value={service.title}>{service.title}</option>)}
             <option value="Other">Other</option>
-          </select>
-        </label>
-      </div>
-      <label>
-        <span>Brief description</span>
-        <textarea name="message" rows={4} required value={form.message} onChange={handleChange} />
-      </label>
-      <p className="contact-form__note">{contact.responseTime}</p>
-      <button className="button button-primary" type="submit">
-        Send Enquiry via Email
-      </button>
-    </form>
+          </chakra.select>
+        </FormField>
+      </Grid>
+      <FormField label="Brief description">
+        <Textarea name="message" rows={4} required value={form.message} onChange={handleChange} minH="120px" resize="vertical" {...fieldStyles} />
+      </FormField>
+      <Text color="vip.pewter" fontSize="xs">{contact.responseTime}</Text>
+      <Action type="submit" alignSelf="flex-start">Send Enquiry via Email</Action>
+    </Stack>
   )
 }
 
 function HeroSection() {
   return (
-    <section className="hero-section viewport-section" style={{ '--hero-image': `url(${hero.image})` }}>
-      <div className="hero-content">
-        <p className="eyebrow">{hero.eyebrow}</p>
-        <h1>{hero.title}</h1>
-        {hero.promo && <p className="hero-promo">{hero.promo}</p>}
-        <p>{hero.summary}</p>
-        <p className="hero-trust">
-          {featureFlags.googleReviews && (
-            <>
-              <a href={contact.googleBusinessHref} target="_blank" rel="noreferrer">
-                Read our Google reviews
-              </a>
-              {' · '}
-            </>
-          )}
+    <Flex
+      as="section"
+      position="relative"
+      minH="100svh"
+      alignItems="flex-end"
+      justifyContent="center"
+      px={6}
+      pt="104px"
+      pb={{ base: '180px', md: '140px' }}
+      bgImage={`url(${hero.image})`}
+      bgPosition="center"
+      bgSize="cover"
+      textAlign="center"
+    >
+      <Box position="absolute" inset="0" bg="rgba(23,26,32,.35)" />
+      <Stack position="relative" zIndex="1" gap={4} maxW="720px" color="white">
+        <Eyebrow color="rgba(255,255,255,.85)">{hero.eyebrow}</Eyebrow>
+        <Heading as="h1" fontSize={{ base: '3xl', md: '4xl' }} {...headingStyles}>{hero.title}</Heading>
+        {hero.promo && <Text color="brand.500" fontSize="xl">{hero.promo}</Text>}
+        <Text color="rgba(255,255,255,.92)">{hero.summary}</Text>
+        <Text color="rgba(255,255,255,.85)" fontSize="xs">
+          {featureFlags.googleReviews && <><chakra.a href={contact.googleBusinessHref}>Read our Google reviews</chakra.a>{' · '}</>}
           {contact.responseTime}
-        </p>
-        <div className="button-row">
-          <a className="button button-primary" href={hero.primaryCta.href}>
-            {hero.primaryCta.label}
-          </a>
-          <a className="button button-secondary" href={hero.secondaryCta.href}>
-            {hero.secondaryCta.label}
-          </a>
-        </div>
-      </div>
-    </section>
+        </Text>
+        <ButtonRow>
+          <Action href={hero.primaryCta.href}>{hero.primaryCta.label}</Action>
+          <Action href={hero.secondaryCta.href} variant="secondary">{hero.secondaryCta.label}</Action>
+        </ButtonRow>
+      </Stack>
+    </Flex>
+  )
+}
+
+function PageHero({ data, eyebrow = data.eyebrow }) {
+  return (
+    <Stack
+      as="section"
+      position="relative"
+      minH="60svh"
+      justifyContent="flex-end"
+      gap={4}
+      px={{ base: 5, md: 10, lg: 18 }}
+      pt="120px"
+      pb={{ base: 16, md: 24 }}
+      bgImage={`url(${data.image})`}
+      bgPosition="center"
+      bgSize="cover"
+      color="white"
+    >
+      <Box position="absolute" inset="0" bg="rgba(23,26,32,.4)" />
+      <Eyebrow position="relative" zIndex="1" color="rgba(255,255,255,.85)">{eyebrow}</Eyebrow>
+      <Heading position="relative" zIndex="1" as="h1" maxW="840px" fontSize={{ base: '3xl', md: '4xl' }} {...headingStyles}>{data.title}</Heading>
+      <Text position="relative" zIndex="1" maxW="640px" color="rgba(255,255,255,.92)">{data.summary}</Text>
+    </Stack>
+  )
+}
+
+function CategoryCard({ service }) {
+  return (
+    <Flex as="article" direction="column" minH="280px" overflow="hidden" bg="white" borderRadius="card">
+      <Box position="relative" flex="1" minH="220px" overflow="hidden">
+        <Image position="absolute" inset="0" w="full" h="full" objectFit="cover" src={service.image} alt={`${service.title} by VIP Lift`} loading="lazy" />
+        <Box position="absolute" inset="0" bg="rgba(23,26,32,.5)" />
+        <Text position="absolute" zIndex="1" top={5} left={5} color="white" fontSize="md" fontWeight="500">{service.title}</Text>
+      </Box>
+      <Flex gap={4} flexShrink="0" px={5} py={4} bg="vip.ash" borderTop="1px solid" borderColor="vip.cloud">
+        <TextLink to={`/services/${service.slug}`} color="vip.graphite" fontWeight="500">Learn</TextLink>
+        <TextLink href={mailtoHref(service.primaryCta.subject)} color="vip.graphite" fontWeight="500">Enquire</TextLink>
+      </Flex>
+    </Flex>
   )
 }
 
 function ServiceGrid() {
   const [featured, ...rest] = services
-
   return (
-    <section className="section">
-      <div className="section-heading">
-        <p className="eyebrow">What we do</p>
-        <h2>Flexible lift systems for modern Nigerian buildings.</h2>
-      </div>
-      <div className="category-grid">
-        <article className="category-card">
-          <div className="category-card__media">
-            <img src={featured.image} alt={`${featured.title} by VIP Lift`} loading="lazy" />
-            <span>{featured.title}</span>
-          </div>
-          <div className="category-card__links">
-            <Link className="text-link" to={`/services/${featured.slug}`}>Learn</Link>
-            <a className="text-link" href={mailtoHref(featured.primaryCta.subject)}>Enquire</a>
-          </div>
-        </article>
-        <div className="card-grid card-grid--stacked">
-          {rest.map((service) => (
-            <article className="category-card" key={service.title}>
-              <div className="category-card__media">
-                <img src={service.image} alt={`${service.title} by VIP Lift`} loading="lazy" />
-                <span>{service.title}</span>
-              </div>
-              <div className="category-card__links">
-                <Link className="text-link" to={`/services/${service.slug}`}>Learn</Link>
-                <a className="text-link" href={mailtoHref(service.primaryCta.subject)}>Enquire</a>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
+    <Box as="section" {...sectionStyles}>
+      <SectionHeading eyebrow="What we do" title="Flexible lift systems for modern Nigerian buildings." />
+      <Grid templateColumns={{ base: '1fr', lg: '1.35fr 1fr' }} gap={4}>
+        <CategoryCard service={featured} />
+        <Grid gap={4}>{rest.map((service) => <CategoryCard key={service.title} service={service} />)}</Grid>
+      </Grid>
+    </Box>
+  )
+}
+
+function ProofList({ items }) {
+  return (
+    <Stack as="ul" gap={3} m={0} p={0} listStyleType="none">
+      {items.map((item) => (
+        <Box as="li" key={item} pb={3} borderBottom="1px solid" borderColor="vip.cloud" color="vip.graphite">
+          {item}
+        </Box>
+      ))}
+    </Stack>
   )
 }
 
 function ProofSection() {
   return (
-    <section className="section section-muted">
-      <div className="split">
-        <div>
-          <p className="eyebrow">Engineered confidence</p>
-          <h2>European-standard lift technology, installed and supported from Lagos.</h2>
-        </div>
-        <ul className="proof-list">
-          {proofPoints.map((point) => (
-            <li key={point}>{point}</li>
-          ))}
-        </ul>
-      </div>
+    <Box as="section" bg="vip.ash" {...sectionStyles}>
+      <Grid templateColumns={{ base: '1fr', md: 'minmax(0,.95fr) minmax(0,1.05fr)' }} gap={{ base: 8, lg: 18 }}>
+        <Box>
+          <Eyebrow>Engineered confidence</Eyebrow>
+          <Heading as="h2" mt={3} fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>European-standard lift technology, installed and supported from Lagos.</Heading>
+        </Box>
+        <ProofList items={proofPoints} />
+      </Grid>
       <CertificationBadges />
-    </section>
+    </Box>
   )
 }
 
@@ -525,132 +749,91 @@ function Home() {
         eyebrow="After-sales support"
         title="Supply, installation, and maintenance in one coordinated lift package."
         description="VIP Lift works with architects, contractors, building owners, and end users from specification through installation and long-term maintenance."
-        primary={
-          <a className="button button-primary" href={contact.phoneHref}>
-            Call VIP Lift
-          </a>
-        }
-        secondary={
-          <Link className="button button-secondary" to="/contact">
-            Send an Enquiry
-          </Link>
-        }
+        primary={<Action href={contact.phoneHref}>Call VIP Lift</Action>}
+        secondary={<Action to="/contact" variant="secondary">Send an Enquiry</Action>}
       />
     </PageShell>
   )
 }
 
 function About() {
-  const data = pageHeroes.about
-
   return (
     <PageShell>
-      <section className="page-hero page-hero--image" style={{ '--hero-image': `url(${data.image})` }}>
-        <p className="eyebrow">{data.eyebrow}</p>
-        <h1>{data.title}</h1>
-        <p>{data.summary}</p>
-      </section>
-      <section className="section">
-        <div className="card-grid three">
+      <PageHero data={pageHeroes.about} />
+      <Box as="section" {...sectionStyles}>
+        <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={4}>
           {audiences.map((audience) => (
-            <article className="text-card" key={audience.title}>
-              <h2>{audience.title}</h2>
-              <p>{audience.summary}</p>
-              <Link className="text-link" to={audience.slug === 'building-owners' ? '/contact' : `/for-${audience.slug}`}>
-                Learn more
-              </Link>
-            </article>
+            <Stack as="article" key={audience.title} gap={3} p={6} bg="white">
+              <Heading as="h2" fontSize="xl" {...headingStyles}>{audience.title}</Heading>
+              <Text color="vip.graphite">{audience.summary}</Text>
+              <TextLink to={audience.slug === 'building-owners' ? '/contact' : `/for-${audience.slug}`}>Learn more</TextLink>
+            </Stack>
           ))}
-        </div>
-      </section>
+        </Grid>
+      </Box>
       <ProcessStrip />
-      <section className="section section-muted split">
-        <div>
-          <p className="eyebrow">Design flexibility</p>
-          <h2>Custom-made lift solutions for new and existing buildings.</h2>
-        </div>
-        <p>
-          VIP Lift can support panoramic lift shafts with glass panels, flexible compact
-          dimensions, robust platform lifts with capacities up to 1000 kilograms, and
-          coordinated installation support.
-        </p>
-      </section>
+      <SplitSection bg="vip.ash">
+        <Box><Eyebrow>Design flexibility</Eyebrow><Heading as="h2" mt={3} fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Custom-made lift solutions for new and existing buildings.</Heading></Box>
+        <Text color="vip.graphite">VIP Lift can support panoramic lift shafts with glass panels, flexible compact dimensions, robust platform lifts with capacities up to 1000 kilograms, and coordinated installation support.</Text>
+      </SplitSection>
       <CtaBand
         eyebrow="Discuss your project"
         title="Talk to VIP Lift about specifications, drawings, and installation support."
-        primary={
-          <a className="button button-primary" href={mailtoHref('VIP%20Lift%20Architect%20Spec%20Request')}>
-            Request Technical Specs
-          </a>
-        }
-        secondary={
-          <a className="button button-secondary" href={contact.phoneHref}>
-            Call VIP Lift
-          </a>
-        }
+        primary={<Action href={mailtoHref('VIP%20Lift%20Architect%20Spec%20Request')}>Request Technical Specs</Action>}
+        secondary={<Action href={contact.phoneHref} variant="secondary">Call VIP Lift</Action>}
       />
     </PageShell>
   )
 }
 
-function Projects() {
-  const data = pageHeroes.projects
-  const featured = projects.filter((project) => project.featured)
+function ProjectCard({ project, featured = false }) {
+  return (
+    <RouterLink to={`/projects/${project.slug}`} display="block" overflow="hidden" bg="white" borderRadius="card" transition="opacity .33s" _hover={{ opacity: 0.92 }}>
+      <Image src={project.image} alt={`${project.title} project example`} loading="lazy" w="full" h={{ base: '220px', md: '300px' }} objectFit="cover" />
+      <Stack gap={2} p={5}>
+        <Text color="vip.pewter">{featured ? `${project.category} · ${project.location}` : project.location}</Text>
+        <Heading as={featured ? 'h3' : 'h2'} fontSize="lg" {...headingStyles}>{project.title}</Heading>
+        {featured && <Text color="vip.pewter">View case study</Text>}
+      </Stack>
+    </RouterLink>
+  )
+}
 
+function Projects() {
+  const featured = projects.filter((project) => project.featured)
   return (
     <PageShell>
-      <section className="page-hero page-hero--image" style={{ '--hero-image': `url(${data.image})` }}>
-        <p className="eyebrow">{data.eyebrow}</p>
-        <h1>{data.title}</h1>
-        <p>{data.summary}</p>
-      </section>
+      <PageHero data={pageHeroes.projects} />
       {featured.length > 0 && (
-        <section className="section">
-          <div className="section-heading">
-            <p className="eyebrow">Featured case studies</p>
-            <h2>Recent installations with project detail.</h2>
-          </div>
-          <div className="card-grid three">
-            {featured.map((project) => (
-              <Link className="image-card project-link-card" key={project.slug} to={`/projects/${project.slug}`}>
-                <img src={project.image} alt={`${project.title} project example`} loading="lazy" />
-                <div>
-                  <p>{project.category} · {project.location}</p>
-                  <h3>{project.title}</h3>
-                  <span className="text-link">View case study</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+        <Box as="section" {...sectionStyles}>
+          <SectionHeading eyebrow="Featured case studies" title="Recent installations with project detail." />
+          <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={4}>
+            {featured.map((project) => <ProjectCard key={project.slug} project={project} featured />)}
+          </Grid>
+        </Box>
       )}
       <ProofSection />
-      <section className="section">
-        <div className="project-grid">
-          {projects.map((project) => (
-            <Link className="project-card project-link-card" key={project.slug} to={`/projects/${project.slug}`}>
-              <img src={project.image} alt={`${project.title} project example`} loading="lazy" />
-              <div>
-                <p>{project.location}</p>
-                <h2>{project.title}</h2>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <Box as="section" {...sectionStyles}>
+        <Grid templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={4}>
+          {projects.map((project) => <ProjectCard key={project.slug} project={project} />)}
+        </Grid>
+      </Box>
       <CtaBand
         title="Discuss a similar project for your building."
-        primary={
-          <a className="button button-primary" href={contact.phoneHref}>
-            Call for a Site Visit
-          </a>
-        }
-        secondary={
-          <Link className="button button-secondary" to="/customize-lift">
-            Customize Your Lift
-          </Link>
-        }
+        primary={<Action href={contact.phoneHref}>Call for a Site Visit</Action>}
+        secondary={<Action to="/customize-lift" variant="secondary">Customize Your Lift</Action>}
       />
+    </PageShell>
+  )
+}
+
+function NotFound({ type, to, label }) {
+  return (
+    <PageShell>
+      <Stack as="section" pt="140px" {...sectionStyles}>
+        <Heading as="h1" {...headingStyles}>{type} not found</Heading>
+        <Action to={to} alignSelf="flex-start">{label}</Action>
+      </Stack>
     </PageShell>
   )
 }
@@ -658,50 +841,19 @@ function Projects() {
 function ProjectDetail() {
   const { slug } = useParams()
   const project = getProjectBySlug(slug)
-
-  if (!project) {
-    return (
-      <PageShell>
-        <section className="section">
-          <h1>Project not found</h1>
-          <Link className="button button-primary" to="/projects">Back to projects</Link>
-        </section>
-      </PageShell>
-    )
-  }
+  if (!project) return <NotFound type="Project" to="/projects" label="Back to projects" />
 
   return (
     <PageShell>
-      <section className="page-hero page-hero--image" style={{ '--hero-image': `url(${project.image})` }}>
-        <p className="eyebrow">{project.category} · {project.location}</p>
-        <h1>{project.title}</h1>
-        <p>{project.summary}</p>
-      </section>
-      <section className="section split">
-        <div>
-          <p className="eyebrow">Project overview</p>
-          <h2>Problem, solution, and delivery.</h2>
-          <p>{project.story}</p>
-        </div>
-        <ul className="proof-list">
-          {project.specs.map((spec) => (
-            <li key={spec}>{spec}</li>
-          ))}
-        </ul>
-      </section>
+      <PageHero data={{ ...project, title: project.title }} eyebrow={`${project.category} · ${project.location}`} />
+      <SplitSection>
+        <Stack gap={3}><Eyebrow>Project overview</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Problem, solution, and delivery.</Heading><Text color="vip.graphite">{project.story}</Text></Stack>
+        <ProofList items={project.specs} />
+      </SplitSection>
       <CtaBand
         title="Start a conversation about a similar lift project."
-        primary={
-          <a className="button button-primary" href={mailtoHref('VIP%20Lift%20Project%20Enquiry', `Hi VIP Lift,\n\nI am interested in a lift project similar to ${project.title}.\n\n`)}
-          >
-            Discuss This Type of Project
-          </a>
-        }
-        secondary={
-          <a className="button button-secondary" href={contact.phoneHref}>
-            Call VIP Lift
-          </a>
-        }
+        primary={<Action href={mailtoHref('VIP%20Lift%20Project%20Enquiry', `Hi VIP Lift,\n\nI am interested in a lift project similar to ${project.title}.\n\n`)}>Discuss This Type of Project</Action>}
+        secondary={<Action href={contact.phoneHref} variant="secondary">Call VIP Lift</Action>}
       />
     </PageShell>
   )
@@ -710,51 +862,21 @@ function ProjectDetail() {
 function ServicePage() {
   const { slug } = useParams()
   const service = getServiceBySlug(slug)
-
-  if (!service) {
-    return (
-      <PageShell>
-        <section className="section">
-          <h1>Service not found</h1>
-          <Link className="button button-primary" to="/">Back to home</Link>
-        </section>
-      </PageShell>
-    )
-  }
+  if (!service) return <NotFound type="Service" to="/" label="Back to home" />
 
   return (
     <PageShell>
-      <section className="page-hero page-hero--image" style={{ '--hero-image': `url(${service.image})` }}>
-        <p className="eyebrow">Service</p>
-        <h1>{service.title}</h1>
-        <p>{service.summary}</p>
-      </section>
-      <section className="section split">
-        <div>
-          <p className="eyebrow">Overview</p>
-          <h2>Built for Nigerian homes and buildings.</h2>
-          <p>{service.description}</p>
-        </div>
-        <ul className="proof-list">
-          {service.highlights.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </section>
+      <PageHero data={service} eyebrow="Service" />
+      <SplitSection>
+        <Stack gap={3}><Eyebrow>Overview</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Built for Nigerian homes and buildings.</Heading><Text color="vip.graphite">{service.description}</Text></Stack>
+        <ProofList items={service.highlights} />
+      </SplitSection>
       <ProcessStrip />
       <FaqSection limit={4} />
       <CtaBand
         title={`Ready to discuss ${service.title.toLowerCase()}?`}
-        primary={
-          <a className="button button-primary" href={service.primaryCta.href ?? mailtoHref(service.primaryCta.subject)}>
-            {service.primaryCta.label}
-          </a>
-        }
-        secondary={
-          <a className="button button-secondary" href={contact.phoneHref}>
-            Call VIP Lift
-          </a>
-        }
+        primary={<Action href={service.primaryCta.href ?? mailtoHref(service.primaryCta.subject)}>{service.primaryCta.label}</Action>}
+        secondary={<Action href={contact.phoneHref} variant="secondary">Call VIP Lift</Action>}
       />
     </PageShell>
   )
@@ -762,151 +884,72 @@ function ServicePage() {
 
 function AudiencePage({ slug: audienceSlug }) {
   const audience = getAudienceBySlug(audienceSlug)
-
-  if (!audience) {
-    return (
-      <PageShell>
-        <section className="section">
-          <h1>Page not found</h1>
-          <Link className="button button-primary" to="/about">Back to about</Link>
-        </section>
-      </PageShell>
-    )
-  }
+  if (!audience) return <NotFound type="Page" to="/about" label="Back to about" />
 
   return (
     <PageShell>
-      <section className="page-hero page-hero--image" style={{ '--hero-image': `url(${audience.image})` }}>
-        <p className="eyebrow">VIP Lift partners</p>
-        <h1>{audience.title}</h1>
-        <p>{audience.summary}</p>
-      </section>
-      <section className="section split">
-        <div>
-          <p className="eyebrow">How we support you</p>
-          <h2>From specification to installation.</h2>
-          <p>{audience.description}</p>
-        </div>
-        <ul className="proof-list">
-          {audience.benefits.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </section>
+      <PageHero data={audience} eyebrow="VIP Lift partners" />
+      <SplitSection>
+        <Stack gap={3}><Eyebrow>How we support you</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>From specification to installation.</Heading><Text color="vip.graphite">{audience.description}</Text></Stack>
+        <ProofList items={audience.benefits} />
+      </SplitSection>
       {audienceSlug === 'architects' && (
-        <section className="section section-muted">
-          <div className="section-heading">
-            <p className="eyebrow">Resources</p>
-            <h2>Technical documentation for specifiers.</h2>
-          </div>
-          <div className="button-row">
-            <a
-              className="button button-primary"
-              href={mailtoHref(contact.specPackMailtoSubject)}
-            >
-              Request Spec Pack
-            </a>
-            <a className="button button-secondary" href={contact.phoneHref}>
-              Call for Technical Support
-            </a>
-          </div>
-          <p className="resource-note">Email us for the latest specifications, drawings, and product documentation.</p>
-        </section>
+        <Box as="section" bg="vip.ash" {...sectionStyles}>
+          <SectionHeading eyebrow="Resources" title="Technical documentation for specifiers." />
+          <ButtonRow justify="flex-start">
+            <Action href={mailtoHref(contact.specPackMailtoSubject)}>Request Spec Pack</Action>
+            <Action href={contact.phoneHref} variant="secondary">Call for Technical Support</Action>
+          </ButtonRow>
+          <Text mt={4} color="vip.pewter" fontSize="xs">Email us for the latest specifications, drawings, and product documentation.</Text>
+        </Box>
       )}
       <CtaBand
         title="Let's coordinate on your next project."
-        primary={
-          <a
-            className="button button-primary"
-            href={audience.primaryCta.href ?? mailtoHref(audience.primaryCta.subject)}
-          >
-            {audience.primaryCta.label}
-          </a>
-        }
-        secondary={
-          featureFlags.calendly ? (
-            <a className="button button-secondary" href={contact.calendlyHref} target="_blank" rel="noreferrer">
-              {contact.calendlyLabel}
-            </a>
-          ) : undefined
-        }
+        primary={<Action href={audience.primaryCta.href ?? mailtoHref(audience.primaryCta.subject)}>{audience.primaryCta.label}</Action>}
+        secondary={featureFlags.calendly ? <Action href={contact.calendlyHref} variant="secondary">{contact.calendlyLabel}</Action> : undefined}
       />
     </PageShell>
   )
 }
 
 function ServiceArea() {
-  const data = pageHeroes.serviceArea
-
   return (
     <PageShell>
-      <section className="page-hero page-hero--image" style={{ '--hero-image': `url(${data.image})` }}>
-        <p className="eyebrow">{data.eyebrow}</p>
-        <h1>{data.title}</h1>
-        <p>{data.summary}</p>
-      </section>
-      <section className="section">
-        <div className="section-heading">
-          <p className="eyebrow">Coverage</p>
-          <h2>Lagos headquarters with nationwide project coordination.</h2>
-        </div>
-        <ul className="area-list">
-          {serviceAreas.map((area) => (
-            <li key={area}>{area}</li>
-          ))}
-        </ul>
-      </section>
-      <section className="section section-muted split">
-        <div>
-          <p className="eyebrow">Lagos office</p>
-          <h2>Visit or call our team on Lagos Island.</h2>
-        </div>
-        <address className="inline-address">
-          <a href={contact.phoneHref}>{contact.phone}</a>
-          <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          <a href={contact.mapHref} target="_blank" rel="noreferrer">{contact.address}</a>
-          <span>{contact.hours}</span>
-        </address>
-      </section>
+      <PageHero data={pageHeroes.serviceArea} />
+      <Box as="section" {...sectionStyles}>
+        <SectionHeading eyebrow="Coverage" title="Lagos headquarters with nationwide project coordination." />
+        <Grid as="ul" templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={3} m={0} p={0} listStyleType="none">
+          {serviceAreas.map((area) => <Box as="li" key={area} p={4} bg="vip.ash" fontWeight="500">{area}</Box>)}
+        </Grid>
+      </Box>
+      <SplitSection bg="vip.ash">
+        <Box><Eyebrow>Lagos office</Eyebrow><Heading as="h2" mt={3} fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Visit or call our team on Lagos Island.</Heading></Box>
+        <Stack as="address" gap={2.5} fontStyle="normal">
+          <TextLink href={contact.phoneHref}>{contact.phone}</TextLink>
+          <TextLink href={`mailto:${contact.email}`}>{contact.email}</TextLink>
+          <TextLink href={contact.mapHref}>{contact.address}</TextLink>
+          <Text>{contact.hours}</Text>
+        </Stack>
+      </SplitSection>
       <CtaBand
         title="Not sure if we cover your location? Call and we will confirm."
-        primary={
-          <a className="button button-primary" href={contact.phoneHref}>
-            Call VIP Lift
-          </a>
-        }
-        secondary={
-          featureFlags.whatsapp ? (
-            <a className="button button-secondary" href={contact.whatsappHref} target="_blank" rel="noreferrer">
-              WhatsApp Us
-            </a>
-          ) : (
-            <a className="button button-secondary" href={`mailto:${contact.email}`}>
-              Email VIP Lift
-            </a>
-          )
-        }
+        primary={<Action href={contact.phoneHref}>Call VIP Lift</Action>}
+        secondary={<Action href={featureFlags.whatsapp ? contact.whatsappHref : `mailto:${contact.email}`} variant="secondary">{featureFlags.whatsapp ? 'WhatsApp Us' : 'Email VIP Lift'}</Action>}
       />
     </PageShell>
   )
 }
 
 function CustomizeLift() {
-  const data = pageHeroes.customizeLift
   const [stepIndex, setStepIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [contactInfo, setContactInfo] = useState({ name: '', phone: '', email: '' })
-
   const step = customizeLiftSteps[stepIndex]
   const isContactStep = stepIndex === customizeLiftSteps.length
   const isComplete = stepIndex > customizeLiftSteps.length
 
-  function selectOption(option) {
-    setAnswers((current) => ({ ...current, [step.id]: option }))
-  }
-
   function buildEnquiryBody() {
-    const lines = [
+    return [
       'Customize Lift Enquiry',
       '',
       ...customizeLiftSteps.map((item) => `${item.title}: ${answers[item.id] ?? 'Not answered'}`),
@@ -914,8 +957,7 @@ function CustomizeLift() {
       `Name: ${contactInfo.name}`,
       `Phone: ${contactInfo.phone}`,
       contactInfo.email ? `Email: ${contactInfo.email}` : null,
-    ].filter(Boolean)
-    return lines.join('\n')
+    ].filter(Boolean).join('\n')
   }
 
   function handleSubmit(event) {
@@ -926,167 +968,111 @@ function CustomizeLift() {
 
   return (
     <PageShell>
-      <section className="page-hero page-hero--image" style={{ '--hero-image': `url(${data.image})` }}>
-        <p className="eyebrow">{data.eyebrow}</p>
-        <h1>{data.title}</h1>
-        <p>{data.summary}</p>
-      </section>
-      <section className="section wizard-section">
+      <PageHero data={pageHeroes.customizeLift} />
+      <Box as="section" maxW="864px" mx="auto" {...sectionStyles}>
         {!isComplete ? (
           <>
-            <div className="wizard-progress" aria-hidden="true">
-              {customizeLiftSteps.map((item, index) => (
-                <span className={index <= stepIndex ? 'wizard-progress__dot wizard-progress__dot--active' : 'wizard-progress__dot'} key={item.id} />
-              ))}
-            </div>
+            <Flex gap={2} mb={8} aria-hidden="true">
+              {customizeLiftSteps.map((item, index) => <Box key={item.id} flex="1" h="4px" bg={index <= stepIndex ? 'brand.500' : 'vip.cloud'} />)}
+            </Flex>
             {!isContactStep ? (
-              <div className="wizard-step">
-                <p className="eyebrow">{step.title}</p>
-                <h2>{step.question}</h2>
-                <div className="wizard-options">
-                  {step.options.map((option) => (
-                    <button
-                      className={answers[step.id] === option ? 'wizard-option wizard-option--selected' : 'wizard-option'}
-                      key={option}
-                      type="button"
-                      onClick={() => selectOption(option)}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-                <div className="button-row">
-                  {stepIndex > 0 && (
-                    <button className="button button-secondary" type="button" onClick={() => setStepIndex((value) => value - 1)}>
-                      Back
-                    </button>
-                  )}
-                  <button
-                    className="button button-primary"
-                    type="button"
-                    disabled={!answers[step.id]}
-                    onClick={() => setStepIndex((value) => value + 1)}
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
+              <Stack gap={5}>
+                <Eyebrow>{step.title}</Eyebrow>
+                <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>{step.question}</Heading>
+                <Stack gap={3}>
+                  {step.options.map((option) => {
+                    const selected = answers[step.id] === option
+                    return (
+                      <Button
+                        key={option}
+                        minH="48px"
+                        justifyContent="flex-start"
+                        px={4}
+                        bg={selected ? 'rgba(62,106,225,.06)' : 'white'}
+                        color="vip.ink"
+                        border="1px solid"
+                        borderColor={selected ? 'brand.500' : 'vip.silver'}
+                        borderRadius="control"
+                        fontWeight="500"
+                        onClick={() => setAnswers((current) => ({ ...current, [step.id]: option }))}
+                        _hover={{ borderColor: 'brand.500', bg: 'rgba(62,106,225,.06)' }}
+                      >
+                        {option}
+                      </Button>
+                    )
+                  })}
+                </Stack>
+                <ButtonRow>
+                  {stepIndex > 0 && <Action variant="secondary" onClick={() => setStepIndex((value) => value - 1)}>Back</Action>}
+                  <Action disabled={!answers[step.id]} onClick={() => setStepIndex((value) => value + 1)}>Continue</Action>
+                </ButtonRow>
+              </Stack>
             ) : (
-              <form className="wizard-step contact-form" onSubmit={handleSubmit}>
-                <p className="eyebrow">Your details</p>
-                <h2>Where should we send your tailored enquiry?</h2>
-                <div className="contact-form__grid">
-                  <label>
-                    <span>Name</span>
-                    <input required value={contactInfo.name} onChange={(event) => setContactInfo((current) => ({ ...current, name: event.target.value }))} />
-                  </label>
-                  <label>
-                    <span>Phone</span>
-                    <input required type="tel" value={contactInfo.phone} onChange={(event) => setContactInfo((current) => ({ ...current, phone: event.target.value }))} />
-                  </label>
-                  <label>
-                    <span>Email (optional)</span>
-                    <input type="email" value={contactInfo.email} onChange={(event) => setContactInfo((current) => ({ ...current, email: event.target.value }))} />
-                  </label>
-                </div>
-                <div className="wizard-summary">
-                  <p className="eyebrow">Your selections</p>
-                  <ul className="proof-list">
-                    {customizeLiftSteps.map((item) => (
-                      <li key={item.id}>{item.title}: {answers[item.id]}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="button-row">
-                  <button className="button button-secondary" type="button" onClick={() => setStepIndex((value) => value - 1)}>
-                    Back
-                  </button>
-                  <button className="button button-primary" type="submit">
-                    Send Enquiry via Email
-                  </button>
-                </div>
-              </form>
+              <Stack as="form" gap={5} onSubmit={handleSubmit}>
+                <Eyebrow>Your details</Eyebrow>
+                <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Where should we send your tailored enquiry?</Heading>
+                <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
+                  <FormField label="Name"><Input required value={contactInfo.name} onChange={(event) => setContactInfo((current) => ({ ...current, name: event.target.value }))} {...fieldStyles} /></FormField>
+                  <FormField label="Phone"><Input required type="tel" value={contactInfo.phone} onChange={(event) => setContactInfo((current) => ({ ...current, phone: event.target.value }))} {...fieldStyles} /></FormField>
+                  <FormField label="Email (optional)"><Input type="email" value={contactInfo.email} onChange={(event) => setContactInfo((current) => ({ ...current, email: event.target.value }))} {...fieldStyles} /></FormField>
+                </Grid>
+                <Box p={5} bg="vip.ash"><Eyebrow>Your selections</Eyebrow><Box mt={4}><ProofList items={customizeLiftSteps.map((item) => `${item.title}: ${answers[item.id]}`)} /></Box></Box>
+                <ButtonRow>
+                  <Action variant="secondary" onClick={() => setStepIndex((value) => value - 1)}>Back</Action>
+                  <Action type="submit">Send Enquiry via Email</Action>
+                </ButtonRow>
+              </Stack>
             )}
           </>
         ) : (
-          <div className="wizard-step">
-            <h2>Your email app should open with your enquiry.</h2>
-            <p>If it did not open, call us directly or use the contact form.</p>
-            <div className="button-row">
-              <a className="button button-primary" href={contact.phoneHref}>Call VIP Lift</a>
-              <Link className="button button-secondary" to="/contact">Contact page</Link>
-            </div>
-          </div>
+          <Stack gap={5}>
+            <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Your email app should open with your enquiry.</Heading>
+            <Text color="vip.graphite">If it did not open, call us directly or use the contact form.</Text>
+            <ButtonRow justify="flex-start"><Action href={contact.phoneHref}>Call VIP Lift</Action><Action to="/contact" variant="secondary">Contact page</Action></ButtonRow>
+          </Stack>
         )}
-      </section>
+      </Box>
     </PageShell>
   )
 }
 
-function Contact() {
-  const data = pageHeroes.contact
+function ContactCard({ href, label, children }) {
+  const styles = {
+    display: 'grid',
+    gap: 2,
+    minH: '140px',
+    p: 6,
+    bg: 'vip.ash',
+    color: 'vip.ink',
+    transition: 'background-color .33s',
+    _hover: href ? { bg: 'vip.cloud' } : undefined,
+  }
+  const content = <><Text color="vip.pewter">{label}</Text><Text fontSize="lg" fontWeight="500" lineHeight="1.3">{children}</Text></>
+  return href ? <chakra.a href={href} {...styles}>{content}</chakra.a> : <Box {...styles}>{content}</Box>
+}
 
+function Contact() {
   return (
     <PageShell>
-      <section className="page-hero page-hero--image" style={{ '--hero-image': `url(${data.image})` }}>
-        <p className="eyebrow">{data.eyebrow}</p>
-        <h1>{data.title}</h1>
-        <p>{data.summary}</p>
-        <p className="hero-trust page-hero-trust">{contact.responseTime}</p>
-      </section>
-      <section className="section contact-grid">
-        <a className="contact-card" href={contact.phoneHref}>
-          <span>Phone</span>
-          <strong>{contact.phone}</strong>
-        </a>
-        {featureFlags.whatsapp && (
-          <a className="contact-card" href={contact.whatsappHref} target="_blank" rel="noreferrer">
-            <span>WhatsApp</span>
-            <strong>Message VIP Lift</strong>
-          </a>
-        )}
-        <a className="contact-card" href={`mailto:${contact.email}`}>
-          <span>Email</span>
-          <strong>{contact.email}</strong>
-        </a>
-        {featureFlags.calendly && (
-          <a className="contact-card" href={contact.calendlyHref} target="_blank" rel="noreferrer">
-            <span>Consultation</span>
-            <strong>{contact.calendlyLabel}</strong>
-          </a>
-        )}
-        <a className="contact-card" href={contact.mapHref} target="_blank" rel="noreferrer">
-          <span>Address</span>
-          <strong>{contact.address}</strong>
-        </a>
-        <div className="contact-card">
-          <span>Working hours</span>
-          <strong>{contact.hours}</strong>
-        </div>
-      </section>
-      <section className="section section-muted">
-        <div className="section-heading">
-          <p className="eyebrow">Send an enquiry</p>
-          <h2>Tell us about your project.</h2>
-        </div>
+      <PageHero data={pageHeroes.contact} />
+      <Grid as="section" templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4} {...sectionStyles}>
+        <ContactCard href={contact.phoneHref} label="Phone">{contact.phone}</ContactCard>
+        {featureFlags.whatsapp && <ContactCard href={contact.whatsappHref} label="WhatsApp">Message VIP Lift</ContactCard>}
+        <ContactCard href={`mailto:${contact.email}`} label="Email">{contact.email}</ContactCard>
+        {featureFlags.calendly && <ContactCard href={contact.calendlyHref} label="Consultation">{contact.calendlyLabel}</ContactCard>}
+        <ContactCard href={contact.mapHref} label="Address">{contact.address}</ContactCard>
+        <ContactCard label="Working hours">{contact.hours}</ContactCard>
+      </Grid>
+      <Box as="section" bg="vip.ash" {...sectionStyles}>
+        <SectionHeading eyebrow="Send an enquiry" title="Tell us about your project." />
         <ContactForm />
-      </section>
-      <section className="section" id="faq">
-        <FaqSection />
-      </section>
+      </Box>
+      <Box id="faq" {...sectionStyles}><FaqSection nested /></Box>
       <CtaBand
         eyebrow="Request information"
         title="Looking for a lift solution for your home or business?"
-        primary={
-          <a className="button button-primary" href={`mailto:${contact.email}?subject=VIP%20Lift%20Information%20Pack`}>
-            Request Your Free Information Pack
-          </a>
-        }
-        secondary={
-          <a className="button button-secondary" href={contact.phoneHref}>
-            Call for a Site Visit
-          </a>
-        }
+        primary={<Action href={`mailto:${contact.email}?subject=VIP%20Lift%20Information%20Pack`}>Request Your Free Information Pack</Action>}
+        secondary={<Action href={contact.phoneHref} variant="secondary">Call for a Site Visit</Action>}
       />
     </PageShell>
   )
