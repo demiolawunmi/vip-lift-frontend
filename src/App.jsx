@@ -256,10 +256,10 @@ function Header({ overHero = false }) {
       left="0"
       zIndex="20"
       w="full"
-      minH="76px"
+      minH="88px"
       px={{ base: 5, md: 8, xl: 12 }}
       py={3}
-      templateColumns={{ base: '1fr auto', lg: 'minmax(210px, 1fr) auto minmax(210px, 1fr)' }}
+      templateColumns={{ base: '1fr auto', lg: 'minmax(250px, 1fr) auto minmax(250px, 1fr)' }}
       gap={4}
       alignItems="center"
       color={foreground}
@@ -273,7 +273,7 @@ function Header({ overHero = false }) {
         <Image
           src={transparent ? brand.logoLight : brand.logo}
           alt="VIP Lift Nigeria"
-          h={{ base: '30px', md: '34px' }}
+          h={{ base: '38px', md: '44px' }}
           w="auto"
           objectFit="contain"
         />
@@ -310,7 +310,7 @@ function Header({ overHero = false }) {
         display={{ base: open ? 'flex' : 'none', lg: 'flex' }}
         direction={{ base: 'column', lg: 'row' }}
         justify="center"
-        gap={{ base: 1, lg: 0 }}
+        gap={{ base: 1, lg: 2 }}
         p={{ base: 3, lg: 0 }}
         bg={{ base: 'bg.surface', lg: 'transparent' }}
         border={{ base: '1px solid', lg: '0' }}
@@ -385,7 +385,12 @@ function Footer() {
       backgroundSize="cover"
     >
       <Stack gap={6}>
-        <Image src={brand.logoLight} alt="VIP Lift Nigeria" h="38px" w="fit-content" />
+        <Image
+          src={brand.logoLight}
+          alt="VIP Lift Nigeria"
+          h={{ base: '48px', md: '58px' }}
+          w="fit-content"
+        />
         <Heading as="h2" maxW="620px" fontSize={{ base: '3xl', md: '5xl' }} {...headingStyles}>
           The right lift for the building. Local support for the journey.
         </Heading>
