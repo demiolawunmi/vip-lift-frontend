@@ -544,17 +544,24 @@ function TestimonialSection() {
   const [previewIndex, setPreviewIndex] = useState(null)
   const [quoteBlurred, setQuoteBlurred] = useState(false)
   const transitionTimeoutRef = useRef(null)
+  const revealTimeoutRef = useRef(null)
   const active = testimonials[activeIndex]
 
-  useEffect(() => () => window.clearTimeout(transitionTimeoutRef.current), [])
+  useEffect(() => () => {
+    window.clearTimeout(transitionTimeoutRef.current)
+    window.clearTimeout(revealTimeoutRef.current)
+  }, [])
 
   function handleSelect(index) {
     if (index === activeIndex) return
     window.clearTimeout(transitionTimeoutRef.current)
+    window.clearTimeout(revealTimeoutRef.current)
     setQuoteBlurred(true)
     transitionTimeoutRef.current = window.setTimeout(() => {
       setActiveIndex(index)
-      setQuoteBlurred(false)
+      revealTimeoutRef.current = window.setTimeout(() => {
+        setQuoteBlurred(false)
+      }, 40)
     }, 170)
   }
 
@@ -564,27 +571,65 @@ function TestimonialSection() {
         aria-hidden="true"
         position="absolute"
         inset="0"
-        bg="radial-gradient(circle at 50% 10%, rgba(22,138,85,.16), transparent 34%)"
+        bg="radial-gradient(circle at 78% 18%, rgba(22,138,85,.2), transparent 32%), radial-gradient(circle at 18% 82%, rgba(62,106,225,.16), transparent 30%)"
         pointerEvents="none"
       />
-      <Stack
+      <Grid
         position="relative"
         maxW="content"
         mx="auto"
-        gap={{ base: 9, md: 12 }}
+        templateColumns={{ base: '1fr', lg: '0.88fr 1.12fr' }}
+        gap={{ base: 10, lg: 20 }}
         alignItems="center"
-        textAlign="center"
       >
+        <Stack gap={5}>
+          <Eyebrow color="vip.platinum">Client Confidence</Eyebrow>
+          <Heading as="h2" textStyle="sectionTitle" color="text.inverse">
+            Trusted for the full life of the lift
+          </Heading>
+          <Text maxW="620px" color="rgba(255,255,255,.78)">
+            From initial supply and installation to repairs, servicing, and maintenance, VIP Lift
+            Nigeria is built to support lift systems long after handover.
+          </Text>
+          <Stack as="ul" gap={3} m={0} p={0} listStyleType="none" pt={2}>
+            {trustBullets.map((bullet) => (
+              <Flex
+                as="li"
+                key={bullet}
+                alignItems="flex-start"
+                gap={3}
+                color="rgba(255,255,255,.76)"
+              >
+                <Box flexShrink={0} mt="10px" w="6px" h="6px" borderRadius="full" bg="accent.primary" />
+                <Text>{bullet}</Text>
+              </Flex>
+            ))}
+          </Stack>
+          {featureFlags.googleReviews && (
+            <Box>
+              <TextLink
+                href={contact.googleBusinessHref}
+                color="vip.platinum"
+                _hover={{ color: 'white', textDecoration: 'underline' }}
+              >
+                Read our Google reviews
+              </TextLink>
+            </Box>
+          )}
+        </Stack>
+
         <Box
           position="relative"
-          maxW="980px"
-          px={{ base: 0, md: 8 }}
+          w="full"
+          px={{ base: 0, md: 6 }}
+          py={{ base: 4, md: 8 }}
+          textAlign="center"
         >
           <Text
             aria-hidden="true"
             position="absolute"
-            top={{ base: '-26px', md: '-44px' }}
-            left={{ base: '-4px', md: '-34px' }}
+            top={{ base: '-20px', md: '-28px' }}
+            left={{ base: '-4px', md: '-18px' }}
             color="rgba(255,255,255,.055)"
             fontFamily="heading"
             fontSize={{ base: '7xl', md: '9xl' }}
@@ -595,8 +640,8 @@ function TestimonialSection() {
           <Text
             aria-hidden="true"
             position="absolute"
-            right={{ base: '-4px', md: '-34px' }}
-            bottom={{ base: '4px', md: '-22px' }}
+            right={{ base: '-4px', md: '-18px' }}
+            bottom={{ base: '96px', md: '82px' }}
             color="rgba(255,255,255,.055)"
             fontFamily="heading"
             fontSize={{ base: '7xl', md: '9xl' }}
@@ -609,18 +654,18 @@ function TestimonialSection() {
             gap={{ base: 5, md: 7 }}
             m={0}
             key={active.id}
-            opacity={quoteBlurred ? 0.38 : 1}
+            opacity={quoteBlurred ? 0.34 : 1}
             filter={quoteBlurred ? 'blur(8px)' : 'blur(0)'}
-            transform={quoteBlurred ? 'translateY(6px) scale(.99)' : 'translateY(0) scale(1)'}
-            transition="opacity 180ms ease, filter 180ms ease, transform 180ms ease"
+            transform={quoteBlurred ? 'translateY(8px) scale(.985)' : 'translateY(0) scale(1)'}
+            transition="opacity 240ms ease, filter 240ms ease, transform 240ms ease"
           >
             <Heading
               as="h2"
-              fontFamily="body"
-              fontWeight="400"
-              fontSize={{ base: '3xl', md: '5xl', lg: '6xl' }}
-              lineHeight={{ base: '1.12', md: '1.08' }}
-              letterSpacing="-0.04em"
+              fontFamily="heading"
+              fontWeight="500"
+              fontSize={{ base: '3xl', md: '4xl', xl: '5xl' }}
+              lineHeight={{ base: '1.08', md: '1.02' }}
+              letterSpacing="-0.02em"
               color="rgba(255,255,255,.94)"
             >
               {active.quote}
@@ -629,10 +674,10 @@ function TestimonialSection() {
               {active.type} · {active.role}
             </Text>
           </Stack>
-        </Box>
 
         <Flex
           gap={{ base: 2.5, md: 3 }}
+          mt={{ base: 8, md: 10 }}
           flexWrap="wrap"
           justify="center"
           role="group"
@@ -654,7 +699,8 @@ function TestimonialSection() {
                 aria-pressed={isActive}
                 minH="56px"
                 minW="56px"
-                w={isOpen ? { base: 'auto', md: '250px' } : '56px'}
+                w={isOpen ? 'auto' : '56px'}
+                maxW={{ base: '100%', sm: '260px' }}
                 px={isOpen ? { base: 2, md: 2.5 } : 0}
                 borderRadius="999px"
                 bg={isActive ? 'surface.light' : isPreviewed ? 'rgba(255,255,255,.16)' : 'rgba(255,255,255,.07)'}
@@ -666,7 +712,7 @@ function TestimonialSection() {
                 fontSize="sm"
                 fontWeight="700"
                 overflow="hidden"
-                transition="width 220ms ease, padding 220ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease"
+                transition="padding 220ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease"
                 _hover={{
                   bg: isActive ? 'surface.light' : 'rgba(255,255,255,.16)',
                   color: isActive ? 'text.primary' : 'vip.platinum',
@@ -697,6 +743,7 @@ function TestimonialSection() {
                   <Text
                     as="span"
                     display={isOpen ? 'block' : 'none'}
+                    maxW={{ base: '180px', sm: '190px' }}
                     whiteSpace="nowrap"
                     overflow="hidden"
                     textOverflow="ellipsis"
@@ -711,41 +758,9 @@ function TestimonialSection() {
             )
           })}
         </Flex>
+        </Box>
 
-        <Stack gap={4} alignItems="center" maxW="840px">
-          <Eyebrow color="vip.platinum">Client Confidence</Eyebrow>
-          <Grid as="ul" templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={3} m={0} p={0} listStyleType="none">
-            {trustBullets.map((bullet) => (
-              <Flex
-                as="li"
-                key={bullet}
-                alignItems="center"
-                justifyContent="center"
-                gap={2}
-                px={4}
-                py={3}
-                border="1px solid"
-                borderColor="rgba(255,255,255,.1)"
-                borderRadius="button"
-                color="rgba(255,255,255,.68)"
-                fontSize="xs"
-              >
-                <Box flexShrink={0} w="5px" h="5px" borderRadius="full" bg="accent.primary" />
-                <Text>{bullet}</Text>
-              </Flex>
-            ))}
-          </Grid>
-          {featureFlags.googleReviews && (
-            <TextLink
-              href={contact.googleBusinessHref}
-              color="vip.platinum"
-              _hover={{ color: 'white', textDecoration: 'underline' }}
-            >
-              Read our Google reviews
-            </TextLink>
-          )}
-        </Stack>
-      </Stack>
+      </Grid>
     </Box>
   )
 }
