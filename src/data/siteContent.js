@@ -11,7 +11,10 @@ export const featureFlags = {
 }
 
 export const images = {
-  heroHome: '/assets/images/hero-home.jpg',
+  heroHome: '/assets/images/brand/residential-lift-hero.jpg',
+  platformLift: '/assets/images/brand/platform-lift-atrium.jpg',
+  commercialLift: '/assets/images/brand/commercial-lift-lobby.jpg',
+  architecturalPattern: '/assets/brand/architectural-shaft-pattern.svg',
   cabinMachineRoom: '/assets/images/cabin-machine-room.jpg',
   officeBuilding: '/assets/images/office-building.jpg',
   homeResidential: '/assets/images/home-residential.jpg',
@@ -27,10 +30,12 @@ export const images = {
 }
 
 export const brand = {
-  logo: '/assets/logo.png',
-  logoLight: '/assets/logo-light.png',
+  logo: '/assets/brand/logo-horizontal-navy.svg',
+  logoLight: '/assets/brand/logo-horizontal-white.svg',
+  symbol: '/assets/brand/symbol-navy.svg',
+  symbolLight: '/assets/brand/symbol-white.svg',
   favicon: '/assets/favicon.png',
-  tagline: 'Value, Innovation and Prestige',
+  tagline: 'Value. Innovation. Prestige.',
 }
 
 export const contact = {
@@ -60,26 +65,26 @@ export const inquiryBar = {
 
 export const navItems = [
   { label: 'Home', href: '/' },
+  { label: 'Solutions', href: '/services/home-lifts' },
+  { label: 'Maintenance', href: '/services/maintenance' },
   { label: 'About', href: '/about' },
   { label: 'Projects', href: '/projects' },
-  { label: 'Services', href: '/services/home-lifts' },
-  { label: 'Customize Lift', href: '/customize-lift' },
   { label: 'Contact', href: '/contact' },
 ]
 
 export const hero = {
-  eyebrow: 'Value, Innovation and Prestige',
-  title: 'Lift solutions for homes and businesses in Lagos',
+  eyebrow: 'Lift solutions, supported locally',
+  title: 'Premium lift solutions for Nigerian homes and buildings.',
   summary:
-    'VIP Lift Nigeria supplies, installs, and maintains elegant platform and MRL lift systems for private homes, public buildings, and commercial environments across Nigeria.',
-  promo: 'Supply, installation, and maintenance from Lagos',
+    'VIP Lift Nigeria supplies, installs, repairs, services, and maintains selected international lift systems for residential, commercial, and public spaces.',
+  promo: 'Platform lifts · Traction lifts · Maintenance',
   primaryCta: {
-    label: 'Call for a Site Visit',
-    href: contact.phoneHref,
+    label: 'Request a Quote',
+    href: `mailto:${contact.email}?subject=VIP%20Lift%20Project%20Enquiry`,
   },
   secondaryCta: {
-    label: 'Request Home Lift Consultation',
-    href: `mailto:${contact.email}?subject=VIP%20Lift%20Home%20Lift%20Consultation`,
+    label: 'Book an Inspection',
+    href: contact.phoneHref,
   },
   image: images.heroHome,
 }
@@ -87,10 +92,10 @@ export const hero = {
 export const pageHeroes = {
   about: {
     eyebrow: 'Who we are',
-    title: 'A lift technology and engineering company operating from Lagos.',
+    title: 'A Nigerian lift-solutions partner with local support at its core.',
     summary:
-      'VIP Lift specializes in the supply, installation, and maintenance of Cibes lifts and other premium elevating solutions for private homes and public buildings.',
-    image: images.cabinMachineRoom,
+      'We help homeowners, architects, developers, and property teams select, install, and care for lift systems suited to each building.',
+    image: images.platformLift,
   },
   projects: {
     eyebrow: 'Completed projects',
@@ -103,8 +108,8 @@ export const pageHeroes = {
     eyebrow: 'Get in touch',
     title: 'Discuss a lift solution for your home or business.',
     summary:
-      'We would be delighted to discuss how VIP Lift can present valuable, innovative, and prestigious lift solutions at a date and time convenient to you.',
-    image: images.homeResidential,
+      'Tell us about the building, the people it needs to serve, and whether you are planning a new lift or need support for an existing system.',
+    image: images.platformLift,
   },
   serviceArea: {
     eyebrow: 'Where we work',
@@ -125,23 +130,28 @@ export const pageHeroes = {
 export const processSteps = [
   {
     step: '01',
-    title: 'Enquiry',
-    summary: 'Call, email, or WhatsApp us with your building type and lift requirements.',
+    title: 'Consultation',
+    summary: 'Tell us about the building, users, space, and project goals.',
   },
   {
     step: '02',
-    title: 'Site survey',
-    summary: 'We assess your space, access routes, and structural considerations on site.',
+    title: 'Site assessment',
+    summary: 'We review the available space, access, and practical building conditions.',
   },
   {
     step: '03',
-    title: 'Design and quote',
-    summary: 'Receive specifications, drawings where needed, and a detailed quotation.',
+    title: 'Lift selection',
+    summary: 'We recommend an appropriate platform or traction lift direction.',
   },
   {
     step: '04',
-    title: 'Install and support',
-    summary: 'Coordinated installation followed by maintenance and after-sales support.',
+    title: 'Supply & installation',
+    summary: 'Delivery, preparation, and installation are coordinated with the project team.',
+  },
+  {
+    step: '05',
+    title: 'Service & maintenance',
+    summary: 'Handover is followed by a clear path for servicing and long-term support.',
   },
 ]
 
@@ -149,7 +159,7 @@ export const faqItems = [
   {
     question: 'Can a platform lift fit in an existing home without major construction?',
     answer:
-      'In many cases, yes. Cibes platform lifts are designed for retrofit installations with compact footprints and flexible dimensions. A site survey confirms what is possible for your building.',
+      'In many cases, yes. Platform lifts can suit retrofit installations with compact footprints and flexible layouts. A site survey confirms what is possible for your building.',
   },
   {
     question: 'How long does installation typically take?',
@@ -159,12 +169,12 @@ export const faqItems = [
   {
     question: 'Do you provide maintenance after installation?',
     answer:
-      'Yes. VIP Lift offers after-sales maintenance for Cibes platform lifts and Italian MRL installations, with coordinated support from our Lagos office.',
+      'Yes. VIP Lift provides routine servicing, repairs, inspections, and maintenance support for systems within its supported range.',
   },
   {
-    question: 'What certifications do your lifts carry?',
+    question: 'Which lift type is right for my building?',
     answer:
-      'Our lifts are CE-certified and compliant with European Standard EN 81-41 and the Machinery Directive 2006/42/EC.',
+      'Platform lifts often suit homes, duplexes, accessibility retrofits, and low-rise spaces. Traction lifts are generally better suited to apartments, hotels, offices, and higher-use buildings. We confirm the appropriate direction after reviewing the site and usage needs.',
   },
   {
     question: 'How do I get a quote?',
@@ -189,31 +199,10 @@ export const faqItems = [
 ]
 
 export const certifications = [
-  { label: 'CE Certified', detail: 'European conformity assessment' },
-  { label: 'EN 81-41', detail: 'Platform lift safety standard' },
-  { label: 'Machinery Directive', detail: '2006/42/EC compliant' },
-  { label: 'Cibes Partner', detail: 'Swedish platform lift systems' },
-]
-
-export const testimonials = [
-  {
-    quote:
-      'The installation was coordinated smoothly from specification through commissioning. The lift fits the building well and operates quietly.',
-    source: 'Facility manager',
-    context: 'Private club installation, Lagos',
-  },
-  {
-    quote:
-      'VIP Lift provided the technical drawings and dimensions we needed early in the design phase, which helped keep the project on schedule.',
-    source: 'Project architect',
-    context: 'Residential retrofit, Lagos Island',
-  },
-  {
-    quote:
-      'We needed accessibility access in an existing public building. The platform lift solution addressed the space constraints without extensive structural changes.',
-    source: 'Building owner representative',
-    context: 'Public building, Lagos',
-  },
+  { label: 'Building-specific guidance', detail: 'Selection based on space, use, and project needs' },
+  { label: 'Local coordination', detail: 'A Nigerian contact point from enquiry to support' },
+  { label: 'Installation support', detail: 'Clear planning, preparation, and handover' },
+  { label: 'Long-term care', detail: 'Servicing and maintenance after installation' },
 ]
 
 export const serviceAreas = [
@@ -231,17 +220,17 @@ export const serviceAreas = [
 export const services = [
   {
     slug: 'home-lifts',
-    title: 'Home Lifts',
+    title: 'Platform Lifts',
     summary:
-      'Space-conscious platform lifts designed as tasteful alternatives to stairs and value-adding additions to private homes.',
+      'Compact, design-conscious lift solutions for homes, duplexes, accessibility needs, and low-rise spaces.',
     description:
-      'VIP Lift supplies and installs platform lifts for private residences where conventional elevators may not fit. Our home lift solutions are quiet, compact, and suitable for new builds and retrofits in existing homes.',
-    image: images.homeResidential,
+      'VIP Lift supplies and installs platform lifts for homes and low-rise buildings where space, accessibility, and visual integration matter. A site assessment determines the right footprint and installation approach.',
+    image: images.platformLift,
     highlights: [
-      'Compact footprint for existing homes',
-      'Electric screw technology — quiet operation',
-      'Flexible interior finishes',
-      'Capacities up to 1000 kg',
+      'Homes, duplexes, and low-rise buildings',
+      'Accessibility and retrofit applications',
+      'Compact, space-conscious layouts',
+      'Finish and configuration guidance',
     ],
     primaryCta: {
       label: 'Request Home Lift Consultation',
@@ -250,17 +239,17 @@ export const services = [
   },
   {
     slug: 'public-lifts',
-    title: 'Public Lifts',
+    title: 'Traction Lifts',
     summary:
-      'Flexible lift solutions for hospitals, shopping malls, churches, offices, schools, restaurants, factories, clubs, and apartment buildings.',
+      'Engineered lift systems for apartments, offices, hotels, malls, churches, and higher-use buildings.',
     description:
-      'From clubs and offices to hospitals and public buildings, VIP Lift provides MRL and platform lift systems designed for high-traffic environments with reliable performance and coordinated installation.',
-    image: images.officeBuilding,
+      'VIP Lift coordinates traction lift solutions for multi-storey and higher-use buildings, helping project teams align capacity, building conditions, usage, and installation requirements.',
+    image: images.commercialLift,
     highlights: [
-      'Commercial and public building experience',
-      'Italian MRL lift systems',
-      'Accessibility and compliance focus',
-      'Project coordination from Lagos',
+      'Apartments, offices, and hotels',
+      'Malls, churches, and public buildings',
+      'Capacity and traffic-flow guidance',
+      'Project coordination and installation support',
     ],
     primaryCta: {
       label: 'Get a Project Quote',
@@ -269,32 +258,60 @@ export const services = [
   },
   {
     slug: 'maintenance',
-    title: 'Maintenance',
+    title: 'Repairs & Maintenance',
     summary:
-      'First-class after-sales maintenance support for Swedish-made Cibes lifts and Italian MRL lift installations.',
+      'Local support for lift inspections, routine servicing, repairs, and long-term reliability.',
     description:
-      'Keep your lift running safely with scheduled maintenance and responsive support. VIP Lift maintains Cibes platform lifts and Italian MRL installations with a fixed contact point from our Lagos office.',
+      'Keep your lift dependable with scheduled maintenance and responsive support. VIP Lift assesses existing systems, coordinates repairs, and provides servicing for lifts within its supported range.',
     image: images.cabinMachineRoom,
     highlights: [
       'After-sales support from Lagos',
-      'Cibes and MRL system expertise',
       'Scheduled maintenance programmes',
-      'Existing lift? Call for support',
+      'Inspection and fault assessment',
+      'Repair and breakdown coordination',
+      'A consistent local contact point',
     ],
     primaryCta: {
       label: 'Book a Service Call',
       subject: 'VIP%20Lift%20Maintenance%20Enquiry',
     },
   },
+  {
+    slug: 'supply-installation',
+    title: 'Supply & Installation',
+    summary:
+      'Guidance from early product selection and site assessment through installation, handover, and support.',
+    description:
+      'VIP Lift coordinates the practical path from lift selection to installation. We work with clients and project teams to clarify requirements, prepare the site, manage delivery, and support handover.',
+    image: images.cabinMachineRoom,
+    highlights: [
+      'Project consultation and lift selection',
+      'Site assessment and preparation guidance',
+      'Supply and installation coordination',
+      'Handover and after-sales support',
+    ],
+    primaryCta: {
+      label: 'Discuss Your Project',
+      subject: 'VIP%20Lift%20Supply%20and%20Installation%20Enquiry',
+    },
+  },
 ]
 
 export const proofPoints = [
-  'Swedish-made Cibes platform lifts and Italian MRL lift systems',
-  'CE-Certified safe and compliant with European Standard EN 81-41',
-  'Compliant with the Machinery Directive 2006/42/EC',
-  'Powered by electric lifting screw technology, not hydraulics',
-  'Quiet, user-friendly, robust, and suitable for existing buildings',
-  'After-sales maintenance and project coordination from Lagos',
+  'Platform and traction lift guidance based on the building and its use',
+  'Support for residential, commercial, institutional, and public spaces',
+  'Site assessment, product selection, supply, and installation coordination',
+  'Repair, servicing, and maintenance support from a Nigerian team',
+  'Clear project communication from first enquiry through handover',
+]
+
+export const solutionGuide = [
+  { need: 'Duplex or private home', direction: 'Platform lift' },
+  { need: 'Accessibility retrofit', direction: 'Platform lift' },
+  { need: 'Apartment building', direction: 'Traction lift' },
+  { need: 'Hotel, office, or church', direction: 'Traction lift' },
+  { need: 'Existing lift issue', direction: 'Repairs & maintenance' },
+  { need: 'New lift project', direction: 'Supply & installation' },
 ]
 
 export const audiences = [
@@ -346,7 +363,7 @@ export const audiences = [
     benefits: [
       'Solutions for new and existing buildings',
       'Quiet, user-friendly operation',
-      'European-standard safety and compliance',
+      'Selection guidance based on building and usage needs',
       'After-sales maintenance from Lagos',
     ],
     primaryCta: {

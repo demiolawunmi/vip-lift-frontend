@@ -11,6 +11,7 @@ import {
   Text,
   Textarea,
   chakra,
+  useRecipe,
 } from '@chakra-ui/react'
 import {
   Link as ReactRouterLink,
@@ -32,6 +33,7 @@ import {
   getProjectBySlug,
   getServiceBySlug,
   hero,
+  images,
   inquiryBar,
   mailtoHref,
   navItems,
@@ -41,14 +43,14 @@ import {
   proofPoints,
   serviceAreas,
   services,
-  testimonials,
+  solutionGuide,
 } from './data/siteContent.js'
 
 const RouterLink = chakra(ReactRouterLink)
 const RouterNavLink = chakra(NavLink)
 
 const pageMeta = {
-  '/': ['VIP Lift Nigeria | Modern Lift Solutions', 'Premium lift solutions for homes, public buildings, and commercial spaces in Nigeria.'],
+  '/': ['VIP Lift Nigeria | Premium Lift Solutions', 'VIP Lift Nigeria supplies, installs, repairs, services, and maintains platform and traction lift systems.'],
   '/about': ['About VIP Lift Nigeria', 'Learn how VIP Lift supports architects, contractors, and building owners with lift engineering services.'],
   '/projects': ['VIP Lift Projects', 'Explore selected VIP Lift Nigeria installations and lift project examples.'],
   '/contact': ['Contact VIP Lift Nigeria', 'Contact VIP Lift Nigeria in Lagos for lift supply, installation, and maintenance enquiries.'],
@@ -56,36 +58,22 @@ const pageMeta = {
   '/service-area': ['Service Area | VIP Lift Nigeria', 'VIP Lift serves Lagos and coordinates lift projects across Nigeria.'],
   '/for-architects': ['For Architects | VIP Lift Nigeria', 'Technical specifications, drawings, and design support for architects specifying lift solutions.'],
   '/for-contractors': ['For Contractors | VIP Lift Nigeria', 'Project coordination and installation support for contractors working with VIP Lift.'],
-  '/services/home-lifts': ['Home Lifts | VIP Lift Nigeria', 'Platform lifts for private homes — compact, quiet, and suitable for retrofits in Nigeria.'],
-  '/services/public-lifts': ['Public Lifts | VIP Lift Nigeria', 'Commercial and public building lift solutions for offices, clubs, hospitals, and more.'],
-  '/services/maintenance': ['Lift Maintenance | VIP Lift Nigeria', 'After-sales maintenance for Cibes platform lifts and Italian MRL installations.'],
+  '/services/home-lifts': ['Platform Lifts | VIP Lift Nigeria', 'Compact platform lift solutions for homes, duplexes, accessibility needs, and low-rise buildings.'],
+  '/services/public-lifts': ['Traction Lifts | VIP Lift Nigeria', 'Traction lift solutions for apartments, offices, hotels, churches, and higher-use buildings.'],
+  '/services/maintenance': ['Lift Repairs and Maintenance | VIP Lift Nigeria', 'Routine servicing, lift repairs, inspections, and maintenance support from VIP Lift Nigeria.'],
+  '/services/supply-installation': ['Lift Supply and Installation | VIP Lift Nigeria', 'Lift consultation, selection, supply, installation coordination, and handover support.'],
 }
 
 const sectionStyles = {
-  px: { base: 5, md: 10, lg: 18 },
-  py: { base: 16, md: 20, lg: 30 },
+  px: { base: 5, md: 10, lg: 16 },
+  py: { base: 16, md: 24, lg: 28 },
 }
 
 const headingStyles = {
   fontFamily: 'heading',
-  fontWeight: '500',
-  lineHeight: '1.2',
-  letterSpacing: 'normal',
-}
-
-const actionStyles = {
-  alignItems: 'center',
-  justifyContent: 'center',
-  minH: '40px',
-  minW: { base: '100%', sm: '200px' },
-  px: 4,
-  border: '3px solid transparent',
-  borderRadius: 'control',
-  fontSize: 'sm',
-  fontWeight: '500',
-  lineHeight: '1',
-  textAlign: 'center',
-  transition: 'background-color 0.33s, border-color 0.33s, color 0.33s',
+  fontWeight: '600',
+  lineHeight: '1.05',
+  letterSpacing: '-0.015em',
 }
 
 function getPageMeta(pathname) {
@@ -118,7 +106,7 @@ function SchemaMarkup() {
       '@context': 'https://schema.org',
       '@type': 'LocalBusiness',
       name: 'VIP Lift Nigeria',
-      description: 'Premium lift supply, installation, and maintenance for homes and businesses in Nigeria.',
+      description: 'Lift supply, installation, repairs, servicing, and maintenance for homes and buildings in Nigeria.',
       url: window.location.origin,
       telephone: contact.phone,
       email: contact.email,
@@ -156,9 +144,9 @@ function SchemaMarkup() {
   return null
 }
 
-function Eyebrow({ children, color = 'vip.pewter', ...props }) {
+function Eyebrow({ children, color = 'text.subtle', ...props }) {
   return (
-    <Text color={color} fontSize="sm" fontWeight="500" {...props}>
+    <Text color={color} textStyle="label" {...props}>
       {children}
     </Text>
   )
@@ -166,10 +154,10 @@ function Eyebrow({ children, color = 'vip.pewter', ...props }) {
 
 function TextLink({ to, href, children, ...props }) {
   const styles = {
-    color: 'vip.pewter',
+    color: 'text.subtle',
     fontSize: 'sm',
     transition: 'color 0.33s',
-    _hover: { color: 'vip.ink', textDecoration: 'underline' },
+    _hover: { color: 'text.primary', textDecoration: 'underline' },
     ...props,
   }
 
@@ -179,9 +167,8 @@ function TextLink({ to, href, children, ...props }) {
 }
 
 function Action({ to, href, children, variant = 'primary', type, disabled, onClick, ...props }) {
-  const variantStyles = variant === 'primary'
-    ? { bg: 'brand.500', color: 'white', _hover: { bg: 'brand.600' } }
-    : { bg: 'white', color: 'vip.graphite', _hover: { bg: 'vip.ash' } }
+  const recipe = useRecipe({ key: 'action' })
+  const styles = recipe({ variant })
 
   if (type || onClick) {
     return (
@@ -189,8 +176,7 @@ function Action({ to, href, children, variant = 'primary', type, disabled, onCli
         type={type ?? 'button'}
         disabled={disabled}
         onClick={onClick}
-        {...actionStyles}
-        {...variantStyles}
+        css={styles}
         {...props}
       >
         {children}
@@ -198,10 +184,9 @@ function Action({ to, href, children, variant = 'primary', type, disabled, onCli
     )
   }
 
-  const styles = { display: 'inline-flex', ...actionStyles, ...variantStyles, ...props }
   return to
-    ? <RouterLink to={to} {...styles}>{children}</RouterLink>
-    : <chakra.a href={href} {...styles}>{children}</chakra.a>
+    ? <RouterLink to={to} css={styles} {...props}>{children}</RouterLink>
+    : <chakra.a href={href} css={styles} {...props}>{children}</chakra.a>
 }
 
 function ButtonRow({ children, justify = 'center' }) {
@@ -220,9 +205,9 @@ function ButtonRow({ children, justify = 'center' }) {
 
 function SectionHeading({ eyebrow, title, children }) {
   return (
-    <Stack gap={3} maxW="720px" mb={8}>
+    <Stack gap={4} maxW="720px" mb={{ base: 8, md: 12 }}>
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>
+      <Heading as="h2" textStyle="sectionTitle">
         {title}
       </Heading>
       {children}
@@ -261,7 +246,7 @@ function Header({ overHero = false }) {
   }, [pathname])
 
   const transparent = overHero && !solid
-  const foreground = transparent ? 'white' : 'vip.ink'
+  const foreground = transparent ? 'text.inverse' : 'text.primary'
 
   return (
     <Grid
@@ -271,69 +256,67 @@ function Header({ overHero = false }) {
       left="0"
       zIndex="20"
       w="full"
-      minH="56px"
-      px={{ base: 4, lg: 12 }}
-      py={2}
-      templateColumns={{ base: '1fr auto auto', md: 'minmax(140px, 1fr) auto minmax(140px, 1fr)' }}
-      gap={2}
+      minH="76px"
+      px={{ base: 5, md: 8, xl: 12 }}
+      py={3}
+      templateColumns={{ base: '1fr auto', lg: 'minmax(210px, 1fr) auto minmax(210px, 1fr)' }}
+      gap={4}
       alignItems="center"
       color={foreground}
-      bg={transparent ? 'transparent' : 'rgba(255,255,255,.78)'}
-      backdropFilter={transparent ? 'none' : 'blur(12px)'}
-      transition="background-color 0.33s, color 0.33s, backdrop-filter 0.33s"
+      bg={transparent ? 'transparent' : 'rgba(246,246,242,.94)'}
+      borderBottom="1px solid"
+      borderColor={transparent ? 'transparent' : 'border.subtle'}
+      backdropFilter={transparent ? 'none' : 'blur(18px)'}
+      transition="background-color 180ms, color 180ms, backdrop-filter 180ms"
     >
-      <RouterLink
-        to="/"
-        aria-label="VIP Lift home"
-        display="inline-flex"
-        alignItems="center"
-        gap={2.5}
-        w="fit-content"
-      >
-        <Image src={transparent ? brand.logoLight : brand.logo} alt="VIP Lift" h="56px" w="auto" objectFit="contain" />
-        <Text
-          display={{ base: 'none', sm: 'block' }}
-          color={transparent ? 'white' : 'vip.pewter'}
-          fontSize="xs"
-        >
-          {brand.tagline}
-        </Text>
+      <RouterLink to="/" aria-label="VIP Lift Nigeria home" display="inline-flex" w="fit-content">
+        <Image
+          src={transparent ? brand.logoLight : brand.logo}
+          alt="VIP Lift Nigeria"
+          h={{ base: '30px', md: '34px' }}
+          w="auto"
+          objectFit="contain"
+        />
       </RouterLink>
 
       <Button
-        display={{ base: 'inline-flex', md: 'none' }}
-        minH="32px"
-        px={4}
+        display={{ base: 'inline-flex', lg: 'none' }}
+        minH="44px"
+        px={3}
         bg="transparent"
         color={foreground}
-        fontSize="sm"
-        fontWeight="500"
-        borderRadius="control"
+        fontFamily="label"
+        fontSize="xs"
+        fontWeight="600"
+        letterSpacing="0.06em"
+        textTransform="uppercase"
+        borderRadius="button"
         aria-expanded={open}
         aria-controls="primary-navigation"
         onClick={() => setOpen((value) => !value)}
-        _hover={{ bg: transparent ? 'rgba(255,255,255,.12)' : 'rgba(23,26,32,.06)' }}
+        _hover={{ bg: transparent ? 'surface.overlay' : 'bg.muted' }}
       >
-        Menu
+        {open ? 'Close' : 'Menu'}
       </Button>
 
       <Flex
         as="nav"
         id="primary-navigation"
         aria-label="Primary"
-        position={{ base: 'absolute', md: 'static' }}
-        top={{ base: '100%', md: 'auto' }}
-        left={{ base: 4, md: 'auto' }}
-        right={{ base: 4, md: 'auto' }}
-        display={{ base: open ? 'flex' : 'none', md: 'flex' }}
-        direction={{ base: 'column', md: 'row' }}
+        position={{ base: 'absolute', lg: 'static' }}
+        top={{ base: '100%', lg: 'auto' }}
+        left={{ base: 5, lg: 'auto' }}
+        right={{ base: 5, lg: 'auto' }}
+        display={{ base: open ? 'flex' : 'none', lg: 'flex' }}
+        direction={{ base: 'column', lg: 'row' }}
         justify="center"
-        gap={1}
-        p={{ base: 2, md: 0 }}
-        bg={{ base: 'white', md: 'transparent' }}
-        border={{ base: '1px solid', md: '0' }}
-        borderColor="vip.cloud"
-        borderRadius="control"
+        gap={{ base: 1, lg: 0 }}
+        p={{ base: 3, lg: 0 }}
+        bg={{ base: 'bg.surface', lg: 'transparent' }}
+        border={{ base: '1px solid', lg: '0' }}
+        borderColor="border.subtle"
+        borderRadius="card"
+        boxShadow={{ base: '0 18px 50px rgba(2,8,20,.16)', lg: 'none' }}
       >
         {navItems.map((item) => (
           <RouterNavLink
@@ -343,23 +326,22 @@ function Header({ overHero = false }) {
             display="inline-flex"
             alignItems="center"
             justifyContent="center"
-            minH="32px"
-            px={4}
-            borderRadius="control"
-            color={{ base: 'vip.ink', md: foreground }}
-            fontSize="sm"
-            fontWeight="500"
-            transition="background-color 0.33s, color 0.33s"
+            minH="42px"
+            px={3}
+            borderRadius="button"
+            color={{ base: 'text.primary', lg: foreground }}
+            fontFamily="label"
+            fontSize="2xs"
+            fontWeight="600"
+            letterSpacing="0.05em"
+            textTransform="uppercase"
+            transition="background-color 180ms, color 180ms"
             css={{
               '&:hover, &[aria-current=page]': {
-                background: transparent
-                  ? 'rgba(255,255,255,.12)'
-                  : 'rgba(23,26,32,.06)',
+                background: transparent ? 'rgba(255,255,255,.12)' : 'rgba(6,19,38,.08)',
               },
-              '@media (max-width: 767px)': {
-                '&:hover, &[aria-current=page]': {
-                  background: 'rgba(23,26,32,.06)',
-                },
+              '@media (max-width: 1023px)': {
+                '&:hover, &[aria-current=page]': { background: 'rgba(6,19,38,.08)' },
               },
             }}
           >
@@ -368,25 +350,20 @@ function Header({ overHero = false }) {
         ))}
       </Flex>
 
-      <Flex justifySelf="end" alignItems="center" gap={3}>
+      <Flex display={{ base: 'none', lg: 'flex' }} justifySelf="end" alignItems="center" gap={3}>
         <chakra.a
-          display={{ base: 'none', lg: 'block' }}
+          display={{ base: 'none', xl: 'block' }}
           href={contact.phoneHref}
           color={foreground}
-          fontSize="sm"
-          fontWeight="500"
+          fontSize="xs"
+          fontWeight="600"
           whiteSpace="nowrap"
           _hover={{ opacity: 0.75, textDecoration: 'underline' }}
         >
           {contact.phone}
         </chakra.a>
-        <Action
-          href={mailtoHref('VIP%20Lift%20Project%20Enquiry')}
-          minW={{ base: 'auto', sm: '160px' }}
-          display={{ base: 'none', sm: 'inline-flex' }}
-          px={4}
-        >
-          Get a Quote
+        <Action href={mailtoHref('VIP%20Lift%20Project%20Enquiry')} minW="156px" minH="44px">
+          Request a Quote
         </Action>
       </Flex>
     </Grid>
@@ -397,28 +374,37 @@ function Footer() {
   return (
     <Grid
       as="footer"
-      templateColumns={{ base: '1fr', md: '1.1fr 1fr' }}
-      gap={8}
-      px={{ base: 5, md: 10, lg: 18 }}
-      pt={12}
-      pb={{ base: 44, md: 32 }}
-      bg="vip.ink"
-      color="white"
+      templateColumns={{ base: '1fr', md: '1.2fr .8fr' }}
+      gap={{ base: 10, md: 16 }}
+      px={{ base: 5, md: 10, lg: 16 }}
+      pt={{ base: 16, md: 20 }}
+      pb={{ base: 36, md: 28 }}
+      bg="bg.deep"
+      color="text.inverse"
+      backgroundImage={`linear-gradient(rgba(2,8,20,.9), rgba(2,8,20,.96)), url(${images.architecturalPattern})`}
+      backgroundSize="cover"
     >
-      <Box>
-        <Eyebrow color="vip.silver">Lagos office</Eyebrow>
-        <Heading as="h2" mt={3} maxW="560px" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>
-          Move forward with a lift solution built around your space.
+      <Stack gap={6}>
+        <Image src={brand.logoLight} alt="VIP Lift Nigeria" h="38px" w="fit-content" />
+        <Heading as="h2" maxW="620px" fontSize={{ base: '3xl', md: '5xl' }} {...headingStyles}>
+          The right lift for the building. Local support for the journey.
         </Heading>
-        <Text mt={3} color="vip.silver">{contact.responseTime}</Text>
-      </Box>
-      <Stack as="address" gap={2.5} fontStyle="normal" color="vip.silver">
-        <TextLink href={contact.phoneHref} color="vip.silver" _hover={{ color: 'white', textDecoration: 'underline' }}>{contact.phone}</TextLink>
-        {featureFlags.whatsapp && <TextLink href={contact.whatsappHref} color="vip.silver">WhatsApp</TextLink>}
-        <TextLink href={`mailto:${contact.email}`} color="vip.silver">{contact.email}</TextLink>
-        <TextLink to="/service-area" color="vip.silver">Service areas</TextLink>
+        <Text maxW="600px" color="vip.platinum">
+          Supply, installation, repairs, servicing, and maintenance for homes, businesses, and public buildings.
+        </Text>
+        <Action href={mailtoHref('VIP%20Lift%20Project%20Enquiry')} variant="inverse" alignSelf="flex-start">
+          Request a Quote
+        </Action>
+      </Stack>
+      <Stack as="address" gap={3} alignSelf="end" fontStyle="normal" color="vip.platinum">
+        <Eyebrow color="vip.platinum">Lagos office</Eyebrow>
+        <TextLink href={contact.phoneHref} color="vip.platinum" _hover={{ color: 'white', textDecoration: 'underline' }}>{contact.phone}</TextLink>
+        {featureFlags.whatsapp && <TextLink href={contact.whatsappHref} color="vip.platinum">WhatsApp</TextLink>}
+        <TextLink href={`mailto:${contact.email}`} color="vip.platinum">{contact.email}</TextLink>
+        <TextLink to="/service-area" color="vip.platinum">Service areas</TextLink>
         <Text>{contact.address}</Text>
         <Text>{contact.hours}</Text>
+        <Text pt={4} color="vip.coolGrey" fontSize="xs">© {new Date().getFullYear()} VIP Lift Nigeria.</Text>
       </Stack>
     </Grid>
   )
@@ -431,25 +417,27 @@ function InquiryBar() {
       aria-label="Quick enquiry"
       position="fixed"
       zIndex="15"
-      left={4}
-      right={4}
-      bottom={4}
-      maxW="920px"
+      left={{ base: 3, md: 6 }}
+      right={{ base: 3, md: 6 }}
+      bottom={{ base: 3, md: 5 }}
+      maxW="980px"
       mx="auto"
       p={3}
       templateColumns={{ base: '1fr', md: '1fr auto' }}
       gap={3}
       alignItems="center"
-      bg="white"
+      bg="rgba(255,255,255,.96)"
       border="1px solid"
-      borderColor="vip.cloud"
-      borderRadius="control"
+      borderColor="border.subtle"
+      borderRadius="card"
+      boxShadow="0 16px 50px rgba(2,8,20,.16)"
+      backdropFilter="blur(18px)"
     >
       <Flex alignItems="center" justify={{ base: 'center', md: 'flex-start' }} gap={2.5} minW="0">
-        <Box as="svg" flexShrink="0" w="20px" h="20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="vip.pewter">
+        <Box as="svg" flexShrink="0" w="20px" h="20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="accent.primary">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
         </Box>
-        <Text color="vip.fog" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
+        <Text color="text.subtle" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
           {inquiryBar.prompt}
         </Text>
       </Flex>
@@ -478,10 +466,10 @@ function PageShell({ children, overHero = false }) {
 
 function CtaBand({ eyebrow, title, description, primary, secondary }) {
   return (
-    <Stack as="section" gap={4} maxW="864px" mx="auto" px={{ base: 5, md: 10 }} py={{ base: 16, md: 24 }} textAlign="center">
+    <Stack as="section" gap={5} maxW="900px" mx="auto" px={{ base: 5, md: 10 }} py={{ base: 16, md: 24 }} textAlign="center">
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>{title}</Heading>
-      {description && <Text color="vip.graphite">{description}</Text>}
+      <Heading as="h2" textStyle="sectionTitle">{title}</Heading>
+      {description && <Text maxW="680px" mx="auto" color="text.muted">{description}</Text>}
       <ButtonRow>{primary}{secondary}</ButtonRow>
     </Stack>
   )
@@ -489,28 +477,30 @@ function CtaBand({ eyebrow, title, description, primary, secondary }) {
 
 function ProcessStrip() {
   return (
-    <Box as="section" bg="vip.ash" {...sectionStyles}>
-      <SectionHeading eyebrow="How it works" title="From first enquiry to installation and support." />
-      <Grid templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }} gap={4}>
-        {processSteps.map((step) => (
-          <Stack as="article" key={step.step} gap={3} p={6} bg="white">
-            <Text color="brand.500" fontWeight="500">{step.step}</Text>
-            <Heading as="h3" fontSize="lg" {...headingStyles}>{step.title}</Heading>
-            <Text color="vip.graphite">{step.summary}</Text>
-          </Stack>
-        ))}
-      </Grid>
+    <Box as="section" bg="bg.deep" color="text.inverse">
+      <Box maxW="content" mx="auto" {...sectionStyles}>
+        <SectionHeading eyebrow="A clear process" title="From first conversation to long-term care." />
+        <Grid templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: `repeat(${processSteps.length}, 1fr)` }} gap="1px" bg="rgba(255,255,255,.18)">
+          {processSteps.map((step) => (
+            <Stack as="article" key={step.step} gap={4} p={{ base: 6, lg: 7 }} bg="bg.deep">
+              <Text color="accent.primary" fontFamily="label" fontSize="xs" fontWeight="600">{step.step}</Text>
+              <Heading as="h3" fontFamily="body" fontSize="md" fontWeight="600">{step.title}</Heading>
+              <Text color="vip.platinum" fontSize="sm">{step.summary}</Text>
+            </Stack>
+          ))}
+        </Grid>
+      </Box>
     </Box>
   )
 }
 
 function CertificationBadges() {
   return (
-    <Grid as="section" aria-label="Certifications and standards" templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }} gap={3} mt={8}>
+    <Grid as="section" aria-label="Service advantages" templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(4, 1fr)' }} gap={3} mt={10}>
       {certifications.map((item) => (
-        <Stack key={item.label} gap={1} p={4} bg="white">
-          <Text fontWeight="500">{item.label}</Text>
-          <Text color="vip.pewter" fontSize="xs">{item.detail}</Text>
+        <Stack key={item.label} gap={2} p={5} bg="bg.surface" border="1px solid" borderColor="border.subtle" borderRadius="card">
+          <Text fontWeight="600">{item.label}</Text>
+          <Text color="text.subtle" fontSize="xs">{item.detail}</Text>
         </Stack>
       ))}
     </Grid>
@@ -525,9 +515,9 @@ function FaqSection({ limit, nested = false }) {
       <SectionHeading eyebrow="Common questions" title="Answers before you call." />
       <Stack gap={2} maxW="840px">
         {items.map((item) => (
-          <Box as="details" key={item.question} p={4} px={5} bg="white" border="1px solid" borderColor="vip.cloud">
-            <Text as="summary" cursor="pointer" fontWeight="500">{item.question}</Text>
-            <Text mt={3} color="vip.graphite">{item.answer}</Text>
+          <Box as="details" key={item.question} p={5} bg="bg.surface" border="1px solid" borderColor="border.subtle" borderRadius="button">
+            <Text as="summary" cursor="pointer" fontWeight="600">{item.question}</Text>
+            <Text mt={3} color="text.muted">{item.answer}</Text>
           </Box>
         ))}
       </Stack>
@@ -536,45 +526,20 @@ function FaqSection({ limit, nested = false }) {
   )
 }
 
-function TestimonialSection() {
-  return (
-    <Box as="section" bg="vip.ash" {...sectionStyles}>
-      <SectionHeading eyebrow="Client feedback" title="Trusted on residential, commercial, and public projects." />
-      <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={4}>
-        {testimonials.map((item) => (
-          <Stack as="blockquote" key={item.context} gap={4} m={0} p={6} bg="white">
-            <Text color="vip.graphite" fontStyle="italic">&ldquo;{item.quote}&rdquo;</Text>
-            <Stack as="footer" gap={1}>
-              <Text fontWeight="500">{item.source}</Text>
-              <Text color="vip.pewter" fontSize="xs">{item.context}</Text>
-            </Stack>
-          </Stack>
-        ))}
-      </Grid>
-      {featureFlags.googleReviews && <Box mt={6} textAlign="center"><TextLink href={contact.googleBusinessHref}>Read reviews on Google</TextLink></Box>}
-      <CtaBand
-        title="Ready to discuss your project?"
-        primary={<Action href={contact.phoneHref}>Call for a Site Visit</Action>}
-        secondary={<Action href={mailtoHref('VIP%20Lift%20Project%20Enquiry')} variant="secondary">Email VIP Lift</Action>}
-      />
-    </Box>
-  )
-}
-
 const fieldStyles = {
   w: 'full',
-  minH: '40px',
-  px: 3,
+  minH: '48px',
+  px: 4,
   border: '1px solid',
-  borderColor: 'vip.silver',
-  borderRadius: 'control',
-  bg: 'white',
-  color: 'vip.ink',
-  _focus: { borderColor: 'brand.500' },
+  borderColor: 'border.strong',
+  borderRadius: 'button',
+  bg: 'bg.surface',
+  color: 'text.primary',
+  _focus: { borderColor: 'accent.primary', boxShadow: '0 0 0 1px var(--chakra-colors-accent-primary)' },
 }
 
 function FormField({ label, children }) {
-  return <Stack as="label" gap={2}><Text color="vip.pewter">{label}</Text>{children}</Stack>
+  return <Stack as="label" gap={2}><Text color="text.subtle" fontSize="sm" fontWeight="600">{label}</Text>{children}</Stack>
 }
 
 function ContactForm() {
@@ -615,7 +580,7 @@ function ContactForm() {
       <FormField label="Brief description">
         <Textarea name="message" rows={4} required value={form.message} onChange={handleChange} minH="120px" resize="vertical" {...fieldStyles} />
       </FormField>
-      <Text color="vip.pewter" fontSize="xs">{contact.responseTime}</Text>
+      <Text color="text.subtle" fontSize="xs">{contact.responseTime}</Text>
       <Action type="submit" alignSelf="flex-start">Send Enquiry via Email</Action>
     </Stack>
   )
@@ -627,29 +592,23 @@ function HeroSection() {
       as="section"
       position="relative"
       minH="100svh"
-      alignItems="flex-end"
-      justifyContent="center"
-      px={6}
-      pt="104px"
-      pb={{ base: '180px', md: '140px' }}
+      alignItems="center"
+      px={{ base: 5, md: 10, lg: 16 }}
+      pt={{ base: '128px', md: '150px' }}
+      pb={{ base: '180px', md: '150px' }}
       bgImage={`url(${hero.image})`}
-      bgPosition="center"
+      bgPosition={{ base: '62% center', md: 'center' }}
       bgSize="cover"
-      textAlign="center"
     >
-      <Box position="absolute" inset="0" bg="rgba(23,26,32,.35)" />
-      <Stack position="relative" zIndex="1" gap={4} maxW="720px" color="white">
-        <Eyebrow color="rgba(255,255,255,.85)">{hero.eyebrow}</Eyebrow>
-        <Heading as="h1" fontSize={{ base: '3xl', md: '4xl' }} {...headingStyles}>{hero.title}</Heading>
-        {hero.promo && <Text color="brand.500" fontSize="xl">{hero.promo}</Text>}
-        <Text color="rgba(255,255,255,.92)">{hero.summary}</Text>
-        <Text color="rgba(255,255,255,.85)" fontSize="xs">
-          {featureFlags.googleReviews && <><chakra.a href={contact.googleBusinessHref}>Read our Google reviews</chakra.a>{' · '}</>}
-          {contact.responseTime}
-        </Text>
-        <ButtonRow>
+      <Box position="absolute" inset="0" bg="linear-gradient(90deg, rgba(2,8,20,.92) 0%, rgba(2,8,20,.66) 48%, rgba(2,8,20,.16) 100%)" />
+      <Stack position="relative" zIndex="1" gap={5} maxW="760px" color="text.inverse">
+        <Eyebrow color="vip.platinum">{hero.eyebrow}</Eyebrow>
+        <Heading as="h1" textStyle="hero">{hero.title}</Heading>
+        <Text maxW="680px" color="rgba(255,255,255,.9)" fontSize={{ base: 'md', md: 'lg' }}>{hero.summary}</Text>
+        {hero.promo && <Text color="vip.platinum" fontFamily="label" fontSize="xs" fontWeight="600" letterSpacing="0.06em" textTransform="uppercase">{hero.promo}</Text>}
+        <ButtonRow justify="flex-start">
           <Action href={hero.primaryCta.href}>{hero.primaryCta.label}</Action>
-          <Action href={hero.secondaryCta.href} variant="secondary">{hero.secondaryCta.label}</Action>
+          <Action href={hero.secondaryCta.href} variant="inverse">{hero.secondaryCta.label}</Action>
         </ButtonRow>
       </Stack>
     </Flex>
@@ -664,48 +623,81 @@ function PageHero({ data, eyebrow = data.eyebrow }) {
       minH="60svh"
       justifyContent="flex-end"
       gap={4}
-      px={{ base: 5, md: 10, lg: 18 }}
+      px={{ base: 5, md: 10, lg: 16 }}
       pt="120px"
       pb={{ base: 16, md: 24 }}
       bgImage={`url(${data.image})`}
       bgPosition="center"
       bgSize="cover"
-      color="white"
+      color="text.inverse"
     >
-      <Box position="absolute" inset="0" bg="rgba(23,26,32,.4)" />
-      <Eyebrow position="relative" zIndex="1" color="rgba(255,255,255,.85)">{eyebrow}</Eyebrow>
-      <Heading position="relative" zIndex="1" as="h1" maxW="840px" fontSize={{ base: '3xl', md: '4xl' }} {...headingStyles}>{data.title}</Heading>
+      <Box position="absolute" inset="0" bg="linear-gradient(90deg, rgba(2,8,20,.86), rgba(2,8,20,.3))" />
+      <Eyebrow position="relative" zIndex="1" color="vip.platinum">{eyebrow}</Eyebrow>
+      <Heading position="relative" zIndex="1" as="h1" maxW="900px" textStyle="hero">{data.title}</Heading>
       <Text position="relative" zIndex="1" maxW="640px" color="rgba(255,255,255,.92)">{data.summary}</Text>
     </Stack>
   )
 }
 
 function CategoryCard({ service }) {
+  const recipe = useRecipe({ key: 'vipCard' })
   return (
-    <Flex as="article" direction="column" minH="280px" overflow="hidden" bg="white" borderRadius="card">
-      <Box position="relative" flex="1" minH="220px" overflow="hidden">
+    <Flex as="article" direction="column" css={recipe({ variant: 'service' })}>
+      <Box position="relative" minH={{ base: '220px', md: '260px' }} overflow="hidden">
         <Image position="absolute" inset="0" w="full" h="full" objectFit="cover" src={service.image} alt={`${service.title} by VIP Lift`} loading="lazy" />
-        <Box position="absolute" inset="0" bg="rgba(23,26,32,.5)" />
-        <Text position="absolute" zIndex="1" top={5} left={5} color="white" fontSize="md" fontWeight="500">{service.title}</Text>
+        <Box position="absolute" inset="0" bg="linear-gradient(180deg, rgba(2,8,20,.08), rgba(2,8,20,.74))" />
+        <Eyebrow position="absolute" zIndex="1" left={6} bottom={6} color="white">{service.title}</Eyebrow>
       </Box>
-      <Flex gap={4} flexShrink="0" px={5} py={4} bg="vip.ash" borderTop="1px solid" borderColor="vip.cloud">
-        <TextLink to={`/services/${service.slug}`} color="vip.graphite" fontWeight="500">Learn</TextLink>
-        <TextLink href={mailtoHref(service.primaryCta.subject)} color="vip.graphite" fontWeight="500">Enquire</TextLink>
-      </Flex>
+      <Stack flex="1" gap={5} p={6}>
+        <Text color="text.muted">{service.summary}</Text>
+        <Flex mt="auto" gap={5}>
+          <TextLink to={`/services/${service.slug}`} color="text.primary" fontWeight="600">Explore</TextLink>
+          <TextLink href={mailtoHref(service.primaryCta.subject)} color="accent.primary" fontWeight="600">Enquire</TextLink>
+        </Flex>
+      </Stack>
     </Flex>
   )
 }
 
 function ServiceGrid() {
-  const [featured, ...rest] = services
   return (
-    <Box as="section" {...sectionStyles}>
-      <SectionHeading eyebrow="What we do" title="Flexible lift systems for modern Nigerian buildings." />
-      <Grid templateColumns={{ base: '1fr', lg: '1.35fr 1fr' }} gap={4}>
-        <CategoryCard service={featured} />
-        <Grid gap={4}>{rest.map((service) => <CategoryCard key={service.title} service={service} />)}</Grid>
+    <Box as="section" maxW="content" mx="auto" {...sectionStyles}>
+      <SectionHeading eyebrow="Our services" title="Lift expertise for every stage of the building." />
+      <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={5}>
+        {services.map((service) => <CategoryCard key={service.title} service={service} />)}
       </Grid>
     </Box>
+  )
+}
+
+function SolutionGuide() {
+  return (
+    <Grid
+      as="section"
+      maxW="content"
+      mx="auto"
+      templateColumns={{ base: '1fr', lg: '.8fr 1.2fr' }}
+      gap={{ base: 10, lg: 20 }}
+      alignItems="start"
+      {...sectionStyles}
+    >
+      <Stack gap={5}>
+        <Eyebrow>Choose with confidence</Eyebrow>
+        <Heading as="h2" textStyle="sectionTitle">Which lift direction fits your building?</Heading>
+        <Text color="text.muted">
+          Building type, available space, usage, traffic, and long-term support all shape the right recommendation.
+        </Text>
+        <Action to="/customize-lift" alignSelf="flex-start">Start Your Enquiry</Action>
+      </Stack>
+      <Stack gap="1px" bg="border.subtle">
+        {solutionGuide.map((item) => (
+          <Grid key={item.need} templateColumns={{ base: '1fr', sm: '1.2fr .8fr' }} gap={3} p={5} bg="bg.surface">
+            <Text color="text.muted">{item.need}</Text>
+            <Text color="text.primary" fontWeight="600">{item.direction}</Text>
+          </Grid>
+        ))}
+      </Stack>
+    </Grid>
   )
 }
 
@@ -713,7 +705,7 @@ function ProofList({ items }) {
   return (
     <Stack as="ul" gap={3} m={0} p={0} listStyleType="none">
       {items.map((item) => (
-        <Box as="li" key={item} pb={3} borderBottom="1px solid" borderColor="vip.cloud" color="vip.graphite">
+        <Box as="li" key={item} pb={3} borderBottom="1px solid" borderColor="border.subtle" color="text.muted">
           {item}
         </Box>
       ))}
@@ -723,11 +715,11 @@ function ProofList({ items }) {
 
 function ProofSection() {
   return (
-    <Box as="section" bg="vip.ash" {...sectionStyles}>
+    <Box as="section" maxW="content" mx="auto" {...sectionStyles}>
       <Grid templateColumns={{ base: '1fr', md: 'minmax(0,.95fr) minmax(0,1.05fr)' }} gap={{ base: 8, lg: 18 }}>
         <Box>
-          <Eyebrow>Engineered confidence</Eyebrow>
-          <Heading as="h2" mt={3} fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>European-standard lift technology, installed and supported from Lagos.</Heading>
+          <Eyebrow>Supported locally</Eyebrow>
+          <Heading as="h2" mt={4} textStyle="sectionTitle">International lift systems, with a Nigerian team beside the project.</Heading>
         </Box>
         <ProofList items={proofPoints} />
       </Grid>
@@ -736,21 +728,42 @@ function ProofSection() {
   )
 }
 
+function MaintenanceSection() {
+  const maintenance = services.find((service) => service.slug === 'maintenance')
+  return (
+    <Grid as="section" templateColumns={{ base: '1fr', lg: '1fr 1fr' }} bg="bg.dark" color="text.inverse">
+      <Image src={maintenance.image} alt="Lift maintenance and technical support" w="full" h="full" minH={{ base: '320px', lg: '620px' }} objectFit="cover" />
+      <Stack justify="center" gap={6} {...sectionStyles}>
+        <Eyebrow color="vip.platinum">Repairs & maintenance</Eyebrow>
+        <Heading as="h2" textStyle="sectionTitle">Keep your lift safe, reliable, and professionally maintained.</Heading>
+        <Text maxW="620px" color="vip.platinum">
+          From routine servicing to fault assessment and repair coordination, VIP Lift provides a consistent local point of support.
+        </Text>
+        <ButtonRow justify="flex-start">
+          <Action href={mailtoHref(maintenance.primaryCta.subject)}>Book a Maintenance Visit</Action>
+          <Action href={contact.phoneHref} variant="inverse">Call Our Team</Action>
+        </ButtonRow>
+      </Stack>
+    </Grid>
+  )
+}
+
 function Home() {
   return (
     <PageShell overHero>
       <HeroSection />
       <ServiceGrid />
+      <SolutionGuide />
       <ProcessStrip />
       <ProofSection />
-      <TestimonialSection />
+      <MaintenanceSection />
       <FaqSection limit={5} />
       <CtaBand
-        eyebrow="After-sales support"
-        title="Supply, installation, and maintenance in one coordinated lift package."
-        description="VIP Lift works with architects, contractors, building owners, and end users from specification through installation and long-term maintenance."
-        primary={<Action href={contact.phoneHref}>Call VIP Lift</Action>}
-        secondary={<Action to="/contact" variant="secondary">Send an Enquiry</Action>}
+        eyebrow="Start a conversation"
+        title="Tell us about your building, space, and lift needs."
+        description="We will help you identify the right next step, whether you are planning a new installation or need support for an existing lift."
+        primary={<Action href={mailtoHref('VIP%20Lift%20Project%20Enquiry')}>Request a Quote</Action>}
+        secondary={<Action href={contact.phoneHref} variant="secondary">Speak to a Lift Specialist</Action>}
       />
     </PageShell>
   )
@@ -765,16 +778,16 @@ function About() {
           {audiences.map((audience) => (
             <Stack as="article" key={audience.title} gap={3} p={6} bg="white">
               <Heading as="h2" fontSize="xl" {...headingStyles}>{audience.title}</Heading>
-              <Text color="vip.graphite">{audience.summary}</Text>
+              <Text color="text.muted">{audience.summary}</Text>
               <TextLink to={audience.slug === 'building-owners' ? '/contact' : `/for-${audience.slug}`}>Learn more</TextLink>
             </Stack>
           ))}
         </Grid>
       </Box>
       <ProcessStrip />
-      <SplitSection bg="vip.ash">
+      <SplitSection bg="bg.surface">
         <Box><Eyebrow>Design flexibility</Eyebrow><Heading as="h2" mt={3} fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Custom-made lift solutions for new and existing buildings.</Heading></Box>
-        <Text color="vip.graphite">VIP Lift can support panoramic lift shafts with glass panels, flexible compact dimensions, robust platform lifts with capacities up to 1000 kilograms, and coordinated installation support.</Text>
+        <Text color="text.muted">VIP Lift helps project teams consider shaft configuration, available space, architectural integration, finish direction, and coordinated installation support.</Text>
       </SplitSection>
       <CtaBand
         eyebrow="Discuss your project"
@@ -791,9 +804,9 @@ function ProjectCard({ project, featured = false }) {
     <RouterLink to={`/projects/${project.slug}`} display="block" overflow="hidden" bg="white" borderRadius="card" transition="opacity .33s" _hover={{ opacity: 0.92 }}>
       <Image src={project.image} alt={`${project.title} project example`} loading="lazy" w="full" h={{ base: '220px', md: '300px' }} objectFit="cover" />
       <Stack gap={2} p={5}>
-        <Text color="vip.pewter">{featured ? `${project.category} · ${project.location}` : project.location}</Text>
+        <Text color="text.subtle">{featured ? `${project.category} · ${project.location}` : project.location}</Text>
         <Heading as={featured ? 'h3' : 'h2'} fontSize="lg" {...headingStyles}>{project.title}</Heading>
-        {featured && <Text color="vip.pewter">View case study</Text>}
+        {featured && <Text color="text.subtle">View case study</Text>}
       </Stack>
     </RouterLink>
   )
@@ -847,7 +860,7 @@ function ProjectDetail() {
     <PageShell>
       <PageHero data={{ ...project, title: project.title }} eyebrow={`${project.category} · ${project.location}`} />
       <SplitSection>
-        <Stack gap={3}><Eyebrow>Project overview</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Problem, solution, and delivery.</Heading><Text color="vip.graphite">{project.story}</Text></Stack>
+        <Stack gap={3}><Eyebrow>Project overview</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Problem, solution, and delivery.</Heading><Text color="text.muted">{project.story}</Text></Stack>
         <ProofList items={project.specs} />
       </SplitSection>
       <CtaBand
@@ -868,7 +881,7 @@ function ServicePage() {
     <PageShell>
       <PageHero data={service} eyebrow="Service" />
       <SplitSection>
-        <Stack gap={3}><Eyebrow>Overview</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Built for Nigerian homes and buildings.</Heading><Text color="vip.graphite">{service.description}</Text></Stack>
+        <Stack gap={3}><Eyebrow>Overview</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Built for Nigerian homes and buildings.</Heading><Text color="text.muted">{service.description}</Text></Stack>
         <ProofList items={service.highlights} />
       </SplitSection>
       <ProcessStrip />
@@ -890,17 +903,17 @@ function AudiencePage({ slug: audienceSlug }) {
     <PageShell>
       <PageHero data={audience} eyebrow="VIP Lift partners" />
       <SplitSection>
-        <Stack gap={3}><Eyebrow>How we support you</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>From specification to installation.</Heading><Text color="vip.graphite">{audience.description}</Text></Stack>
+        <Stack gap={3}><Eyebrow>How we support you</Eyebrow><Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>From specification to installation.</Heading><Text color="text.muted">{audience.description}</Text></Stack>
         <ProofList items={audience.benefits} />
       </SplitSection>
       {audienceSlug === 'architects' && (
-        <Box as="section" bg="vip.ash" {...sectionStyles}>
+        <Box as="section" bg="bg.canvas" {...sectionStyles}>
           <SectionHeading eyebrow="Resources" title="Technical documentation for specifiers." />
           <ButtonRow justify="flex-start">
             <Action href={mailtoHref(contact.specPackMailtoSubject)}>Request Spec Pack</Action>
             <Action href={contact.phoneHref} variant="secondary">Call for Technical Support</Action>
           </ButtonRow>
-          <Text mt={4} color="vip.pewter" fontSize="xs">Email us for the latest specifications, drawings, and product documentation.</Text>
+          <Text mt={4} color="text.subtle" fontSize="xs">Email us for the latest specifications, drawings, and product documentation.</Text>
         </Box>
       )}
       <CtaBand
@@ -919,10 +932,10 @@ function ServiceArea() {
       <Box as="section" {...sectionStyles}>
         <SectionHeading eyebrow="Coverage" title="Lagos headquarters with nationwide project coordination." />
         <Grid as="ul" templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={3} m={0} p={0} listStyleType="none">
-          {serviceAreas.map((area) => <Box as="li" key={area} p={4} bg="vip.ash" fontWeight="500">{area}</Box>)}
+          {serviceAreas.map((area) => <Box as="li" key={area} p={4} bg="bg.canvas" fontWeight="500">{area}</Box>)}
         </Grid>
       </Box>
-      <SplitSection bg="vip.ash">
+      <SplitSection bg="bg.surface">
         <Box><Eyebrow>Lagos office</Eyebrow><Heading as="h2" mt={3} fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Visit or call our team on Lagos Island.</Heading></Box>
         <Stack as="address" gap={2.5} fontStyle="normal">
           <TextLink href={contact.phoneHref}>{contact.phone}</TextLink>
@@ -973,7 +986,7 @@ function CustomizeLift() {
         {!isComplete ? (
           <>
             <Flex gap={2} mb={8} aria-hidden="true">
-              {customizeLiftSteps.map((item, index) => <Box key={item.id} flex="1" h="4px" bg={index <= stepIndex ? 'brand.500' : 'vip.cloud'} />)}
+              {customizeLiftSteps.map((item, index) => <Box key={item.id} flex="1" h="4px" bg={index <= stepIndex ? 'accent.primary' : 'border.subtle'} />)}
             </Flex>
             {!isContactStep ? (
               <Stack gap={5}>
@@ -988,14 +1001,14 @@ function CustomizeLift() {
                         minH="48px"
                         justifyContent="flex-start"
                         px={4}
-                        bg={selected ? 'rgba(62,106,225,.06)' : 'white'}
-                        color="vip.ink"
+                        bg={selected ? 'rgba(22,138,85,.08)' : 'bg.surface'}
+                        color="text.primary"
                         border="1px solid"
-                        borderColor={selected ? 'brand.500' : 'vip.silver'}
-                        borderRadius="control"
+                        borderColor={selected ? 'accent.primary' : 'border.strong'}
+                        borderRadius="button"
                         fontWeight="500"
                         onClick={() => setAnswers((current) => ({ ...current, [step.id]: option }))}
-                        _hover={{ borderColor: 'brand.500', bg: 'rgba(62,106,225,.06)' }}
+                        _hover={{ borderColor: 'accent.primary', bg: 'rgba(22,138,85,.08)' }}
                       >
                         {option}
                       </Button>
@@ -1016,7 +1029,7 @@ function CustomizeLift() {
                   <FormField label="Phone"><Input required type="tel" value={contactInfo.phone} onChange={(event) => setContactInfo((current) => ({ ...current, phone: event.target.value }))} {...fieldStyles} /></FormField>
                   <FormField label="Email (optional)"><Input type="email" value={contactInfo.email} onChange={(event) => setContactInfo((current) => ({ ...current, email: event.target.value }))} {...fieldStyles} /></FormField>
                 </Grid>
-                <Box p={5} bg="vip.ash"><Eyebrow>Your selections</Eyebrow><Box mt={4}><ProofList items={customizeLiftSteps.map((item) => `${item.title}: ${answers[item.id]}`)} /></Box></Box>
+                <Box p={5} bg="bg.canvas"><Eyebrow>Your selections</Eyebrow><Box mt={4}><ProofList items={customizeLiftSteps.map((item) => `${item.title}: ${answers[item.id]}`)} /></Box></Box>
                 <ButtonRow>
                   <Action variant="secondary" onClick={() => setStepIndex((value) => value - 1)}>Back</Action>
                   <Action type="submit">Send Enquiry via Email</Action>
@@ -1027,7 +1040,7 @@ function CustomizeLift() {
         ) : (
           <Stack gap={5}>
             <Heading as="h2" fontSize={{ base: 'xl', md: '2xl' }} {...headingStyles}>Your email app should open with your enquiry.</Heading>
-            <Text color="vip.graphite">If it did not open, call us directly or use the contact form.</Text>
+            <Text color="text.muted">If it did not open, call us directly or use the contact form.</Text>
             <ButtonRow justify="flex-start"><Action href={contact.phoneHref}>Call VIP Lift</Action><Action to="/contact" variant="secondary">Contact page</Action></ButtonRow>
           </Stack>
         )}
@@ -1040,14 +1053,17 @@ function ContactCard({ href, label, children }) {
   const styles = {
     display: 'grid',
     gap: 2,
-    minH: '140px',
+    minH: '160px',
     p: 6,
-    bg: 'vip.ash',
-    color: 'vip.ink',
-    transition: 'background-color .33s',
-    _hover: href ? { bg: 'vip.cloud' } : undefined,
+    bg: 'bg.surface',
+    color: 'text.primary',
+    border: '1px solid',
+    borderColor: 'border.subtle',
+    borderRadius: 'card',
+    transition: 'background-color 180ms, border-color 180ms',
+    _hover: href ? { bg: 'bg.canvas', borderColor: 'border.strong' } : undefined,
   }
-  const content = <><Text color="vip.pewter">{label}</Text><Text fontSize="lg" fontWeight="500" lineHeight="1.3">{children}</Text></>
+  const content = <><Text color="text.subtle">{label}</Text><Text fontSize="lg" fontWeight="500" lineHeight="1.3">{children}</Text></>
   return href ? <chakra.a href={href} {...styles}>{content}</chakra.a> : <Box {...styles}>{content}</Box>
 }
 
@@ -1063,7 +1079,7 @@ function Contact() {
         <ContactCard href={contact.mapHref} label="Address">{contact.address}</ContactCard>
         <ContactCard label="Working hours">{contact.hours}</ContactCard>
       </Grid>
-      <Box as="section" bg="vip.ash" {...sectionStyles}>
+      <Box as="section" bg="bg.canvas" {...sectionStyles}>
         <SectionHeading eyebrow="Send an enquiry" title="Tell us about your project." />
         <ContactForm />
       </Box>
