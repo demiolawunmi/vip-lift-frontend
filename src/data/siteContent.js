@@ -58,11 +58,6 @@ export const contact = {
   specPackMailtoSubject: 'VIP%20Lift%20Technical%20Spec%20Pack%20Request',
 }
 
-export const inquiryBar = {
-  prompt: 'Discuss a lift solution for your home or business.',
-  cta: { label: 'Email VIP Lift', subject: 'VIP%20Lift%20Project%20Enquiry' },
-}
-
 export const contactPage = {
   hero: {
     eyebrow: 'Contact VIP Lift Nigeria',

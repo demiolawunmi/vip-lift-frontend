@@ -10,9 +10,9 @@ import {
   Stack,
   Text,
   Textarea,
-  chakra,
+  styled,
   useRecipe,
-} from '@chakra-ui/react'
+} from './components/primitives.jsx'
 import {
   Link as ReactRouterLink,
   NavLink,
@@ -35,7 +35,6 @@ import {
   getServiceBySlug,
   hero,
   images,
-  inquiryBar,
   mailtoHref,
   navItems,
   pageHeroes,
@@ -47,9 +46,10 @@ import {
   solutionGuide,
   testimonials,
 } from './data/siteContent.js'
+import { UniqueTestimonial } from './components/ui/unique-testimonial.jsx'
 
-const RouterLink = chakra(ReactRouterLink)
-const RouterNavLink = chakra(NavLink)
+const RouterLink = styled(ReactRouterLink)
+const RouterNavLink = styled(NavLink)
 
 const pageMeta = {
   '/': ['VIP Lift Nigeria | Premium Lift Solutions', 'VIP Lift Nigeria supplies, installs, repairs, services, and maintains platform and traction lift systems.'],
@@ -165,7 +165,7 @@ function TextLink({ to, href, children, ...props }) {
 
   return to
     ? <RouterLink to={to} {...styles}>{children}</RouterLink>
-    : <chakra.a href={href} {...styles}>{children}</chakra.a>
+    : <styled.a href={href} {...styles}>{children}</styled.a>
 }
 
 function Action({ to, href, children, variant = 'primary', type, disabled, onClick, ...props }) {
@@ -179,6 +179,7 @@ function Action({ to, href, children, variant = 'primary', type, disabled, onCli
         disabled={disabled}
         onClick={onClick}
         css={styles}
+        borderColor={variant === 'secondary' ? 'transparent' : undefined}
         {...props}
       >
         {children}
@@ -188,7 +189,7 @@ function Action({ to, href, children, variant = 'primary', type, disabled, onCli
 
   return to
     ? <RouterLink to={to} css={styles} {...props}>{children}</RouterLink>
-    : <chakra.a href={href} css={styles} {...props}>{children}</chakra.a>
+    : <styled.a href={href} css={styles} {...props}>{children}</styled.a>
 }
 
 function ButtonRow({ children, justify = 'center' }) {
@@ -353,7 +354,7 @@ function Header({ overHero = false }) {
       </Flex>
 
       <Flex display={{ base: 'none', lg: 'flex' }} justifySelf="end" alignItems="center" gap={3}>
-        <chakra.a
+        <styled.a
           display={{ base: 'none', xl: 'block' }}
           href={contact.phoneHref}
           color={foreground}
@@ -363,7 +364,7 @@ function Header({ overHero = false }) {
           _hover={{ opacity: 0.75, textDecoration: 'underline' }}
         >
           {contact.phone}
-        </chakra.a>
+        </styled.a>
         <Action href={mailtoHref('VIP%20Lift%20Project%20Enquiry')} minW="156px" minH="44px">
           Request a Quote
         </Action>
@@ -417,48 +418,7 @@ function Footer() {
   )
 }
 
-function InquiryBar() {
-  return (
-    <Grid
-      as="aside"
-      aria-label="Quick enquiry"
-      position="fixed"
-      zIndex="15"
-      left={{ base: 3, md: 6 }}
-      right={{ base: 3, md: 6 }}
-      bottom={{ base: 3, md: 5 }}
-      maxW="980px"
-      mx="auto"
-      p={3}
-      templateColumns={{ base: '1fr', md: '1fr auto' }}
-      gap={3}
-      alignItems="center"
-      bg="rgba(255,255,255,.96)"
-      border="1px solid"
-      borderColor="border.subtle"
-      borderRadius="card"
-      boxShadow="0 16px 50px rgba(2,8,20,.16)"
-      backdropFilter="blur(18px)"
-    >
-      <Flex alignItems="center" justify={{ base: 'center', md: 'flex-start' }} gap={2.5} minW="0">
-        <Box as="svg" flexShrink="0" w="20px" h="20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" color="accent.primary">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-        </Box>
-        <Text color="text.subtle" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
-          {inquiryBar.prompt}
-        </Text>
-      </Flex>
-      <Flex justify="center" flexWrap="wrap" gap={2}>
-        <Action href={contact.phoneHref} minW="auto" px={4}>Call Now</Action>
-        {featureFlags.whatsapp && <TextLink href={contact.whatsappHref}>WhatsApp</TextLink>}
-        <TextLink href={mailtoHref(inquiryBar.cta.subject)} display={{ base: 'none', sm: 'inline-flex' }} alignItems="center" px={3}>Email</TextLink>
-        {featureFlags.calendly && <TextLink href={contact.calendlyHref}>{contact.calendlyLabel}</TextLink>}
-      </Flex>
-    </Grid>
-  )
-}
-
-function PageShell({ children, overHero = false, showInquiryBar = true }) {
+function PageShell({ children, overHero = false }) {
   return (
     <>
       <MetaTitle />
@@ -466,7 +426,6 @@ function PageShell({ children, overHero = false, showInquiryBar = true }) {
       <Header overHero={overHero} />
       <Box as="main" overflow="hidden">{children}</Box>
       <Footer />
-      {showInquiryBar && <InquiryBar />}
     </>
   )
 }
@@ -540,31 +499,6 @@ const trustBullets = [
 ]
 
 function TestimonialSection() {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [previewIndex, setPreviewIndex] = useState(null)
-  const [quoteBlurred, setQuoteBlurred] = useState(false)
-  const transitionTimeoutRef = useRef(null)
-  const revealTimeoutRef = useRef(null)
-  const active = testimonials[activeIndex]
-
-  useEffect(() => () => {
-    window.clearTimeout(transitionTimeoutRef.current)
-    window.clearTimeout(revealTimeoutRef.current)
-  }, [])
-
-  function handleSelect(index) {
-    if (index === activeIndex) return
-    window.clearTimeout(transitionTimeoutRef.current)
-    window.clearTimeout(revealTimeoutRef.current)
-    setQuoteBlurred(true)
-    transitionTimeoutRef.current = window.setTimeout(() => {
-      setActiveIndex(index)
-      revealTimeoutRef.current = window.setTimeout(() => {
-        setQuoteBlurred(false)
-      }, 40)
-    }, 170)
-  }
-
   return (
     <Box as="section" bg="bg.deep" color="text.inverse" position="relative" overflow="hidden" {...sectionStyles}>
       <Box
@@ -618,147 +552,7 @@ function TestimonialSection() {
           )}
         </Stack>
 
-        <Box
-          position="relative"
-          w="full"
-          px={{ base: 0, md: 6 }}
-          py={{ base: 4, md: 8 }}
-          textAlign="center"
-        >
-          <Text
-            aria-hidden="true"
-            position="absolute"
-            top={{ base: '-20px', md: '-28px' }}
-            left={{ base: '-4px', md: '-18px' }}
-            color="rgba(255,255,255,.055)"
-            fontFamily="heading"
-            fontSize={{ base: '7xl', md: '9xl' }}
-            lineHeight="1"
-          >
-            &ldquo;
-          </Text>
-          <Text
-            aria-hidden="true"
-            position="absolute"
-            right={{ base: '-4px', md: '-18px' }}
-            bottom={{ base: '96px', md: '82px' }}
-            color="rgba(255,255,255,.055)"
-            fontFamily="heading"
-            fontSize={{ base: '7xl', md: '9xl' }}
-            lineHeight="1"
-          >
-            &rdquo;
-          </Text>
-          <Stack
-            as="blockquote"
-            gap={{ base: 5, md: 7 }}
-            m={0}
-            key={active.id}
-            opacity={quoteBlurred ? 0.34 : 1}
-            filter={quoteBlurred ? 'blur(8px)' : 'blur(0)'}
-            transform={quoteBlurred ? 'translateY(8px) scale(.985)' : 'translateY(0) scale(1)'}
-            transition="opacity 240ms ease, filter 240ms ease, transform 240ms ease"
-          >
-            <Heading
-              as="h2"
-              fontFamily="heading"
-              fontWeight="500"
-              fontSize={{ base: '3xl', md: '4xl', xl: '5xl' }}
-              lineHeight={{ base: '1.08', md: '1.02' }}
-              letterSpacing="-0.02em"
-              color="rgba(255,255,255,.94)"
-            >
-              {active.quote}
-            </Heading>
-            <Text color="rgba(255,255,255,.58)" textStyle="label" letterSpacing="0.28em">
-              {active.type} · {active.role}
-            </Text>
-          </Stack>
-
-        <Flex
-          gap={{ base: 2.5, md: 3 }}
-          mt={{ base: 8, md: 10 }}
-          flexWrap="wrap"
-          justify="center"
-          role="group"
-          aria-label="Select testimonial"
-        >
-          {testimonials.map((item, index) => {
-            const isActive = index === activeIndex
-            const isPreviewed = previewIndex === index && !isActive
-            const isOpen = isActive || isPreviewed
-            return (
-              <Button
-                key={item.id}
-                onClick={() => handleSelect(index)}
-                onMouseEnter={() => setPreviewIndex(index)}
-                onMouseLeave={() => setPreviewIndex(null)}
-                onFocus={() => setPreviewIndex(index)}
-                onBlur={() => setPreviewIndex(null)}
-                aria-label={`View testimonial from ${item.author}`}
-                aria-pressed={isActive}
-                minH="56px"
-                minW="56px"
-                w={isOpen ? 'auto' : '56px'}
-                maxW={{ base: '100%', sm: '260px' }}
-                px={isOpen ? { base: 2, md: 2.5 } : 0}
-                borderRadius="999px"
-                bg={isActive ? 'surface.light' : isPreviewed ? 'rgba(255,255,255,.16)' : 'rgba(255,255,255,.07)'}
-                color={isActive ? 'text.primary' : isPreviewed ? 'vip.platinum' : 'rgba(255,255,255,.62)'}
-                border="1px solid"
-                borderColor={isActive ? 'rgba(255,255,255,.86)' : isPreviewed ? 'rgba(255,255,255,.24)' : 'rgba(255,255,255,.1)'}
-                boxShadow={isActive ? '0 18px 38px rgba(0,0,0,.26)' : 'none'}
-                fontFamily="label"
-                fontSize="sm"
-                fontWeight="700"
-                overflow="hidden"
-                transition="padding 220ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease"
-                _hover={{
-                  bg: isActive ? 'surface.light' : 'rgba(255,255,255,.16)',
-                  color: isActive ? 'text.primary' : 'vip.platinum',
-                  borderColor: isActive ? 'rgba(255,255,255,.86)' : 'rgba(255,255,255,.24)',
-                }}
-                _focusVisible={{
-                  outline: '3px solid',
-                  outlineColor: 'focus.ring',
-                  outlineOffset: '3px',
-                }}
-              >
-                <Flex alignItems="center" gap={3} minW="0">
-                  <Flex
-                    alignItems="center"
-                    justifyContent="center"
-                    flexShrink={0}
-                    w="42px"
-                    h="42px"
-                    borderRadius="full"
-                    bg={isActive ? 'vip.platinum' : 'rgba(255,255,255,.12)'}
-                    border="1px solid"
-                    borderColor={isActive ? 'rgba(2,8,20,.12)' : 'rgba(255,255,255,.14)'}
-                    color={isActive ? 'text.primary' : 'vip.platinum'}
-                    fontSize="xs"
-                  >
-                    {item.initials}
-                  </Flex>
-                  <Text
-                    as="span"
-                    display={isOpen ? 'block' : 'none'}
-                    maxW={{ base: '180px', sm: '190px' }}
-                    whiteSpace="nowrap"
-                    overflow="hidden"
-                    textOverflow="ellipsis"
-                    opacity={isOpen ? 1 : 0}
-                    transform={isOpen ? 'translateX(0)' : 'translateX(-6px)'}
-                    transition="opacity 180ms ease, transform 180ms ease"
-                  >
-                    {item.author}
-                  </Text>
-                </Flex>
-              </Button>
-            )
-          })}
-        </Flex>
-        </Box>
+        <UniqueTestimonial testimonials={testimonials} />
 
       </Grid>
     </Box>
@@ -774,7 +568,7 @@ const fieldStyles = {
   borderRadius: 'button',
   bg: 'bg.surface',
   color: 'text.primary',
-  _focus: { borderColor: 'accent.primary', boxShadow: '0 0 0 1px var(--chakra-colors-accent-primary)' },
+  _focus: { borderColor: 'accent.primary', boxShadow: '0 0 0 1px #168a55' },
 }
 
 function FormField({ id, label, required = false, error, children }) {
@@ -906,7 +700,7 @@ function ContactForm({ selectedInquiry = '' }) {
           />
         </FormField>
         <FormField id="contact-inquiry" label="Inquiry type" required error={errors.inquiryType}>
-          <chakra.select
+          <styled.select
             ref={(node) => { fieldRefs.current.inquiryType = node }}
             id="contact-inquiry"
             name="inquiryType"
@@ -918,13 +712,13 @@ function ContactForm({ selectedInquiry = '' }) {
           >
             <option value="">Select an inquiry type</option>
             {contactPage.inquiryOptions.map((option) => <option key={option} value={option}>{option}</option>)}
-          </chakra.select>
+          </styled.select>
         </FormField>
         <FormField id="contact-building" label="Building type (optional)">
-          <chakra.select id="contact-building" name="buildingType" value={form.buildingType} onChange={handleChange} {...fieldStyles}>
+          <styled.select id="contact-building" name="buildingType" value={form.buildingType} onChange={handleChange} {...fieldStyles}>
             <option value="">Select a building type</option>
             {contactPage.buildingTypes.map((option) => <option key={option} value={option}>{option}</option>)}
-          </chakra.select>
+          </styled.select>
         </FormField>
         <FormField id="contact-location" label="Location / city (optional)">
           <Input id="contact-location" name="location" value={form.location} onChange={handleChange} autoComplete="address-level2" {...fieldStyles} />
@@ -1447,7 +1241,7 @@ function ContactCard({ href, label, children, external = false, ...props }) {
   }
   const content = <><Text color="text.subtle" fontSize="xs">{label}</Text><Text fontSize="md" fontWeight="500" lineHeight="1.35">{children}</Text></>
   return href
-    ? <chakra.a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} {...styles}>{content}</chakra.a>
+    ? <styled.a href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined} {...styles}>{content}</styled.a>
     : <Box {...styles}>{content}</Box>
 }
 
@@ -1562,7 +1356,7 @@ function Contact() {
   }
 
   return (
-    <PageShell overHero showInquiryBar={false}>
+    <PageShell overHero>
       <ContactHero onSelectInquiry={selectInquiry} />
 
       <Box

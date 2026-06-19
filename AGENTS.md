@@ -6,7 +6,7 @@
 
 ## OVERVIEW
 
-VIP Lift Nigeria marketing site: React 19 + Vite 8 SPA with client-side routing. Tesla-inspired visual system (see `DESIGN.md`). No backend, CMS, or form API—contact is `mailto:` / `tel:` only.
+VIP Lift Nigeria marketing site: React 19 + Vite 8 + Tailwind CSS SPA with client-side routing. The official VIP Lift Nigeria brand kit governs the visual system (see `DESIGN.md`). No backend, CMS, or form API—contact is `mailto:` / `tel:` only.
 
 ## STRUCTURE
 
@@ -17,9 +17,10 @@ vip-lift-frontend/
 ├── DESIGN.md           # Tokens, components, do/do-not
 ├── src/
 │   ├── main.jsx        # BrowserRouter + StrictMode
-│   ├── App.jsx         # Routes, layout, pages, MetaTitle
-│   ├── data/siteContent.js   # All copy, nav, images (WP CDN URLs)
-│   └── styles/global.css     # CSS variables + layout
+│   ├── App.jsx         # Routes, sections, and page components
+│   ├── components/     # Chakra-compatible Tailwind migration primitives
+│   ├── data/siteContent.js   # All copy, navigation, and asset paths
+│   └── styles/global.css     # Tailwind theme and global styles
 └── .omo/               # Orchestration plans/notepads (not app code)
 ```
 
@@ -30,9 +31,10 @@ vip-lift-frontend/
 | Add/edit page copy | `src/data/siteContent.js` | Single content source |
 | Brand logo / favicon | `public/assets/` + `siteContent.js` → `brand` | Drop files in `public/assets/`; paths in `brand` export |
 | New route / page | `src/App.jsx` | Add `pageMeta` entry + `<Route>` + page component |
-| Per-route `<title>` / description | `App.jsx` → `pageMeta` + `MetaTitle` | Updates `document.title` and meta description |
-| Global styles / tokens | `src/styles/global.css` | Mirrors `DESIGN.md` color tokens |
-| Typography / fonts | `index.html` + `global.css` → `--font-display`, `--font-text` | Open Sans via Google Fonts |
+| Per-route `<title>` / description | `src/App.jsx` | Updates title, description, and schema |
+| Header / footer / page shell | `src/App.jsx` | Shared responsive layout |
+| Global styles / tokens | `src/styles/global.css` | Tailwind v4 theme mirroring `DESIGN.md` |
+| Typography / fonts | `src/styles/global.css` | Self-hosted Cormorant Garamond, Inter, Montserrat |
 | Design rules | `DESIGN.md` | Authoritative for visual constraints |
 | Redesign plan | `.omo/plans/vip-lift-redesign.md` | Active boulder, not runtime |
 
@@ -41,11 +43,11 @@ vip-lift-frontend/
 | Symbol | Type | Location | Role |
 |--------|------|----------|------|
 | `App` | default export | `src/App.jsx` | Route table |
-| `pageMeta` | object | `src/App.jsx` | SEO title/description per path |
+| `MetaTitle` / `SchemaMarkup` | components | `src/App.jsx` | SEO title, description, and schema per path |
 | `siteContent` exports | data | `src/data/siteContent.js` | `contact`, `navItems`, `hero`, `services`, etc. |
-| `PageShell` | component | `src/App.jsx` | Header + main + Footer wrapper |
+| `PageShell` | component | `src/App.jsx` | Header + main + footer wrapper |
 
-All page UI lives in `App.jsx` (~290 lines; no `src/pages/` split). Pages: `/`, `/about`, `/projects`, `/contact`. Content data ~130 lines; global CSS ~450 lines.
+Routes include home, about, projects and project details, service pages, audience pages, service area, contact, and customize-lift.
 
 ## CONVENTIONS
 
@@ -53,7 +55,8 @@ All page UI lives in `App.jsx` (~290 lines; no `src/pages/` split). Pages: `/`, 
 - **Content separation** — never hardcode marketing copy in components; use `siteContent.js`.
 - **Images** — local files in `public/assets/images/` (sourced from legacy WordPress uploads); lazy-load in grids. Paths centralized in `siteContent.js` → `images` export.
 - **Routing** — `react-router-dom` v7; `NavLink` with `end` on home; mobile nav closes on `pathname` change.
-- **Hero background** — CSS custom property `--hero-image` inline on section.
+- **Design authority** — use official assets in `public/assets/brand/`; do not reintroduce the legacy Tesla/blue visual system.
+- **Styling** — Tailwind v4 is configured through `@tailwindcss/vite` and `src/styles/global.css`.
 
 ## ANTI-PATTERNS (THIS PROJECT)
 
@@ -66,7 +69,7 @@ All page UI lives in `App.jsx` (~290 lines; no `src/pages/` split). Pages: `/`, 
 ## UNIQUE STYLES
 
 - Fixed translucent header (`backdrop-filter`), centered nav, compact CTAs.
-- Photography-first sections; `--color-blue` (#3E6AE1) primary actions.
+- Photography-first sections; Emerald Accent (`#168A55`) primary actions.
 - Contact CTAs use encoded `mailto:` subjects (`VIP%20Lift%20...`).
 
 ## COMMANDS
