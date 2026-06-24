@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects — VIP Lift Nigeria</title>
+  <meta name="description" content="Featured lift installations and applications across residential, commercial, hospitality, and public building environments in Nigeria." />
+  <link rel="stylesheet" href="css/site.css" />
+  <link rel="preload" as="image" href="assets/logo/vip-lift-nigeria-horizontal-navy.svg" />
+  <link rel="preload" as="image" href="assets/logo/vip-lift-nigeria-horizontal-white.svg" />
+  <style>
+    .project-card { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: var(--r-card); overflow: hidden; background: var(--surface-lowest); }
+    .project-card .ph-img { border: 0; border-radius: 0; aspect-ratio: 4/3; }
+    .project-card .proj-body { padding: var(--s-lg); display: flex; flex-direction: column; gap: 8px; }
+    .project-card .proj-meta { display: flex; gap: 8px; flex-wrap: wrap; }
+    .project-card .proj-meta .tag { font-size: 10px; }
+    .project-card h3 { font-family: var(--font-body); font-size: 17px; font-weight: 600; }
+    .project-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    .project-card .proj-status { font-family: var(--font-label); font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted-2); }
+  </style>
+</head>
+<body class="site-page">
+
+  <header class="topnav scrolled" data-od-id="topnav" id="topnav">
+    <div class="container topnav-inner">
+      <a href="index.html" class="logo-link" aria-label="VIP Lift Nigeria — Home">
+        <img class="logo-light" src="assets/logo/vip-lift-nigeria-horizontal-white.svg" alt="" aria-hidden="true" width="114" height="36" decoding="async" />
+        <img class="logo-dark" src="assets/logo/vip-lift-nigeria-horizontal-navy.svg" alt="VIP Lift Nigeria" width="114" height="36" fetchpriority="high" decoding="async" />
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html">Home</a><a href="about.html">About</a><a href="lift-solutions.html">Lift Solutions</a><a href="services.html">Services</a><a href="projects.html" class="active">Projects</a><a href="contact.html">Contact</a>
+      </nav>
+      <div class="nav-cta">
+        <a href="contact.html" class="btn btn-primary">Request a Quote</a>
+        <button class="nav-toggle" aria-label="Open menu" id="navToggle"><span></span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <a href="index.html">Home</a><a href="about.html">About</a><a href="lift-solutions.html">Lift Solutions</a><a href="services.html">Services</a><a href="projects.html" class="active">Projects</a><a href="contact.html">Contact</a>
+    <a href="contact.html" class="btn btn-primary btn-block">Request a Quote</a>
+  </div>
+
+  <main id="content">
+
+    <section class="page-header" data-od-id="page-header">
+      <div class="container">
+        <p class="eyebrow">PROJECTS</p>
+        <h1 style="max-width: 22ch;">Where VIP Lift solutions are applied.</h1>
+        <p class="lead" style="margin-top: 24px;">Real project case studies will be published here — with verified client names, locations, lift models, and outcomes — once content is available. Until then, these placeholders show the project categories and structure.</p>
+      </div>
+    </section>
+
+    <section class="section" data-od-id="project-filters">
+      <div class="container">
+        <div class="row-between" style="margin-bottom: 40px; flex-wrap: wrap; gap: 16px;">
+          <h2>Project gallery</h2>
+          <div class="filter-bar" id="filterBar">
+            <button class="filter-chip active" data-filter="all">All</button>
+            <button class="filter-chip" data-filter="residential">Residential</button>
+            <button class="filter-chip" data-filter="commercial">Commercial</button>
+            <button class="filter-chip" data-filter="hospitality">Hospitality</button>
+            <button class="filter-chip" data-filter="public">Public</button>
+            <button class="filter-chip" data-filter="maintenance">Maintenance</button>
+          </div>
+        </div>
+
+        <div class="grid-3" id="projectGrid" style="gap: 24px;">
+          <div class="project-card" data-category="residential">
+            <div class="ph-img" aria-label="Project image — placeholder">Residential Lift Installation</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Residential</span><span class="tag">Home Lift</span></div>
+              <h3>[ Project name ]</h3>
+              <p>[ Location, building type, lift model, and scope — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+          <div class="project-card" data-category="residential">
+            <div class="ph-img" aria-label="Project image — placeholder">Duplex Lift Installation</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Residential</span><span class="tag">Platform Lift</span></div>
+              <h3>[ Project name ]</h3>
+              <p>[ Location, building type, lift model, and scope — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+          <div class="project-card" data-category="commercial">
+            <div class="ph-img" aria-label="Project image — placeholder">Office Building Lift</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Commercial</span><span class="tag">Passenger Lift</span></div>
+              <h3>[ Project name ]</h3>
+              <p>[ Location, building type, lift model, and scope — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+          <div class="project-card" data-category="commercial">
+            <div class="ph-img" aria-label="Project image — placeholder">Retail Complex Lift</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Commercial</span><span class="tag">Public Building</span></div>
+              <h3>[ Project name ]</h3>
+              <p>[ Location, building type, lift model, and scope — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+          <div class="project-card" data-category="hospitality">
+            <div class="ph-img" aria-label="Project image — placeholder">Hotel Guest Lift</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Hospitality</span><span class="tag">Service Lift</span></div>
+              <h3>[ Project name ]</h3>
+              <p>[ Location, building type, lift model, and scope — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+          <div class="project-card" data-category="hospitality">
+            <div class="ph-img" aria-label="Project image — placeholder">Serviced Apartment Lift</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Hospitality</span><span class="tag">Passenger Lift</span></div>
+              <h3>[ Project name ]</h3>
+              <p>[ Location, building type, lift model, and scope — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+          <div class="project-card" data-category="public">
+            <div class="ph-img" aria-label="Project image — placeholder">Healthcare Facility Lift</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Public</span><span class="tag">Healthcare</span></div>
+              <h3>[ Project name ]</h3>
+              <p>[ Location, building type, lift model, and scope — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+          <div class="project-card" data-category="public">
+            <div class="ph-img" aria-label="Project image — placeholder">School Accessibility Lift</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Public</span><span class="tag">Accessibility</span></div>
+              <h3>[ Project name ]</h3>
+              <p>[ Location, building type, lift model, and scope — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+          <div class="project-card" data-category="maintenance">
+            <div class="ph-img" aria-label="Project image — placeholder">Maintenance Programme</div>
+            <div class="proj-body">
+              <div class="proj-meta"><span class="tag">Maintenance</span><span class="tag">Servicing</span></div>
+              <h3>[ Maintenance account ]</h3>
+              <p>[ Building portfolio, service plan, and outcomes — to be supplied ]</p>
+              <span class="proj-status">Placeholder · Awaiting content</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="wf-block" style="margin-top: 40px;">[ Additional project case studies to be published as verified content becomes available ]</div>
+      </div>
+    </section>
+
+    <section class="section" data-od-id="cta" style="text-align: center;">
+      <div class="container" style="max-width: 600px;">
+        <h2>Have a project you'd like to discuss?</h2>
+        <p class="lead" style="margin: 16px auto 32px;">Share your building details and project stage. We'll help you plan the right approach.</p>
+        <a href="contact.html" class="btn btn-primary">Discuss Your Project</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="pagefoot" data-od-id="footer">
+    <div class="container">
+      <div class="foot-grid">
+        <div><div class="foot-logo" style="margin-bottom: 20px;"><img src="assets/logo/vip-lift-nigeria-horizontal-white.svg" alt="VIP Lift Nigeria" style="height: 36px;" /></div><p style="color: var(--platinum); font-size: 14px; line-height: 1.6; max-width: 36ch; opacity: 0.86;">Value, Innovation and Prestige. Premium lift solutions for homes, businesses and public buildings across Nigeria.</p></div>
+        <div><h4>Navigate</h4><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="lift-solutions.html">Lift Solutions</a></li><li><a href="services.html">Services</a></li><li><a href="projects.html">Projects</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+        <div><h4>Solutions</h4><ul><li><a href="solution-home-platform-lifts.html">Home &amp; Platform Lifts</a></li><li><a href="lift-solutions.html">Passenger Lifts</a></li><li><a href="lift-solutions.html">Commercial Lifts</a></li><li><a href="modernisation.html">Modernisation</a></li><li><a href="maintenance-servicing.html">Maintenance</a></li></ul></div>
+        <div><h4>Contact</h4><ul><li><a href="contact.html">Request a Quote</a></li><li><a href="contact.html">Discuss Your Project</a></li><li><a href="maintenance-servicing.html">Request Maintenance Support</a></li></ul><p style="color: var(--on-dark-muted); font-size: 13px; margin-top: 16px;">[Phone number]<br/>[Email address]<br/>[Office address, Nigeria]</p></div>
+      </div>
+      <div class="foot-bottom"><span>© VIP Lift Nigeria. All rights reserved.</span><span>International lift technology, supported by dependable local expertise.</span></div>
+    </div>
+  </footer>
+
+  <div class="mobile-contact-bar"><div class="row">
+    <a href="tel:[PHONE]" class="btn btn-secondary"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.36 1.9.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0122 16.92z"/></svg> Call</a>
+    <a href="https://wa.me/[NUMBER]" class="btn btn-primary"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.7.2-.2.3-.7 1-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.1 3.2 5 4.5.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm0 18.2c-1.5 0-2.9-.4-4.2-1.1l-.3-.2-3 .9.9-2.9-.2-.3A8.2 8.2 0 1112 20.2z"/></svg> WhatsApp</a>
+  </div></div>
+
+  <script src="js/site.js"></script>
+  <script>
+    // Project filter
+    var chips=document.querySelectorAll('.filter-chip');var cards=document.querySelectorAll('.project-card');
+    chips.forEach(function(c){c.addEventListener('click',function(){chips.forEach(function(x){x.classList.remove('active');});c.classList.add('active');var f=c.getAttribute('data-filter');cards.forEach(function(card){if(f==='all'||card.getAttribute('data-category')===f){card.style.display='';}else{card.style.display='none';}});});});
+  </script>
+</body>
+</html>

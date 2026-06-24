@@ -1,0 +1,223 @@
+@import url('/assets/open-design/css/site.css');
+@import url('/assets/open-design/css/coverage-map.css');
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  outline-offset: 3px;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.topnav.scrolled {
+  background: color-mix(in oklch, var(--bg) 94%, transparent);
+  border-bottom-color: var(--border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.topnav.scrolled .logo-light {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.topnav.scrolled .logo-dark {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.topnav.scrolled .nav-links a {
+  color: var(--muted);
+}
+
+.coverage-fallback {
+  min-height: inherit;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: var(--s-xl);
+  background:
+    radial-gradient(circle at 48% 58%, rgba(0, 109, 64, 0.16), transparent 0 11%, transparent 12%),
+    radial-gradient(circle at 56% 36%, rgba(0, 109, 64, 0.1), transparent 0 8%, transparent 9%),
+    linear-gradient(135deg, var(--surface-lowest), var(--surface-low));
+  color: var(--fg);
+}
+
+.coverage-fallback > div {
+  max-width: 30ch;
+  text-align: center;
+}
+
+.coverage-fallback p:last-child {
+  margin-top: var(--s-sm);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.coverage-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-bottom: var(--s-sm);
+  border-radius: var(--r-full);
+  background: var(--accent);
+  box-shadow: 0 0 0 10px rgba(0, 109, 64, 0.12);
+}
+
+.coverage-globe {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  overflow: hidden;
+  background: var(--deep-navy);
+}
+
+.coverage-globe-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.coverage-globe .maplibregl-canvas {
+  outline: none;
+}
+
+.coverage-globe .maplibregl-ctrl-attrib {
+  background: rgba(248, 249, 255, 0.84);
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 10px;
+}
+
+.coverage-globe-loading,
+.coverage-globe-error {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--surface-lowest) 58%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.coverage-globe-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.coverage-globe-loading span {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-full);
+  background: var(--accent);
+  animation: coverage-pulse 1.4s ease-in-out infinite;
+}
+
+.coverage-globe-loading span:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.coverage-globe-loading span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+.coverage-globe-error {
+  padding: var(--s-xl);
+  text-align: center;
+}
+
+.coverage-globe-error p:last-child {
+  max-width: 30ch;
+  margin-top: var(--s-sm);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.coverage-globe-marker {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+.coverage-globe-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--surface-lowest);
+  border-radius: var(--r-full);
+  background: var(--accent);
+  box-shadow: 0 2px 10px rgba(2, 8, 20, 0.22);
+  transform: translate(-50%, -50%);
+}
+
+.coverage-globe-marker.is-hub .coverage-globe-dot {
+  width: 13px;
+  height: 13px;
+  box-shadow:
+    0 0 0 8px rgba(0, 109, 64, 0.15),
+    0 2px 12px rgba(2, 8, 20, 0.26);
+}
+
+.coverage-globe-label {
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  padding: 2px 7px;
+  border: 1px solid rgba(6, 19, 38, 0.16);
+  border-radius: var(--r-sm);
+  background: rgba(248, 249, 255, 0.88);
+  color: var(--fg);
+  font-family: var(--font-label);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
+  backdrop-filter: blur(6px);
+}
+
+.coverage-globe-controls {
+  position: absolute;
+  right: 10px;
+  bottom: 28px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 1px 8px rgba(2, 8, 20, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.coverage-globe-controls button {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  color: var(--fg);
+}
+
+.coverage-globe-controls button + button {
+  border-top: 1px solid var(--border);
+}
+
+.coverage-globe-controls button:hover {
+  background: var(--nav-pill);
+}
+
+@media (max-width: 920px) {
+  .pagefoot {
+    padding-bottom: calc(var(--s-4xl) + 72px);
+  }
+}
