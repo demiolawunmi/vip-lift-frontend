@@ -15,7 +15,7 @@
     .form-section-title { font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-2); margin: 0 0 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
     .form-section-title:not(:first-child) { margin-top: 32px; }
     .enquiry-type-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .enquiry-option { display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--border-strong); border-radius: var(--r-btn); cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
+    .enquiry-option { display: flex; flex-direction: column; gap: 4px; padding: 16px; border: 1px solid var(--border-strong); border-radius: var(--r-btn); cursor: pointer; transition: border-color var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out); }
     .enquiry-option:hover { border-color: var(--fg); }
     .enquiry-option.selected { border-color: var(--accent); background: var(--accent-soft); }
     .enquiry-option input { position: absolute; opacity: 0; }

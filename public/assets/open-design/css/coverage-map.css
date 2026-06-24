@@ -56,7 +56,7 @@
 .coverage-map-shell .bg-background\/50 { background: rgba(248, 249, 255, 0.5); }
 .coverage-map-shell .bg-muted-foreground\/60 { background: rgba(117, 119, 125, 0.6); }
 .coverage-map-shell .size-1\.5 { width: 6px; height: 6px; }
-.coverage-map-shell .animate-pulse { animation: coverage-pulse 1.4s ease-in-out infinite; }
+.coverage-map-shell .animate-pulse { animation: coverage-pulse 1.4s var(--ease-in-out) infinite; }
 .coverage-map-shell .animate-spin { animation: coverage-spin 1s linear infinite; }
 .coverage-map-shell .backdrop-blur-xs { backdrop-filter: blur(4px); }
 .coverage-map-shell .bottom-3 { bottom: 12px; }
@@ -87,7 +87,11 @@
 .coverage-map-shell .font-medium { font-weight: 500; }
 .coverage-map-shell .border-b { border-bottom: 1px solid var(--border); }
 .coverage-map-shell .border-border { border-color: var(--border); }
-.coverage-map-shell .transition-all { transition: all 0.15s ease; }
+.coverage-map-shell .transition-all {
+  transition-property: background-color, border-color, color, opacity, transform;
+  transition-duration: var(--dur-short);
+  transition-timing-function: var(--ease-out);
+}
 .coverage-map-shell .first\:rounded-t-md:first-child { border-top-left-radius: 6px; border-top-right-radius: 6px; }
 .coverage-map-shell .last\:rounded-b-md:last-child { border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; }
 
@@ -104,7 +108,7 @@
 .coverage-map-shell .map-controls-group > button:not(:last-child) {
   border-bottom: 1px solid var(--border);
 }
-.coverage-map-shell .transition-transform { transition: transform 0.2s ease; }
+.coverage-map-shell .transition-transform { transition: transform var(--dur-short) var(--ease-out); }
 .coverage-map-shell .duration-200 { transition-duration: 0.2s; }
 
 @keyframes coverage-pulse {

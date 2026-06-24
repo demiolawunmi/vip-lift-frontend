@@ -232,7 +232,11 @@ input, textarea, select { font: inherit; }
   letter-spacing: 0.08em;
   text-transform: uppercase;
   min-height: 48px;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.05s ease;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
   cursor: pointer;
 }
 .btn:active { transform: translateY(1px); }
@@ -244,7 +248,7 @@ input, textarea, select { font: inherit; }
 .btn-ghost:hover { color: var(--fg); }
 .btn-on-dark-secondary { background: transparent; color: var(--on-dark); border-color: var(--on-dark-border); }
 .btn-on-dark-secondary:hover { background: rgba(255,255,255,0.06); border-color: var(--on-dark); }
-.btn-arrow::after { content: '→'; transition: transform 0.15s ease; margin-left: 2px; }
+.btn-arrow::after { content: '→'; transition: transform var(--dur-short) var(--ease-out); margin-left: 2px; }
 .btn-arrow:hover::after { transform: translateX(3px); }
 .btn-block { display: flex; width: 100%; justify-content: center; }
 
@@ -343,7 +347,7 @@ input, textarea, select { font: inherit; }
   color: var(--fg);
   font-family: var(--font-body);
   font-size: 15px;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: border-color var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
 }
 .input::placeholder, .textarea::placeholder { color: var(--muted-2); }
 .input:focus, .textarea:focus, .select:focus {
@@ -412,10 +416,10 @@ input, textarea, select { font: inherit; }
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border);
   transition:
-    background 0.35s ease,
-    border-color 0.35s ease,
-    backdrop-filter 0.35s ease,
-    -webkit-backdrop-filter 0.35s ease;
+    background-color var(--dur-long) var(--ease-out),
+    border-color var(--dur-long) var(--ease-out),
+    backdrop-filter var(--dur-long) var(--ease-out),
+    -webkit-backdrop-filter var(--dur-long) var(--ease-out);
 }
 .topnav.over-hero {
   background: transparent;
@@ -447,7 +451,7 @@ body.site-page:not(.has-hero-bleed) main {
   height: var(--logo-h);
   object-fit: contain;
   object-position: left center;
-  transition: opacity 0.35s ease;
+  transition: opacity var(--dur-long) var(--ease-out);
 }
 .topnav .logo-light { opacity: 0; pointer-events: none; }
 .topnav .logo-dark { opacity: 1; }
@@ -462,7 +466,7 @@ body.site-page:not(.has-hero-bleed) main {
   color: var(--muted);
   padding: 8px 12px;
   border-radius: var(--r-btn);
-  transition: color 0.35s ease, background 0.15s ease;
+  transition: color var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
 }
 .topnav.over-hero .nav-links a { color: var(--platinum); }
 .topnav.over-hero .nav-links a:hover {
@@ -484,12 +488,12 @@ body.site-page:not(.has-hero-bleed) main {
   align-items: center; justify-content: center;
   border: 1px solid var(--border-strong);
   border-radius: var(--r-btn);
-  transition: border-color 0.35s ease;
+  transition: border-color var(--dur-short) var(--ease-out);
 }
 .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after {
   display: block; width: 18px; height: 2px;
   background: var(--fg); position: relative;
-  transition: transform 0.2s ease, background 0.35s ease;
+  transition: transform var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
 }
 .topnav.over-hero .nav-toggle { border-color: rgba(255, 255, 255, 0.28); }
 .topnav.over-hero .nav-toggle span,
@@ -585,11 +589,11 @@ body.site-page:not(.has-hero-bleed) main {
 .lifecycle-step p { font-size: 12px; color: var(--muted); line-height: 1.5; margin: 0; }
 
 /* ---- Solution category card ------------------------------------------- */
-.sol-card { display: flex; flex-direction: column; gap: var(--s-sm); border: 1px solid var(--border); border-radius: var(--r-card); padding: var(--s-xl); background: var(--surface-lowest); transition: border-color 0.2s ease; }
+.sol-card { display: flex; flex-direction: column; gap: var(--s-sm); border: 1px solid var(--border); border-radius: var(--r-card); padding: var(--s-xl); background: var(--surface-lowest); transition: border-color var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out); }
 .sol-card:hover { border-color: var(--accent); }
 .sol-card h3 { font-size: 20px; font-family: var(--font-body); font-weight: 600; }
 .sol-card p { color: var(--muted); font-size: 14px; line-height: 1.55; flex: 1; }
-.sol-card .sol-link { font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg); margin-top: var(--s-sm); transition: color 0.15s ease; }
+.sol-card .sol-link { font-family: var(--font-label); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg); margin-top: var(--s-sm); transition: color var(--dur-short) var(--ease-out); }
 .sol-card:hover .sol-link { color: var(--accent); }
 
 /* ---- Filter chips ------------------------------------------------------ */
@@ -603,7 +607,12 @@ body.site-page:not(.has-hero-bleed) main {
   letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--muted);
   cursor: pointer;
-  transition: all 0.15s ease;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out),
+    transform var(--dur-short) var(--ease-out);
   background: transparent;
 }
 .filter-chip:hover { border-color: var(--fg); color: var(--fg); }

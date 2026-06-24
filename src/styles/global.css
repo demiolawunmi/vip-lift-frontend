@@ -1,5 +1,13 @@
+/* Hallmark · pre-emit critique: P5 H4 E4 S5 R5 V4 */
+/* Hallmark · macrostructure: system-managed motion layer · tone: restrained luxury · anchor hue: emerald */
 @import url('/assets/open-design/css/site.css');
 @import url('/assets/open-design/css/coverage-map.css');
+@import url('../../tokens.css');
+
+html,
+body {
+  overflow-x: clip;
+}
 
 :focus-visible {
   outline: 3px solid color-mix(in srgb, var(--accent) 34%, transparent);
@@ -8,6 +16,54 @@
 
 #root {
   min-height: 100vh;
+}
+
+@keyframes vip-load-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-enter-distance));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vip-reveal-once {
+  from {
+    opacity: 0;
+    transform: translateY(var(--motion-reveal-distance));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vip-sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--s-sm) * -1));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.motion-load {
+  animation: vip-load-in var(--dur-long) var(--ease-out) both;
+  animation-delay: calc(var(--motion-index, 0) * var(--motion-stagger-step));
+}
+
+.motion-ready .motion-reveal {
+  opacity: 0;
+  transform: translateY(var(--motion-reveal-distance));
+}
+
+.motion-ready .motion-reveal.is-visible {
+  animation: vip-reveal-once var(--dur-long) var(--ease-out) forwards;
+  animation-delay: min(calc(var(--motion-index, 0) * var(--motion-stagger-step)), var(--motion-stagger-cap));
 }
 
 .topnav.scrolled {
@@ -29,6 +85,173 @@
 
 .topnav.scrolled .nav-links a {
   color: var(--muted);
+}
+
+.btn {
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.btn:active {
+  transform: translateY(1px);
+  transition-duration: var(--dur-micro);
+}
+
+.btn:focus-visible,
+.topnav a:focus-visible,
+.mobile-nav a:focus-visible,
+.filter-chip:focus-visible,
+.coverage-globe-controls button:focus-visible,
+.coverage-map-shell button[aria-label]:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  outline-offset: 3px;
+}
+
+.input,
+.textarea,
+.select {
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .input:hover,
+  .textarea:hover,
+  .select:hover {
+    background-color: var(--surface-low);
+  }
+}
+
+.input:focus-visible,
+.textarea:focus-visible,
+.select:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.topnav,
+.topnav .logo-link img,
+.topnav .nav-links a,
+.nav-toggle,
+.nav-toggle span,
+.nav-toggle span::before,
+.nav-toggle span::after {
+  transition-timing-function: var(--ease-out);
+}
+
+.mobile-nav.open {
+  animation: vip-sheet-in var(--dur-long) var(--ease-out) both;
+}
+
+.mobile-nav a,
+.pagefoot a {
+  transition:
+    color var(--dur-short) var(--ease-out),
+    opacity var(--dur-short) var(--ease-out),
+    background-color var(--dur-short) var(--ease-out);
+  white-space: nowrap;
+}
+
+.sol-card,
+.sol-detail-card,
+.svc-card,
+.svc-detail-card,
+.mod-card,
+.project-card,
+.app-card,
+.team-card,
+.card-bordered,
+.feature-mark,
+.enquiry-option,
+.filter-chip {
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out),
+    opacity var(--dur-short) var(--ease-out),
+    transform var(--dur-short) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sol-card:hover,
+  .sol-detail-card:hover,
+  .svc-card:hover,
+  .svc-detail-card:hover,
+  .mod-card:hover,
+  .project-card:hover,
+  .app-card:hover,
+  .team-card:hover,
+  .card-bordered:hover {
+    transform: translateY(-2px);
+  }
+
+  .feature:hover .feature-mark {
+    transform: translateY(-1px);
+    border-color: var(--border-strong);
+  }
+
+  .enquiry-option:hover,
+  .filter-chip:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.enquiry-option:has(input:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--accent) 34%, transparent);
+  outline-offset: 3px;
+}
+
+.form-success.show {
+  animation: vip-reveal-once var(--dur-long) var(--ease-out) both;
+}
+
+.filter-chip {
+  white-space: nowrap;
+  transition-property: background-color, border-color, color, transform;
+  transition-duration: var(--dur-short);
+  transition-timing-function: var(--ease-out);
+}
+
+.coverage-map-shell .transition-all {
+  transition-property: background-color, border-color, color, opacity, transform;
+  transition-duration: var(--dur-short);
+  transition-timing-function: var(--ease-out);
+}
+
+.coverage-map-shell .transition-transform {
+  transition: transform var(--dur-short) var(--ease-out);
+}
+
+.coverage-globe-loading span,
+.coverage-map-shell .animate-pulse {
+  animation-timing-function: var(--ease-in-out);
+}
+
+.coverage-globe-controls button,
+.coverage-map-shell button[aria-label] {
+  transition:
+    background-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .coverage-globe-controls button:hover,
+  .coverage-map-shell button[aria-label]:hover {
+    transform: translateY(-1px);
+  }
 }
 
 .coverage-fallback {
@@ -219,5 +442,29 @@
 @media (max-width: 920px) {
   .pagefoot {
     padding-bottom: calc(var(--s-4xl) + 72px);
+  }
+}
+
+@media (max-width: 40rem) {
+  .motion-ready .motion-reveal,
+  .motion-ready .motion-reveal.is-visible,
+  .motion-load,
+  .mobile-nav.open,
+  .form-success.show {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-ready .motion-reveal,
+  .motion-ready .motion-reveal.is-visible,
+  .motion-load,
+  .mobile-nav.open,
+  .form-success.show {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 }

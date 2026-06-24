@@ -1,0 +1,15 @@
+{
+  "date": "2026-06-24",
+  "font_stack": "Cormorant Garamond display, Inter body, Montserrat labels",
+  "palette": "Open Design deep navy, emerald accent, pale surfaces",
+  "motion": "motion-cut: no motion library; CSS + IntersectionObserver only",
+  "spacing": "4px rhythm via --s-* tokens",
+  "framework": "React 19 + Vite SPA",
+  "preserve": [
+    "Open Design typography",
+    "Open Design palette",
+    "existing routes",
+    "raw prototype HTML adapter",
+    "MapLibre contact globe"
+  ]
+}

@@ -182,6 +182,33 @@ Use real lift, architectural, installation, maintenance, and project imagery whe
 - Avoid exaggerated transforms, parallax gimmicks, or decorative motion.
 - Map/globe interactions should start from useful business context, such as Lagos as the hub for coverage.
 
+### Motion Tokens
+
+The site uses a small motion layer rather than a motion library. Tokens live in `tokens.css` and are imported by `src/styles/global.css`.
+
+| Token | Value | Use |
+|---|---:|---|
+| `--ease-out` | `cubic-bezier(0.16, 1, 0.3, 1)` | Reveals and hover feedback |
+| `--ease-in` | `cubic-bezier(0.7, 0, 0.84, 0)` | Exits if needed |
+| `--ease-in-out` | `cubic-bezier(0.65, 0, 0.35, 1)` | State toggles |
+| `--dur-micro` | `120ms` | Press feedback |
+| `--dur-short` | `220ms` | Hover and control transitions |
+| `--dur-long` | `420ms` | Page-load and one-shot reveal |
+
+### Motion Primitives
+
+- **Load reveal**: hero or page-header content enters once on route load.
+- **One-shot reveal**: cards, media blocks, and structured panels reveal once with IntersectionObserver on desktop/tablet.
+- **Interaction feedback**: buttons, cards, chips, form options, map controls, and nav links use small transform/color feedback.
+
+### Motion Rules
+
+- Animate only `transform` and `opacity` for spatial motion.
+- Do not reveal every paragraph or every section; reading content should settle quickly.
+- Do not run scroll-triggered reveals below `40rem`; compact mobile views render the final state immediately.
+- Respect `prefers-reduced-motion: reduce`; spatial motion is removed.
+- Do not use parallax, cursor effects, bouncy easing, animated gradients, or looping decoration.
+
 ## 9. Page Patterns
 
 ### Home

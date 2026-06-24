@@ -60,6 +60,26 @@ const aliases = {
 
 const coverageRoots = new WeakMap()
 
+const motionRevealSelector = [
+  '.grid-split > *',
+  '.grid-1-2 > *',
+  '.grid-2-1 > *',
+  '.sol-card',
+  '.sol-detail-card',
+  '.svc-card',
+  '.svc-detail-card',
+  '.mod-card',
+  '.project-card',
+  '.app-card',
+  '.team-card',
+  '.card-bordered',
+  '.feature',
+  '.lifecycle-step',
+  '.confidence-grid > *',
+  '.coverage-map-shell',
+  '.form-panel',
+].join(',')
+
 function replaceAll(value, replacements) {
   return replacements.reduce(
     (result, [pattern, replacement]) => result.split(pattern).join(replacement),
@@ -116,6 +136,73 @@ function parsePage(source) {
   }
 }
 
+function setupMotion(root) {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const compactViewport = window.matchMedia('(max-width: 40rem)').matches
+  const doc = document.documentElement
+  const loadTargets = [
+    root.querySelector('.hero-content'),
+    root.querySelector('.page-header .container'),
+  ].filter(Boolean)
+  const revealTargets = [...new Set([...root.querySelectorAll(motionRevealSelector)])].filter(
+    (element) => !loadTargets.includes(element),
+  )
+
+  doc.classList.add('motion-ready')
+
+  loadTargets.forEach((element, index) => {
+    element.classList.add('motion-load')
+    element.style.setProperty('--motion-index', String(index))
+  })
+
+  revealTargets.forEach((element, index) => {
+    element.classList.add('motion-reveal')
+    element.style.setProperty('--motion-index', String(index % 7))
+  })
+
+  if (reducedMotion || compactViewport || !('IntersectionObserver' in window)) {
+    revealTargets.forEach((element) => element.classList.add('is-visible'))
+    return () => {
+      loadTargets.forEach((element) => {
+        element.classList.remove('motion-load')
+        element.style.removeProperty('--motion-index')
+      })
+      revealTargets.forEach((element) => {
+        element.classList.remove('motion-reveal', 'is-visible')
+        element.style.removeProperty('--motion-index')
+      })
+    }
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return
+        entry.target.classList.add('is-visible')
+        observer.unobserve(entry.target)
+      })
+    },
+    {
+      rootMargin: '0px 0px -12% 0px',
+      threshold: 0.12,
+    },
+  )
+
+  revealTargets.forEach((element) => observer.observe(element))
+
+  return () => {
+    observer.disconnect()
+    loadTargets.forEach((element) => {
+      element.classList.remove('motion-load')
+      element.style.removeProperty('--motion-index')
+    })
+    revealTargets.forEach((element) => {
+      element.classList.remove('motion-reveal', 'is-visible')
+      element.style.removeProperty('--motion-index')
+    })
+  }
+}
+
 function usePrototypeInteractions(rootRef) {
   const navigate = useNavigate()
   const location = useLocation()
@@ -133,6 +220,7 @@ function usePrototypeInteractions(rootRef) {
     const enquiryOptions = root.querySelectorAll('.enquiry-option')
     const contactForm = root.querySelector('#contactForm')
     const formSuccess = root.querySelector('#formSuccess')
+    const cleanupMotion = setupMotion(root)
 
     const updateNav = () => {
       if (!nav || !hero) return
@@ -242,6 +330,7 @@ function usePrototypeInteractions(rootRef) {
       contactForm?.removeEventListener('submit', onSubmit)
       chipHandlers.forEach(([chip, handler]) => chip.removeEventListener('click', handler))
       enquiryHandlers.forEach(([option, handler]) => option.removeEventListener('click', handler))
+      cleanupMotion()
       closeMobileNav()
     }
   }, [location.pathname, navigate, rootRef])
