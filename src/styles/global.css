@@ -510,6 +510,19 @@ body {
 }
 
 @media (max-width: 920px) {
+  .topnav-inner {
+    height: calc(var(--logo-h-mobile) + 24px);
+    padding-block: 12px;
+  }
+
+  body.site-page:not(.has-hero-bleed) main {
+    padding-top: calc(var(--logo-h-mobile) + 25px);
+  }
+
+  .mobile-nav {
+    padding-top: calc(var(--logo-h-mobile) + 25px);
+  }
+
   body.has-hero-bleed main {
     padding-top: 0;
   }
@@ -520,7 +533,7 @@ body {
   }
 
   body.has-hero-bleed .hero-bleed .hero-content {
-    padding-block-start: clamp(132px, 18vh, 168px);
+    padding-block-start: clamp(124px, calc(18vh - 8px), 160px);
     padding-block-end: clamp(56px, 9vh, 88px);
   }
 
