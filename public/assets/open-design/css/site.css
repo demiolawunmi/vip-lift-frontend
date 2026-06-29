@@ -142,10 +142,10 @@
   /* Navigation */
   --nav-height: 88px;
   --nav-height-mobile: 64px;
-  --logo-w: 150px;
-  --logo-h: 48px;
-  --logo-w-mobile: 154px;
-  --logo-h-mobile: 49px;
+  --logo-w: 176px;
+  --logo-h: 50px;
+  --logo-w-mobile: 176px;
+  --logo-h-mobile: 50px;
 }
 
 /* ---- Reset & base ----------------------------------------------------- */

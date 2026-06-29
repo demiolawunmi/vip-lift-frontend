@@ -85,7 +85,7 @@ body {
 }
 
 .motion-load {
-  animation: vip-load-in var(--dur-long) var(--ease-out) both;
+  animation: vip-load-in var(--dur-reveal) var(--ease-out) both;
   animation-delay: calc(var(--motion-index, 0) * var(--motion-stagger-step));
 }
 
@@ -95,7 +95,7 @@ body {
 }
 
 .motion-ready .motion-reveal.is-visible {
-  animation: vip-reveal-once var(--dur-long) var(--ease-out) forwards;
+  animation: vip-reveal-once var(--dur-reveal) var(--ease-out) forwards;
   animation-delay: min(calc(var(--motion-index, 0) * var(--motion-stagger-step)), var(--motion-stagger-cap));
 }
 
@@ -510,6 +510,18 @@ body {
 }
 
 @media (max-width: 920px) {
+  body.has-hero-bleed main {
+    padding-top: var(--nav-height-mobile);
+  }
+
+  body.has-hero-bleed .hero-bleed {
+    min-height: calc(100svh - var(--nav-height-mobile));
+  }
+
+  body.has-hero-bleed .hero-bleed .hero-content {
+    padding-block-start: clamp(56px, 12vh, 88px);
+  }
+
   .topnav.menu-open {
     z-index: 260;
     background: color-mix(in oklch, var(--bg) 96%, transparent);
@@ -550,17 +562,6 @@ body {
 
   .pagefoot {
     padding-bottom: calc(var(--s-4xl) + 72px);
-  }
-}
-
-@media (max-width: 40rem) {
-  .motion-ready .motion-reveal,
-  .motion-ready .motion-reveal.is-visible,
-  .motion-load,
-  .form-success.show {
-    opacity: 1;
-    transform: none;
-    animation: none;
   }
 }
 

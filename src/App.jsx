@@ -138,7 +138,6 @@ function parsePage(source) {
 
 function setupMotion(root) {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const compactViewport = window.matchMedia('(max-width: 40rem)').matches
   const doc = document.documentElement
   const loadTargets = [
     root.querySelector('.hero-content'),
@@ -160,7 +159,7 @@ function setupMotion(root) {
     element.style.setProperty('--motion-index', String(index % 7))
   })
 
-  if (reducedMotion || compactViewport || !('IntersectionObserver' in window)) {
+  if (reducedMotion || !('IntersectionObserver' in window)) {
     revealTargets.forEach((element) => element.classList.add('is-visible'))
     return () => {
       loadTargets.forEach((element) => {

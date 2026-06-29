@@ -6,8 +6,9 @@
   --dur-micro: 120ms;
   --dur-short: 220ms;
   --dur-long: 420ms;
+  --dur-reveal: 680ms;
   --motion-enter-distance: 8px;
   --motion-reveal-distance: 10px;
-  --motion-stagger-step: 55ms;
-  --motion-stagger-cap: 385ms;
+  --motion-stagger-step: 75ms;
+  --motion-stagger-cap: 525ms;
 }
