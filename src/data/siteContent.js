@@ -27,9 +27,11 @@ export const images = {
 }
 
 export const brand = {
-  logo: '/assets/logo.png',
-  logoLight: '/assets/logo-light.png',
+  logo: '/assets/open-design/assets/logo/vip-lift-nigeria-horizontal-navy.svg',
+  logoLight: '/assets/open-design/assets/logo/vip-lift-nigeria-horizontal-white.svg',
   favicon: '/assets/favicon.png',
+  faviconLight: '/assets/favicon-light.png',
+  faviconDark: '/assets/favicon-dark.png',
   tagline: 'Value, Innovation and Prestige',
 }
 
