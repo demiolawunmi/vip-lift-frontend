@@ -27,8 +27,8 @@ export const images = {
 }
 
 export const brand = {
-  logo: '/assets/open-design/assets/logo/vip-lift-nigeria-horizontal-navy.svg',
-  logoLight: '/assets/open-design/assets/logo/vip-lift-nigeria-horizontal-white.svg',
+  logo: '/assets/open-design/assets/logo/vip-lift-nigeria-horizontal-navy.webp',
+  logoLight: '/assets/open-design/assets/logo/vip-lift-nigeria-horizontal-white.webp',
   favicon: '/assets/favicon.png',
   faviconLight: '/assets/favicon-light.png',
   faviconDark: '/assets/favicon-dark.png',
