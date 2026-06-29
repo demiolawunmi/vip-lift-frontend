@@ -221,6 +221,7 @@ function usePrototypeInteractions(rootRef) {
     const contactForm = root.querySelector('#contactForm')
     const formSuccess = root.querySelector('#formSuccess')
     const cleanupMotion = setupMotion(root)
+    let mobileNavCloseTimer
 
     const updateNav = () => {
       if (!nav || !hero) return
@@ -229,21 +230,66 @@ function usePrototypeInteractions(rootRef) {
       nav.classList.toggle('scrolled', window.scrollY > threshold)
     }
 
-    const closeMobileNav = () => {
+    const finishMobileNavClose = () => {
       mobileNav?.classList.remove('open')
+      mobileNav?.classList.remove('closing')
       toggle?.classList.remove('open')
+      nav?.classList.remove('menu-open')
       toggle?.setAttribute('aria-label', 'Open menu')
       mobileNav?.setAttribute('aria-hidden', 'true')
       document.body.style.overflow = ''
     }
 
-    const onToggle = () => {
+    const closeMobileNav = ({ animate = false } = {}) => {
+      if (!animate && mobileNav?.classList.contains('closing')) return
+
+      if (!mobileNav?.classList.contains('open')) {
+        finishMobileNavClose()
+        return
+      }
+
+      window.clearTimeout(mobileNavCloseTimer)
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      if (!animate || reduceMotion) {
+        finishMobileNavClose()
+        return
+      }
+
+      mobileNav.classList.add('closing')
+      mobileNavCloseTimer = window.setTimeout(finishMobileNavClose, 320)
+    }
+
+    const onToggle = (event) => {
+      event.preventDefault()
+      event.stopPropagation()
+
       if (!toggle || !mobileNav) return
-      const isOpen = mobileNav.classList.toggle('open')
-      toggle.classList.toggle('open', isOpen)
-      toggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu')
-      mobileNav.setAttribute('aria-hidden', String(!isOpen))
-      document.body.style.overflow = isOpen ? 'hidden' : ''
+
+      if (mobileNav.classList.contains('closing')) return
+
+      if (mobileNav.classList.contains('open')) {
+        window.clearTimeout(mobileNavCloseTimer)
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        if (reduceMotion) {
+          finishMobileNavClose()
+          return
+        }
+
+        mobileNav.classList.add('closing')
+        mobileNavCloseTimer = window.setTimeout(finishMobileNavClose, 320)
+        return
+      }
+
+      window.clearTimeout(mobileNavCloseTimer)
+      mobileNav.classList.remove('closing')
+      mobileNav.classList.add('open')
+      toggle.classList.add('open')
+      nav?.classList.add('menu-open')
+      toggle.setAttribute('aria-label', 'Close menu')
+      mobileNav.setAttribute('aria-hidden', 'false')
+      document.body.style.overflow = 'hidden'
     }
 
     const onLinkClick = (event) => {
@@ -331,7 +377,8 @@ function usePrototypeInteractions(rootRef) {
       chipHandlers.forEach(([chip, handler]) => chip.removeEventListener('click', handler))
       enquiryHandlers.forEach(([option, handler]) => option.removeEventListener('click', handler))
       cleanupMotion()
-      closeMobileNav()
+      window.clearTimeout(mobileNavCloseTimer)
+      finishMobileNavClose()
     }
   }, [location.pathname, navigate, rootRef])
 }
