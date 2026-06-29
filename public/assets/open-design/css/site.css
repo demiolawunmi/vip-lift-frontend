@@ -675,20 +675,20 @@ body.site-page:not(.has-hero-bleed) main {
   .topnav .logo-link img { width: var(--logo-w-mobile); height: var(--logo-h-mobile); }
   body.site-page:not(.has-hero-bleed) main { padding-top: var(--nav-height-mobile); }
   .mobile-nav { padding-top: var(--nav-height-mobile); }
-  /* Mobile: solid nav for legibility over hero photo */
+  /* Mobile hero uses the same transparent-to-solid nav behavior as desktop. */
   .topnav.over-hero {
-    background: color-mix(in oklch, var(--bg) 94%, transparent);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-    border-bottom-color: var(--border);
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border-bottom-color: transparent;
   }
-  .topnav.over-hero .logo-light { opacity: 0; pointer-events: none; }
-  .topnav.over-hero .logo-dark { opacity: 1; pointer-events: auto; }
-  .topnav.over-hero .nav-links a { color: var(--muted); }
-  .topnav.over-hero .nav-toggle { border-color: var(--border-strong); }
+  .topnav.over-hero .logo-light { opacity: 1; pointer-events: auto; }
+  .topnav.over-hero .logo-dark { opacity: 0; pointer-events: none; }
+  .topnav.over-hero .nav-links a { color: var(--platinum); }
+  .topnav.over-hero .nav-toggle { border-color: rgba(255, 255, 255, 0.42); }
   .topnav.over-hero .nav-toggle span,
   .topnav.over-hero .nav-toggle span::before,
-  .topnav.over-hero .nav-toggle span::after { background: var(--fg); }
+  .topnav.over-hero .nav-toggle span::after { background: var(--platinum); }
   .lifecycle { grid-template-columns: 1fr; }
   .lifecycle-step { border-left: 0; border-top: 1px solid var(--border); padding: var(--s-md) 0; }
   .lifecycle-step:first-child { border-top: 0; }

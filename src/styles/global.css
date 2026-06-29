@@ -511,15 +511,44 @@ body {
 
 @media (max-width: 920px) {
   body.has-hero-bleed main {
-    padding-top: var(--nav-height-mobile);
+    padding-top: 0;
   }
 
   body.has-hero-bleed .hero-bleed {
-    min-height: calc(100svh - var(--nav-height-mobile));
+    min-height: 100svh;
+    align-items: flex-start;
   }
 
   body.has-hero-bleed .hero-bleed .hero-content {
-    padding-block-start: clamp(56px, 12vh, 88px);
+    padding-block-start: clamp(132px, 18vh, 168px);
+    padding-block-end: clamp(56px, 9vh, 88px);
+  }
+
+  body.has-hero-bleed .topnav.menu-open {
+    background: color-mix(in oklch, var(--bg) 96%, transparent);
+    border-bottom-color: var(--border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+
+  body.has-hero-bleed .topnav.menu-open .logo-light {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  body.has-hero-bleed .topnav.menu-open .logo-dark {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  body.has-hero-bleed .topnav.menu-open .nav-toggle {
+    border-color: var(--border-strong);
+    background: var(--surface);
+  }
+
+  body.has-hero-bleed .topnav.menu-open .nav-toggle span::before,
+  body.has-hero-bleed .topnav.menu-open .nav-toggle span::after {
+    background: var(--fg);
   }
 
   .topnav.menu-open {
