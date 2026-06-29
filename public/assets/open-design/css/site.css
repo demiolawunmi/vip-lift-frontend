@@ -142,10 +142,10 @@
   /* Navigation */
   --nav-height: 88px;
   --nav-height-mobile: 64px;
-  --logo-w: 114px;
-  --logo-h: 36px;
-  --logo-w-mobile: 89px;
-  --logo-h-mobile: 28px;
+  --logo-w: 150px;
+  --logo-h: 48px;
+  --logo-w-mobile: 154px;
+  --logo-h-mobile: 49px;
 }
 
 /* ---- Reset & base ----------------------------------------------------- */
@@ -668,7 +668,7 @@ body.site-page:not(.has-hero-bleed) main {
 @media (max-width: 920px) {
   .grid-2, .grid-3, .grid-4, .grid-split, .grid-2-1, .grid-1-2 { grid-template-columns: 1fr; }
   .hero-split { grid-template-columns: 1fr; }
-  .topnav .nav-links, .topnav .nav-cta .btn-secondary { display: none; }
+  .topnav .nav-links, .topnav .nav-cta .btn { display: none; }
   .nav-toggle { display: flex; }
   .topnav-inner { height: var(--nav-height-mobile); }
   .topnav .logo-link { width: var(--logo-w-mobile); height: var(--logo-h-mobile); }
